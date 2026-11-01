@@ -124,7 +124,7 @@ function alEditar(e) { onEdit(e); }
 
 function onEdit(e) {
   const n = e && e.range && e.range.getSheet().getName();
-  if (n === H_INSC || n === H_TORNEOS) recalcular_();
+  if (n === H_INSC || n === H_TORNEOS) { recalcular_(); actualizarListados_(); }
 }
 
 /** Agrega a la hoja de inscripciones las columnas nuevas que falten. */
@@ -222,6 +222,7 @@ function doPost_(e) {
       ['Estado', estado === 'Adentro' ? 'Adentro · pareja n.º ' + posicion : 'Lista de espera · lugar ' + posicion],
       ['Registrada', hora + ' hs'], ['Disponibilidad', dispTxt],
     ], codigo, d, t);
+    actualizarListados_(d.torneo, d.categoria);
     return json_({ ok: true, estado, posicion, hora, email, enviado, codigo });
   } finally {
     lock.releaseLock();
@@ -260,11 +261,14 @@ function gestionar_(d) {
       sh.getRange(r._fila, COLS_I.indexOf('baja') + 1).setValue('x (web ' + cuando + ')');
       SpreadsheetApp.flush();
       recalcular_();
+      actualizarListados_(r.torneo, r.categoria);
       // Sin email: la baja se confirma en pantalla (ahorra cupo diario de Gmail).
       return json_({ ok: true, accion: 'baja', pareja, categoria: r.categoria });
     }
     const dispTxt = disp.length === FRANJAS.length ? 'Completa' : disp.join(' / ');
     sh.getRange(r._fila, COLS_I.indexOf('disponibilidad') + 1).setValue(dispTxt);
+    SpreadsheetApp.flush();
+    actualizarListados_(r.torneo, r.categoria);
     // Sin email: el cambio se confirma en pantalla (ahorra cupo diario de Gmail).
     return json_({ ok: true, accion: 'disponibilidad', pareja, categoria: r.categoria, disponibilidad: dispTxt });
   } finally {
@@ -283,6 +287,89 @@ function reenviar_(d) {
   ], r.codigo, d, T));
   return json_({ ok: true }); // no dice si existe o no, para no revelar inscripciones ajenas
 }
+
+/* ---------- listados por categoría en la carpeta "Torneo" del Drive ---------- */
+
+/** Torneos (columna "torneo" de la hoja Torneos) que tienen listados en la carpeta. Se suman a medida que salen los flyers. */
+const TORNEOS_CON_LISTADO = ['prueba'];
+const CARPETA_LISTADOS = 'Torneo';
+
+function carpetaListados_() {
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('carpeta_listados');
+  if (id) { try { return DriveApp.getFolderById(id); } catch (err) { /* la borraron o movieron: se busca de nuevo */ } }
+  const it = DriveApp.getRootFolder().getFoldersByName(CARPETA_LISTADOS);
+  const f = it.hasNext() ? it.next() : DriveApp.getRootFolder().createFolder(CARPETA_LISTADOS);
+  props.setProperty('carpeta_listados', f.getId());
+  return f;
+}
+
+/** Devuelve la planilla de una categoría (la crea en la carpeta si no existe). */
+function planillaListado_(torneo, categoria) {
+  const props = PropertiesService.getScriptProperties();
+  const k = 'listado|' + torneo + '|' + categoria;
+  const id = props.getProperty(k);
+  if (id) {
+    try { const f = DriveApp.getFileById(id); if (!f.isTrashed()) return SpreadsheetApp.openById(id); } catch (err) { /* se crea de nuevo */ }
+  }
+  const ss = SpreadsheetApp.create(categoria);
+  ss.setSpreadsheetTimeZone(TZ);
+  DriveApp.getFileById(ss.getId()).moveTo(carpetaListados_());
+  const sh = ss.getSheets()[0];
+  sh.setName('Listado');
+  props.setProperty(k, ss.getId());
+  return ss;
+}
+
+/** Reescribe el listado de una categoría con las inscripciones de la planilla. */
+function actualizarListado_(t, I) {
+  const cupo = Number(t.cupo) || 0;
+  const filas = I.filter((r) => r.torneo === t.torneo && r.categoria === t.categoria);
+  const activas = filas.filter((r) => !String(r.baja).trim());
+  const bajas = filas.filter((r) => String(r.baja).trim());
+  const hora = (d) => (fecha_(d) ? Utilities.formatDate(fecha_(d), TZ, 'dd/MM HH:mm:ss') : '');
+  const datos = activas.map((r, n) => [n + 1, r.jugador_1, r.jugador_2, "'" + String(r.telefono || ''), r.disponibilidad,
+    cupo && n >= cupo ? 'Lista de espera' : 'Adentro', hora(r.fecha_hora)])
+    .concat(bajas.map((r) => ['', r.jugador_1, r.jugador_2, "'" + String(r.telefono || ''), r.disponibilidad, 'Baja', hora(r.fecha_hora)]));
+  const adentro = activas.length > cupo && cupo ? cupo : activas.length;
+
+  const sh = planillaListado_(t.torneo, t.categoria).getSheets()[0];
+  sh.clear();
+  sh.getRange(1, 1).setValue(t.categoria).setFontSize(14).setFontWeight('bold').setFontColor('#037841');
+  sh.getRange(2, 1).setValue('Parejas adentro: ' + adentro + (cupo ? ' de ' + cupo : '') + ' · Lista de espera: ' + Math.max(activas.length - adentro, 0)
+    + ' · Actualizado ' + Utilities.formatDate(new Date(), TZ, 'dd/MM HH:mm') + ' hs').setFontColor('#555555');
+  const cab = ['N°', 'Jugador 1', 'Jugador 2', 'Teléfono', 'Disponibilidad', 'Estado', 'Inscripción'];
+  sh.getRange(4, 1, 1, cab.length).setValues([cab]).setFontWeight('bold').setBackground('#E6F2EB');
+  if (datos.length) {
+    sh.getRange(5, 1, datos.length, cab.length).setValues(datos);
+    datos.forEach((f, n) => {
+      if (f[5] === 'Lista de espera') sh.getRange(5 + n, 1, 1, cab.length).setBackground('#FFF4D6');
+      if (f[5] === 'Baja') sh.getRange(5 + n, 1, 1, cab.length).setFontColor('#999999').setFontLine('line-through');
+    });
+  } else {
+    sh.getRange(5, 1).setValue('Todavía no hay inscriptos.').setFontColor('#999999');
+  }
+  sh.setFrozenRows(4);
+  sh.autoResizeColumns(2, cab.length - 1);
+  sh.setColumnWidth(1, 40);
+  sh.getRange(5, 1, Math.max(datos.length, 1), 1).setHorizontalAlignment('center');
+}
+
+/** Actualiza los listados de los torneos de TORNEOS_CON_LISTADO (o solo una categoría). Nunca corta una inscripción si falla. */
+function actualizarListados_(torneo, categoria) {
+  try {
+    const T = leer_(H_TORNEOS).filas.filter((t) => t.torneo && t.categoria && TORNEOS_CON_LISTADO.includes(t.torneo)
+      && (!torneo || t.torneo === torneo) && (!categoria || t.categoria === categoria));
+    if (!T.length) return;
+    const I = leer_(H_INSC).filas;
+    T.forEach((t) => actualizarListado_(t, I));
+  } catch (err) {
+    console.error('listados', err);
+  }
+}
+
+/** Correr a mano para crear (o rehacer) todos los listados. La primera vez pide permiso para usar Drive. */
+function crearListados() { actualizarListados_(); }
 
 /* ---------- email ---------- */
 
