@@ -436,7 +436,7 @@ function enviar_(to, asunto, filas, codigo, d, t) {
       '<div style="padding:22px"><h2 style="margin:0 0 6px;color:#024A29;font-size:22px">' + esc_(asunto.split(' · ')[0]) + '</h2>' +
       (d ? '<p style="margin:0 0 16px;color:#4D6357;font-size:15px">' + esc_(nombreTorneo_(d)) + '</p>' : '') +
       '<h3 style="margin:18px 0 6px;font-size:16px;color:#037841">Tu inscripción</h3>' + tabla(filas) + cod +
-      (tor.filas.length ? '<h3 style="margin:24px 0 6px;font-size:16px;color:#037841">El torneo</h3>' + tabla(tor.filas) : '') +
+      // Los datos del torneo (fecha, lugar, precio, horarios) ya están en el flyer: no se repiten en texto.
       (tor.flyer ? '<p style="margin:18px 0 0;text-align:center"><img src="' + tor.flyer + '" alt="Flyer del torneo" style="width:100%;max-width:360px;border-radius:12px"></p>' : '') +
       '<p style="margin:22px 0 0"><a href="' + WEB + '" style="background:#037841;color:#fff;padding:11px 18px;border-radius:999px;text-decoration:none;font-weight:700">Ver torneos en la página</a></p>' +
       '<p style="margin:18px 0 0;color:#4D6357;font-size:13px">Cualquier consulta, escribinos por WhatsApp al complejo.</p>' +
