@@ -20,7 +20,7 @@ const H_TORNEOS = 'Torneos';
 const H_INSC = 'Inscripciones';
 const COLS_T = ['torneo', 'categoria', 'cupo', 'apertura', 'cierre'];
 const COLS_I = ['fecha_hora', 'torneo', 'categoria', 'jugador_1', 'jugador_2', 'telefono', 'estado', 'baja', 'disponibilidad', 'email', 'codigo'];
-const WEB = 'https://ramirezpadelclub.netlify.app/#torneos';
+const WEB = 'https://ramirezpadelclub.pages.dev/#torneos';
 /** Regla del circuito: al menos dos franjas del sábado, o el viernes completo. */
 function dispValida_(disp) { return disp.some((f) => f.indexOf('Viernes') === 0) || disp.filter((f) => f.indexOf('Sábado') === 0).length >= 2; }
 const FRANJAS = ['Viernes 14 a 00 hs', 'Sábado mañana 9 a 13 hs', 'Sábado siesta/tarde 13 a 18 hs', 'Sábado noche 18 a 00 hs'];
@@ -322,7 +322,7 @@ function bloqueTorneo_(d, t) {
     filas.push(['Cierre de inscripción', dia + ' ' + Utilities.formatDate(c, TZ, "dd/MM 'a las' HH:mm 'hs'")]);
   }
   filas.push(['Disponibilidad horaria', 'Viernes 14 a 00 hs · Sábado mañana 9 a 13 hs · Sábado siesta/tarde 13 a 18 hs · Sábado noche 18 a 00 hs. Domingo: llaves finales.']);
-  const flyer = /^https:\/\/ramirezpadelclub\.netlify\.app\/fotos\/torneos\/[\w-]+\.jpg$/.test(String(i.flyer || '')) ? i.flyer : '';
+  const flyer = /^https:\/\/ramirezpadelclub\.(pages\.dev|netlify\.app)\/fotos\/torneos\/[\w-]+\.jpg$/.test(String(i.flyer || '')) ? i.flyer : '';
   return { filas, flyer };
 }
 
