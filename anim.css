@@ -1,0 +1,189 @@
+/* =====================================================================
+   Animaciones del sitio (inspiradas en componentes de 21st.dev,
+   reescritas en CSS/JS puro: no hace falta build).
+   Para sacarlas: borrar las 2 líneas de anim.css / anim.js en index.html.
+   ===================================================================== */
+
+/* ---------- Portada ---------- */
+.hero{overflow:hidden;isolation:isolate}
+/* La foto pasa a una capa propia que hace un zoom lento (efecto "Ken Burns") */
+.hero.anim-on{background:var(--verde)}
+.hero .hero-foto{position:absolute;inset:-4%;z-index:-2;background:url("fotos/frente.jpg") center 40%/cover;animation:kenburns 22s ease-in-out infinite alternate;will-change:transform}
+.hero.anim-on::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(100deg,rgba(2,74,41,.96) 0%,rgba(3,120,65,.88) 45%,rgba(3,120,65,.55) 100%)}
+@keyframes kenburns{from{transform:scale(1) translate(0,0)}to{transform:scale(1.12) translate(-2%,-1.5%)}}
+
+/* La red de abajo de la portada corre despacito */
+.hero::after{animation:red 18s linear infinite}
+@keyframes red{to{background-position:160px 0}}
+
+/* Título letra por letra con corte vertical */
+.hero h1 .ch{font-size:inherit;letter-spacing:inherit;display:inline-block;clip-path:inset(0 0 100% 0);transform:translateY(40%);animation:corte .7s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.25s + var(--i) * 45ms)}
+.hero h1 span .ch{animation-delay:calc(.75s + var(--i) * 35ms)}
+@keyframes corte{to{clip-path:inset(0 0 -10% 0);transform:none}}
+
+/* Eyebrow, texto y botones entran en cascada */
+.hero .entra{opacity:0;transform:translateY(18px);animation:sube .7s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes sube{to{opacity:1;transform:none}}
+
+/* Escudo: cae girando y después flota */
+.hero .escudo{animation:escudo-in 1s cubic-bezier(.2,1.3,.4,1) .3s both,flota 6s ease-in-out 1.4s infinite}
+@keyframes escudo-in{from{opacity:0;transform:scale(.6) rotate(-25deg)}to{opacity:1;transform:none}}
+@keyframes flota{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* Pelotita que cruza la portada de vez en cuando */
+.hero .pelota{position:absolute;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#F4FF8A,#D7F03F 55%,#A8BE1F);box-shadow:0 0 18px rgba(215,240,63,.6);left:-30px;top:30%;z-index:0;pointer-events:none;offset-path:path("M0 120 Q 300 -60 620 140 T 1400 60");animation:pelota 9s cubic-bezier(.45,.05,.55,.95) 2s infinite}
+@keyframes pelota{0%{offset-distance:0%;opacity:0}6%{opacity:1}55%{offset-distance:100%;opacity:1}56%,100%{offset-distance:100%;opacity:0}}
+@supports not (offset-path:path("M0 0")){.hero .pelota{display:none}}
+
+/* ---------- Datos que cuentan ---------- */
+.anim .dato{opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i,0) * 90ms)}
+.anim .dato.visto{opacity:1;transform:none}
+
+/* ---------- Aparecer al hacer scroll ---------- */
+.revela{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i,0) * 80ms)}
+.revela.visto{opacity:1;transform:none}
+.cab.revela h2{background:linear-gradient(90deg,var(--verde-osc) 50%,var(--verde) 50%) 100% 0/200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;transition:background-position 1.1s cubic-bezier(.2,.8,.2,1) .2s}
+.cab.revela.visto h2{background-position:0 0}
+
+/* ---------- Atajos con inclinación 3D y brillo ---------- */
+.atajos{perspective:900px}
+.atajo{transform-style:preserve-3d;transition:transform .25s ease,box-shadow .25s ease;will-change:transform}
+.atajo::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.28),transparent 45%);opacity:0;transition:opacity .25s}
+.atajo:hover::after{opacity:1}
+.atajo:hover{box-shadow:0 22px 40px rgba(2,40,22,.28)}
+.atajo div{transform:translateZ(30px)}
+.atajo.tour svg{animation:flota 5s ease-in-out infinite}
+
+/* ---------- Tira de fotos en carrusel infinito ---------- */
+.tira.marquee{display:flex;gap:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.tira.marquee .pista{display:flex;gap:12px;padding-right:12px;flex:none;animation:corre 45s linear infinite}
+.tira.marquee:hover .pista{animation-play-state:paused}
+.tira.marquee a{flex:none;width:clamp(150px,18vw,220px)}
+.tira.marquee a:nth-child(odd){transform:rotate(-1.5deg)}
+.tira.marquee a:nth-child(even){transform:rotate(1.5deg) translateY(10px)}
+.tira.marquee{padding-block:8px 18px}
+@keyframes corre{to{transform:translateX(-100%)}}
+
+/* ---------- Botones con destello ---------- */
+.btn{position:relative;overflow:hidden}
+.btn::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);pointer-events:none}
+.btn:hover::after{animation:destello .7s ease}
+@keyframes destello{to{left:130%}}
+.hero .btn.blanco{animation:sube .7s cubic-bezier(.2,.8,.2,1) forwards,late 2.6s ease-in-out 3s infinite}
+@keyframes late{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.55)}50%{box-shadow:0 0 0 10px rgba(255,255,255,0)}}
+
+/* ---------- Cabecera: se compacta al bajar ---------- */
+.top{transition:box-shadow .3s,background-color .3s}
+.top.scrolleado{box-shadow:0 6px 24px rgba(0,0,0,.25);background:rgba(2,74,41,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.top .marca img{transition:transform .5s cubic-bezier(.2,1.3,.4,1)}
+.top .marca:hover img{transform:rotate(-360deg)}
+.tabs a{transition:background-color .25s,color .25s}
+
+/* ---------- Tarjetas que se levantan ---------- */
+.cancha,.profe,.torneo,.tarjeta{transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,opacity .7s ease}
+.cancha:hover,.profe:hover,.torneo:hover{transform:translateY(-6px);box-shadow:0 18px 36px rgba(2,40,22,.12)}
+.cancha img{transition:transform .6s}
+.cancha{overflow:hidden}
+.cancha:hover img{transform:scale(1.04)}
+
+/* ---------- Respeta "reducir movimiento" del celular ---------- */
+@media (prefers-reduced-motion:reduce){
+  .hero .hero-foto,.hero::after,.hero .escudo,.hero .pelota,.atajo.tour svg,.tira.marquee .pista,.hero .btn.blanco{animation:none!important}
+  .hero h1 .ch,.hero .entra{animation:none!important;clip-path:none;transform:none;opacity:1}
+  .revela,.dato{opacity:1!important;transform:none!important;transition:none!important}
+  .cab.revela h2{color:var(--verde-osc);background:none}
+  .hero .pelota{display:none}
+}
+
+/* =====================================================================
+   Portadas animadas de cada pestaña (El complejo, Buffet, Clases,
+   Torneos, Fotos, Reservas). Se arman desde anim.js con el título de cada una.
+   ===================================================================== */
+.portada-tab{position:relative;overflow:hidden;isolation:isolate;background:var(--verde);color:var(--blanco)}
+.portada-tab .pt-foto{position:absolute;inset:-4%;z-index:-2;background-position:center;background-size:cover;animation:kenburns 22s ease-in-out infinite alternate;will-change:transform}
+.portada-tab::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(100deg,rgba(2,74,41,.96) 0%,rgba(3,120,65,.88) 50%,rgba(3,120,65,.6) 100%)}
+.portada-tab::after{content:"";position:absolute;inset:auto 0 0;height:12px;background:repeating-linear-gradient(90deg,var(--blanco) 0 40px,var(--verde-osc) 40px 80px);animation:red 18s linear infinite}
+.portada-tab .in{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;padding-block:48px 64px}
+.portada-tab .cab{margin-bottom:0;max-width:680px}
+.portada-tab .cab h2{color:var(--blanco);font-size:clamp(34px,6vw,60px)}
+.portada-tab .cab p{color:rgba(255,255,255,.9);font-size:17px}
+.portada-tab .eyebrow{color:var(--verde-claro)}
+.portada-tab .btn.verde{background:var(--blanco);color:var(--verde-osc);animation:sube .7s cubic-bezier(.2,.8,.2,1) forwards,late 2.6s ease-in-out 2.5s infinite}
+.portada-tab .botones{margin-top:16px!important}
+.portada-tab .pal{display:inline-block;white-space:nowrap}
+.portada-tab .ch{display:inline-block;clip-path:inset(0 0 100% 0);transform:translateY(40%);animation:corte .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.2s + var(--i) * 26ms)}
+.portada-tab .entra{opacity:0;transform:translateY(18px);animation:sube .7s cubic-bezier(.2,.8,.2,1) forwards}
+.portada-tab .pt-icono{width:150px;height:auto;color:var(--verde-claro);animation:flota 5s ease-in-out 2s infinite;filter:drop-shadow(0 10px 24px rgba(0,0,0,.25))}
+.portada-tab .pt-icono > *{stroke-dasharray:var(--l);stroke-dashoffset:var(--l);animation:traza-ic 1.1s cubic-bezier(.6,0,.2,1) forwards;animation-delay:calc(.3s + var(--i) * .14s)}
+@keyframes traza-ic{to{stroke-dashoffset:0}}
+.portada-tab .pelota{position:absolute;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#F4FF8A,#D7F03F 55%,#A8BE1F);box-shadow:0 0 18px rgba(215,240,63,.6);left:-30px;top:20%;pointer-events:none;offset-path:path("M0 140 Q 300 -40 640 120 T 1400 40");animation:pelota 9s cubic-bezier(.45,.05,.55,.95) 1.5s infinite}
+@supports not (offset-path:path("M0 0")){.portada-tab .pelota{display:none}}
+@media (max-width:760px){
+  .portada-tab .in{grid-template-columns:1fr;gap:18px;padding-block:28px 52px}
+  .portada-tab .pt-icono{order:-1;width:72px}
+}
+/* Clases: la foto pasa a ser la portada */
+.clases-top.sin-cab{display:none}
+
+/* ---------- El complejo ---------- */
+.anim .cancha.revela img{clip-path:inset(0 0 0 100%);transition:clip-path 1s cubic-bezier(.7,0,.2,1) .2s,transform .6s}
+.anim .cancha.visto img{clip-path:inset(0 0 0 0)}
+.anim .extra.revela{border-top-color:transparent;position:relative}
+.anim .extra.revela::before{content:"";position:absolute;top:-3px;left:0;right:0;height:3px;background:var(--verde);transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.2,.8,.2,1) .25s}
+.anim .extra.visto::before{transform:scaleX(1)}
+.extra h3{transition:color .25s}
+.extra:hover h3{color:var(--verde)}
+.aviso-clases{transition:background-color .25s,transform .25s}
+.aviso-clases:hover{transform:translateX(6px)}
+
+/* ---------- Buffet ---------- */
+.anim .plato.revela{transform:translateX(-24px)}
+.anim .plato.visto{transform:none}
+.plato{transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1),padding-left .25s,border-color .25s}
+.plato:hover{padding-left:12px;border-bottom-color:var(--verde)}
+.anim .menu.revela .chips li{opacity:0;transform:scale(.6)}
+.anim .menu.visto .chips li{animation:pop .5s cubic-bezier(.2,1.4,.4,1) forwards;animation-delay:calc(.5s + var(--j,0) * 45ms)}
+@keyframes pop{to{opacity:1;transform:none}}
+.chips li{transition:background-color .25s,color .25s,transform .25s}
+.chips li:hover{background:var(--verde);color:var(--blanco);transform:translateY(-3px)}
+
+/* ---------- Clases ---------- */
+.avatar{position:relative}
+.avatar::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:2px dashed var(--verde);animation:gira-aro 14s linear infinite;pointer-events:none}
+@keyframes gira-aro{to{transform:rotate(1turn)}}
+.profe:hover .avatar::after{animation-duration:3s}
+.anim .pasos li.revela::before{transform:scale(0)}
+.anim .pasos li.visto::before{animation:pop-num .55s cubic-bezier(.2,1.5,.4,1) .2s both}
+@keyframes pop-num{from{transform:scale(0) rotate(-90deg)}to{transform:none}}
+
+/* ---------- Torneos ---------- */
+.torneo img{transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s}
+.torneo:hover img{transform:rotate(-2deg) scale(1.04);box-shadow:0 14px 28px rgba(2,40,22,.25)}
+.t-estado:not(.off)::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--verde);margin-right:7px;vertical-align:1px;animation:punto 1.6s ease-in-out infinite}
+@keyframes punto{0%,100%{box-shadow:0 0 0 0 rgba(3,120,65,.5)}50%{box-shadow:0 0 0 6px rgba(3,120,65,0)}}
+
+/* ---------- Fotos ---------- */
+.anim .galeria figure.revela::after{content:"";position:absolute;inset:0;background:var(--verde);transform-origin:right;transition:transform .8s cubic-bezier(.7,0,.2,1);transition-delay:calc(var(--i,0) * 80ms);pointer-events:none}
+.anim .galeria figure.visto::after{transform:scaleX(0)}
+.galeria figure.baraja{animation:baraja .55s cubic-bezier(.2,1.2,.4,1) both;animation-delay:calc(var(--k,0) * 35ms)}
+@keyframes baraja{from{opacity:0;transform:scale(.85) rotate(-3deg)}to{opacity:1;transform:none}}
+.filtros button{transition:background-color .25s,color .25s,border-color .25s,transform .2s}
+.filtros button:hover{transform:translateY(-2px);border-color:var(--verde)}
+
+/* ---------- Reservas ---------- */
+.anim .horario.revela div{opacity:0;transform:translateX(24px);transition:opacity .5s,transform .5s cubic-bezier(.2,.8,.2,1);transition-delay:calc(.15s + var(--j,0) * 70ms)}
+.anim .horario.visto div{opacity:1;transform:none}
+.horario div:not(:first-child){transition:background-color .2s}
+.horario div:not(:first-child):hover{background:var(--verde-claro)}
+.tarjeta .fila{transition:transform .25s}
+.tarjeta .fila:hover{transform:translateX(6px)}
+
+@media (prefers-reduced-motion:reduce){
+  .portada-tab .pt-foto,.portada-tab::after,.portada-tab .pt-icono,.portada-tab .pelota,.portada-tab .btn.verde,.avatar::after,.t-estado::before{animation:none!important}
+  .portada-tab .ch,.portada-tab .entra{animation:none!important;clip-path:none;transform:none;opacity:1}
+  .portada-tab .pt-icono > *{animation:none!important;stroke-dashoffset:0}
+  .portada-tab .pelota{display:none}
+  .anim .cancha img,.anim .horario div,.anim .menu .chips li,.anim .pasos li::before{clip-path:none!important;opacity:1!important;transform:none!important;animation:none!important}
+  .anim .galeria figure::after,.anim .extra::before{display:none}
+  .galeria figure.baraja{animation:none}
+}

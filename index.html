@@ -3,6 +3,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Manrope:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="anim.css">
 <style>
 /* Layout: sitio en pestañas (Inicio, El complejo, Fotos, Reservas) + Pádel Tour aparte; verde y blanco del escudo */
 :root{
@@ -299,7 +300,7 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
         <div class="cab"><p class="eyebrow">En la cancha</p><h2>Así se juega en el club</h2></div>
         <a class="btn verde" href="#fotos">Ver todas las fotos</a>
       </div>
-      <div class="tira"><a href="#fotos"><img src="fotos/juego/juego-bandeja.jpg" alt="Bandeja" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-choque.jpg" alt="Choque de manos en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-derecha.jpg" alt="Derecha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-estirada.jpg" alt="Jugadora estirándose a la pelota" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-dobles.jpg" alt="Partido de dobles" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-red.jpg" alt="Volea en la red" loading="lazy"></a></div>
+      <div class="tira"><a href="#fotos"><img src="fotos/juego/juego-bandeja.jpg" alt="Bandeja" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-choque.jpg" alt="Choque de manos en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-derecha.jpg" alt="Derecha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-estirada.jpg" alt="Jugadora estirándose a la pelota" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-dobles.jpg" alt="Partido de dobles" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-red.jpg" alt="Volea en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-smash.jpg" alt="Smash" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-festejo.jpg" alt="Festejo después del punto" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-globo.jpg" alt="Globo" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-sonrisas.jpg" alt="Sonrisas en la cancha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-volea.jpg" alt="Volea" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-remate-damas.jpg" alt="Remate" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-grupo.jpg" alt="Grupo en el club" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-salto.jpg" alt="Salto a la pelota" loading="lazy"></a></div>
     </div>
   </section>
 </main>
@@ -648,14 +649,6 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
   <section>
     <div class="in">
       <div class="cab"><p class="eyebrow">Fotos</p><h2>Así se vive el complejo</h2></div>
-      <div class="filtros" role="group" aria-label="Filtrar fotos">
-        <button type="button" data-f="todas" aria-pressed="true">Todas</button>
-        <button type="button" data-f="juego" aria-pressed="false">En juego</button>
-        <button type="button" data-f="canchas" aria-pressed="false">Canchas</button>
-        <button type="button" data-f="pasarela" aria-pressed="false">Pasarela</button>
-        <button type="button" data-f="gente" aria-pressed="false">La gente</button>
-        <button type="button" data-f="afuera" aria-pressed="false">Afuera</button>
-      </div>
       <div class="galeria" id="galeria">
         <figure data-c="juego"><img src="fotos/juego/juego-remate.jpg" alt="Jugador rematando con la pelota en el aire" loading="lazy"><figcaption>Remate</figcaption></figure>
         <figure data-c="gente"><img src="fotos/juego/gente-grupo.jpg" alt="Grupo de jugadoras sonriendo en el complejo" loading="lazy"><figcaption>Las chicas del torneo</figcaption></figure>
@@ -826,4 +819,5 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
 })();
 </script>
 
+<script src="anim.js" defer></script>
 </body></html>
