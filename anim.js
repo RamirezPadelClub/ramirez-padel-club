@@ -179,6 +179,15 @@
     document.querySelectorAll('.dato').forEach(function(el){ el.classList.add('visto'); });
   }
 
+  /* ---------- Elementos que se agregan después de cargar (álbumes) ---------- */
+  window.revelar = function(els){
+    if (!obs) return;
+    [].slice.call(els).forEach(function(el, i){
+      if (el.classList.contains('revela')) return;
+      el.classList.add('revela'); el.style.setProperty('--i', Math.min(i % 12, 8)); obs.observe(el);
+    });
+  };
+
   /* ---------- Ver torneo: la vista se arma después de cargar la página ---------- */
   var vtUltimo = null;
   var vtGrupos = ['.vt-sec', '.vt-lista li', '.vt-zona', '.vt-dia', '.vt-fila', '.vt-ronda', '.vt-llave', '.vt-campeones div'];

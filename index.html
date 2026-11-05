@@ -277,6 +277,33 @@ dialog.insc::backdrop{background:rgba(16,35,26,.55)}
 .visor .ant{left:max(8px,env(safe-area-inset-left,0px))}
 .visor .sig{right:max(8px,env(safe-area-inset-right,0px))}
 @media (max-width:560px){.visor{padding-left:12px;padding-right:12px}.visor .nav{bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}}
+/* Álbumes de torneos */
+.albumes-bloque{margin:0 0 30px}
+.albumes-tit{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:12px}
+.albumes-tit h3{margin:0;font-family:var(--display);font-size:22px;color:var(--verde-osc)}
+.albumes-tit span{font-size:13px;color:var(--tinta-2)}
+.albumes{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.album-card{display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;text-decoration:none;color:inherit;border-radius:18px;overflow:hidden;background:var(--blanco);border:1px solid var(--linea);transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,opacity .7s ease}
+.album-card:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(2,40,22,.14)}
+.album-card:focus-visible{outline:3px solid var(--verde);outline-offset:3px}
+.album-portada{position:relative;aspect-ratio:1;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:2px;background:var(--verde-osc)}
+.album-portada img{width:100%;height:100%;object-fit:cover;display:block}
+.album-portada img:first-child{grid-row:1/3}
+.album-portada span{position:absolute;left:6px;bottom:6px;background:rgba(6,20,12,.82);color:#fff;font-size:11px;font-weight:800;border-radius:999px;padding:3px 8px}
+.album-txt{padding:12px 16px;display:grid;gap:2px;min-width:0}
+.album-txt h4{margin:0;font-family:var(--display);font-size:18px;line-height:1.2;color:var(--verde-osc)}
+.album-txt p{margin:0;font-size:13px;color:var(--tinta-2)}
+.album-txt b{font-size:13px;color:var(--verde);margin-top:4px}
+.album-cab{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px;margin-bottom:18px}
+.album-cab p{margin:0;color:var(--tinta-2);font-size:14px}
+.album-grilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.album-grilla button{border:0;padding:0;cursor:zoom-in;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--verde-claro)}
+.album-grilla button:focus-visible{outline:3px solid var(--verde);outline-offset:2px}
+.album-grilla img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.album-grilla button:hover img{transform:scale(1.05)}
+.visor .bajar{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(12px,env(safe-area-inset-left,0px));display:inline-flex;align-items:center;gap:8px;background:var(--verde);color:var(--blanco);border-radius:999px;padding:0 16px;height:46px;font-weight:800;font-size:14px;text-decoration:none}
+.visor .num{position:absolute;top:calc(env(safe-area-inset-top,0px) + 24px);left:50%;transform:translateX(-50%);color:var(--blanco);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums;opacity:.85}
+@media (max-width:600px){.album-grilla{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.album-grilla button{border-radius:6px}}
 @media (prefers-reduced-motion:reduce){.galeria img{transition:none}}
 
 /* Reservas */
@@ -807,6 +834,10 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
   <section>
     <div class="in">
       <div class="cab"><p class="eyebrow">Fotos</p><h2>Así se vive el complejo</h2></div>
+      <div class="albumes-bloque" id="sec-albumes" hidden>
+        <div class="albumes-tit"><h3>Álbumes de torneos</h3><span>Buscá tus fotos y descargalas</span></div>
+        <div class="albumes" id="albumes"></div>
+      </div>
       <div class="galeria" id="galeria">
         <figure data-c="juego"><img src="fotos/juego/juego-remate.jpg" alt="Jugador rematando con la pelota en el aire" loading="lazy"><figcaption>Remate</figcaption></figure>
         <figure data-c="gente"><img src="fotos/juego/gente-grupo.jpg" alt="Grupo de jugadoras sonriendo en el complejo" loading="lazy"><figcaption>Las chicas del torneo</figcaption></figure>
@@ -855,6 +886,26 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
       </div>
     </div>
   </section>
+</main>
+<!-- ÁLBUM ABIERTO (#album/<id>) -->
+<main class="vista" id="v-album" hidden>
+  <section>
+    <div class="in">
+      <a class="vt-volver" href="#fotos">← Todas las fotos</a>
+      <div class="album-cab">
+        <div><p class="eyebrow" id="al-grupo"></p><h2 id="al-tit" style="color:var(--verde-osc)">Álbum</h2><p id="al-info"></p></div>
+      </div>
+      <div class="album-grilla" id="al-grilla"></div>
+    </div>
+  </section>
+  <div class="visor" id="al-visor" hidden role="dialog" aria-modal="true" aria-label="Foto en grande">
+    <a class="bajar" id="al-bajar" href="#" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Descargar</a>
+    <span class="num" id="al-num"></span>
+    <button type="button" class="cerrar" id="al-cerrar" aria-label="Cerrar">✕</button>
+    <button type="button" class="nav ant" id="al-ant" aria-label="Foto anterior">‹</button>
+    <figure><img id="al-img" src="" alt=""></figure>
+    <button type="button" class="nav sig" id="al-sig" aria-label="Foto siguiente">›</button>
+  </div>
 </main>
 
 <!-- RESERVAS -->
@@ -941,15 +992,16 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
 
 <script>
 (function(){
-  var vistas=['inicio','complejo','buffet','clases','torneos','fotos','reservas','torneo'];
+  var vistas=['inicio','complejo','buffet','clases','torneos','fotos','reservas','torneo','album'];
   var titulo0=document.title;
   function mostrar(){
     var v=(location.hash||'#inicio').slice(1);
     if(v.indexOf('torneo/')===0) v='torneo';
+    else if(v.indexOf('album/')===0) v='album';
     else if(document.title!==titulo0) document.title=titulo0;
     if(vistas.indexOf(v)<0) v='inicio';
     vistas.forEach(function(n){document.getElementById('v-'+n).hidden=(n!==v)});
-    var tab=v==='torneo'?'torneos':v;
+    var tab=v==='torneo'?'torneos':v==='album'?'fotos':v;
     document.querySelectorAll('.tabs a[data-v]').forEach(function(a){
       if(a.dataset.v===tab){a.setAttribute('aria-current','page');try{a.scrollIntoView({block:'nearest',inline:'center'})}catch(e){}}
       else a.removeAttribute('aria-current');
@@ -978,6 +1030,45 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
   window.addEventListener('hashchange',function(){visor.hidden=true});
   window.addEventListener('hashchange',mostrar);
   mostrar();
+})();
+/* ---------- Álbumes de torneos: fotos desde carpetas de Google Drive (albumes.json) ---------- */
+(function(){
+  var FOTO=window.FOTO_URL||function(id,w){return'https://lh3.googleusercontent.com/d/'+id+'=w'+w};
+  var ORIG=window.FOTO_ORIGINAL||function(id){return'https://drive.google.com/file/d/'+id+'/view'};
+  var albs=[], sec=document.getElementById('sec-albumes'), cont=document.getElementById('albumes');
+  function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function lista(){
+    if(!albs.length){sec.hidden=true;return}
+    sec.hidden=false;
+    cont.innerHTML=albs.map(function(a){var p=(a.portada&&a.portada.length?a.portada:a.fotos).slice(0,3);
+      return'<a class="album-card" href="#album/'+esc(a.id)+'"><div class="album-portada">'+p.map(function(id,i){return'<img src="'+FOTO(id,i?200:300)+'" alt="" loading="lazy">'}).join('')+'<span>'+a.fotos.length+' fotos</span></div><div class="album-txt"><h4>'+esc(a.titulo)+'</h4><p>'+esc(a.grupo||'')+(a.credito?' · Fotos: '+esc(a.credito):'')+'</p><b>Ver álbum →</b></div></a>'}).join('');
+    if(window.revelar)window.revelar(cont.querySelectorAll('.album-card'));
+  }
+  var actual=null, idx=0, visor=document.getElementById('al-visor'), img=document.getElementById('al-img');
+  function abrirAlbum(){
+    var h=location.hash.slice(1);if(h.indexOf('album/')!==0)return;
+    var a=albs.filter(function(x){return x.id===decodeURIComponent(h.slice(6))})[0];
+    var g=document.getElementById('al-grilla');
+    if(!a){document.getElementById('al-tit').textContent=albs.length?'Álbum no encontrado':'Cargando…';g.innerHTML='';return}
+    actual=a;
+    document.getElementById('al-tit').textContent=a.titulo;
+    document.getElementById('al-grupo').textContent=a.grupo||'';
+    document.getElementById('al-info').textContent=a.fotos.length+' fotos'+(a.credito?' · Fotos: '+a.credito:'');
+    document.title=a.titulo+' · Fotos · Complejo Ramirez Padel Club';
+    g.innerHTML=a.fotos.map(function(id,i){return'<button type="button" data-al="'+i+'" aria-label="Ver foto '+(i+1)+'"><img src="'+FOTO(id,400)+'" alt="" loading="lazy"></button>'}).join('');
+    if(window.revelar)window.revelar(g.querySelectorAll('button'));
+  }
+  function ver(i){var n=actual.fotos.length;idx=(i+n)%n;var id=actual.fotos[idx];img.src=FOTO(id,1600);img.alt='Foto '+(idx+1)+' de '+actual.titulo;document.getElementById('al-num').textContent=(idx+1)+' / '+n;document.getElementById('al-bajar').href=ORIG(id)}
+  document.getElementById('al-grilla').addEventListener('click',function(e){var b=e.target.closest('[data-al]');if(!b)return;ver(+b.dataset.al);visor.hidden=false;document.getElementById('al-cerrar').focus()});
+  document.getElementById('al-cerrar').onclick=function(){visor.hidden=true};
+  document.getElementById('al-ant').onclick=function(){ver(idx-1)};
+  document.getElementById('al-sig').onclick=function(){ver(idx+1)};
+  visor.addEventListener('click',function(e){if(e.target===visor)visor.hidden=true});
+  document.addEventListener('keydown',function(e){if(visor.hidden)return;if(e.key==='Escape')visor.hidden=true;if(e.key==='ArrowLeft')ver(idx-1);if(e.key==='ArrowRight')ver(idx+1)});
+  var x0=null;visor.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+  visor.addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)ver(idx+(dx<0?1:-1));x0=null});
+  window.addEventListener('hashchange',function(){visor.hidden=true;abrirAlbum()});
+  fetch('albumes.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(j){albs=Array.isArray(j)?j:[];lista();abrirAlbum()}).catch(function(){sec.hidden=true});
 })();
 </script>
 
