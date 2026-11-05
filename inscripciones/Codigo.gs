@@ -18,6 +18,11 @@ function libro_() { return SHEET_ID ? SpreadsheetApp.openById(SHEET_ID) : Spread
 const TZ = 'America/Argentina/Buenos_Aires';
 const H_TORNEOS = 'Torneos';
 const H_INSC = 'Inscripciones';
+/** Hojas que carga la organización para "Ver torneo" en la página (opcionales). */
+const H_ZONAS = 'Zonas';
+const H_PARTIDOS = 'Partidos';
+const COLS_Z = ['torneo', 'categoria', 'zona', 'pareja'];
+const COLS_P = ['torneo', 'categoria', 'fase', 'dia', 'hora', 'pareja_1', 'pareja_2', 'resultado', 'ganador'];
 const COLS_T = ['torneo', 'categoria', 'cupo', 'apertura', 'cierre'];
 const COLS_I = ['fecha_hora', 'torneo', 'categoria', 'jugador_1', 'jugador_2', 'telefono', 'estado', 'baja', 'disponibilidad', 'email', 'codigo'];
 const WEB = 'https://ramirezpadelclub.pages.dev/#torneos';
@@ -71,7 +76,61 @@ function setup() {
   if (hoja1 && hoja1.getLastRow() === 0 && ss.getSheets().length > 2) ss.deleteSheet(hoja1);
 }
 
+/**
+ * Correr UNA vez a mano: crea las hojas "Zonas" y "Partidos" para cargar lo que se ve en "Ver torneo".
+ *   Zonas:    una fila por pareja → torneo | categoria | zona (A, B, C…) | pareja
+ *   Partidos: una fila por partido → torneo | categoria | fase | dia | hora | pareja_1 | pareja_2 | resultado | ganador
+ *             fase: "Zona A", "Zona B"… para la fase de zonas, y "Octavos", "Cuartos", "Semis" o "Final" para las llaves.
+ *             dia: Viernes, Sábado o Domingo. ganador: 1 o 2 (o el nombre de la pareja); en la Final define campeones.
+ * Lo que quede vacío no se muestra en la página.
+ */
+function crearHojasTorneo() {
+  const ss = libro_();
+  [[H_ZONAS, COLS_Z], [H_PARTIDOS, COLS_P]].forEach(([n, cols]) => {
+    const sh = ss.getSheetByName(n) || ss.insertSheet(n);
+    if (sh.getLastRow() === 0) {
+      sh.appendRow(cols);
+      sh.setFrozenRows(1);
+      sh.getRange(1, 1, 1, cols.length).setFontWeight('bold').setBackground('#E6F2EB');
+    }
+  });
+  ss.getSheetByName(H_PARTIDOS).getRange('E:E').setNumberFormat('@');
+}
+
 /* ---------- utilidades ---------- */
+
+/** Lee una hoja opcional: si no existe devuelve []. */
+function leerOpc_(nombre) {
+  const sh = libro_().getSheetByName(nombre);
+  if (!sh || sh.getLastRow() < 2) return [];
+  return leer_(nombre).filas;
+}
+
+/** "18:00" aunque la celda venga como hora de Sheets. */
+function hora_(v) {
+  if (v instanceof Date) return Utilities.formatDate(v, TZ, 'HH:mm');
+  return txt_(v, 10);
+}
+
+/** Zonas y partidos de una categoría, tal como los muestra la página. */
+function fixture_(Z, P, t) {
+  const es = (r) => r.torneo === t.torneo && r.categoria === t.categoria;
+  const zonas = [];
+  Z.filter(es).forEach((r) => {
+    const z = txt_(r.zona, 20).toUpperCase(); const p = txt_(r.pareja, 120);
+    if (!z || !p) return;
+    let g = zonas.find((x) => x.zona === z);
+    if (!g) { g = { zona: z, parejas: [] }; zonas.push(g); }
+    g.parejas.push(p);
+  });
+  zonas.sort((a, b) => a.zona.localeCompare(b.zona));
+  const partidos = P.filter(es).filter((r) => r.pareja_1 || r.pareja_2 || r.hora).map((r) => ({
+    fase: txt_(r.fase, 30), dia: txt_(r.dia, 20), hora: hora_(r.hora),
+    p1: txt_(r.pareja_1, 120), p2: txt_(r.pareja_2, 120),
+    resultado: txt_(r.resultado, 40), ganador: txt_(r.ganador, 120),
+  }));
+  return { zonas, partidos };
+}
 
 function leer_(nombre) {
   const sh = libro_().getSheetByName(nombre);
@@ -144,6 +203,7 @@ function doGet() {
   const ahora = new Date();
   const T = leer_(H_TORNEOS).filas.filter((t) => t.torneo && t.categoria);
   const I = leer_(H_INSC).filas.filter((r) => !String(r.baja).trim());
+  const Z = leerOpc_(H_ZONAS), P = leerOpc_(H_PARTIDOS);
   const fmt = (d) => (d ? Utilities.formatDate(fecha_(d), TZ, "yyyy-MM-dd'T'HH:mm:ss") : null);
   const out = T.map((t) => {
     const cupo = Number(t.cupo) || 0;
@@ -157,6 +217,7 @@ function doGet() {
       torneo: t.torneo, categoria: t.categoria, cupo,
       apertura: fmt(t.apertura), cierre: fmt(t.cierre),
       estado: estadoVentana_(t, ahora), inscriptos: lista,
+      ...fixture_(Z, P, t),
     };
   });
   return json_({ ok: true, ahora: fmt(ahora), categorias: out });
