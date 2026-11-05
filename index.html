@@ -176,6 +176,60 @@ section.blanca{background:var(--blanco)}
 .t-cats li small{color:var(--tinta-2);font-variant-numeric:tabular-nums;margin-left:6px}
 .t-cats li.esp{color:#9A6B12}
 .torneo.prueba{border:2px dashed var(--verde)}
+/* Ver torneo */
+.vt-cab{display:grid;grid-template-columns:120px 1fr;gap:22px;align-items:end;margin-bottom:22px}
+.vt-cab img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:12px;display:block}
+.vt-cab h2{color:var(--verde-osc);font-size:clamp(28px,5vw,44px)}
+.vt-volver{display:inline-flex;font-weight:800;color:var(--verde);text-decoration:none;margin-bottom:14px}
+.vt-cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+.vt-cats button{font:800 14px var(--texto);border:1.5px solid var(--verde);background:none;color:var(--verde);border-radius:999px;padding:9px 16px;cursor:pointer;min-height:44px}
+.vt-cats button[aria-pressed="true"]{background:var(--verde);color:var(--blanco)}
+.vt-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1.5px solid var(--tinta);border-radius:14px;overflow:hidden;margin:0 0 18px;background:var(--blanco)}
+.vt-tabs button{font:800 14px var(--texto);border:0;border-left:1.5px solid var(--tinta);background:none;color:var(--tinta);padding:12px 8px;cursor:pointer;min-height:48px;line-height:1.2}
+.vt-tabs button:first-child{border-left:0}
+.vt-tabs button[aria-selected="true"]{background:var(--verde);color:var(--blanco)}
+@media (max-width:600px){.vt-tabs{grid-template-columns:1fr 1fr}.vt-tabs button:nth-child(3){border-left:0}.vt-tabs button:nth-child(n+3){border-top:1.5px solid var(--tinta)}}
+.vt-sec{background:var(--blanco);border:1px solid var(--linea);border-radius:20px;padding:22px;margin-bottom:18px;min-width:0}
+.vt-sec h3{font-size:24px;color:var(--verde-osc);margin-bottom:14px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.vt-sec h3 small{font:700 13px var(--texto);color:var(--tinta-2)}
+.vt-vacio{color:var(--tinta-2);margin:0}
+.vt-lista{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0 24px}
+.vt-lista li{display:flex;gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--linea)}
+.vt-lista li b{font-family:var(--display);color:var(--verde);min-width:22px}
+.vt-lista li.esp{color:#9A6B12}
+.vt-lista li small{margin-left:auto;color:var(--tinta-2);font-size:12px}
+.vt-zonas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.vt-zona{border:1.5px solid var(--tinta);border-radius:12px;overflow:hidden}
+.vt-zona p{margin:0;background:var(--verde);color:var(--blanco);padding:7px 12px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.vt-zona p b{font-family:var(--display);font-size:22px;letter-spacing:0;margin-left:6px}
+.vt-zona ul{list-style:none;margin:0;padding:0}
+.vt-zona li{padding:10px 14px;border-top:1px solid var(--linea);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vt-dia+.vt-dia{margin-top:18px}
+.vt-dia h4{font-family:var(--display);font-size:20px;text-transform:uppercase;border-bottom:2px solid var(--tinta);padding-bottom:4px;margin:0 0 2px}
+.vt-fila{display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--linea)}
+.vt-fila .h{font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+.vt-fila .vs{font-weight:600;min-width:0}
+.vt-fila .vs i{font-style:normal;color:var(--tinta-2);font-weight:500;padding:0 4px}
+.vt-fila .tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--verde-osc);background:var(--verde-claro);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.vt-fila .res{display:block;font-size:13px;color:var(--verde);font-weight:800;margin-top:2px}
+.vt-cuadro{overflow-x:auto;margin:0 -22px;padding:0 22px}
+.vt-rondas{display:grid;grid-template-columns:repeat(var(--n),minmax(170px,1fr));gap:14px;min-width:calc(var(--n) * 184px)}
+.vt-ronda{display:flex;flex-direction:column;gap:10px}
+.vt-ronda>p{margin:0;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--verde);border-bottom:2px solid var(--tinta);padding-bottom:6px}
+.vt-ronda>div{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:10px}
+.vt-llave{border:1.5px solid var(--tinta);border-radius:10px;overflow:hidden;font-size:13px}
+.vt-llave.final{border-color:var(--verde);border-width:2px}
+.vt-llave .h{background:var(--verde);color:var(--blanco);font-weight:800;padding:3px 10px;font-size:12px}
+.vt-llave .p{padding:7px 10px;display:flex;justify-content:space-between;gap:8px}
+.vt-llave .p+.p{border-top:1px solid var(--linea)}
+.vt-llave .p.gana{font-weight:800;color:var(--verde-osc)}
+.vt-llave .p.nada{color:var(--tinta-2)}
+.vt-campeones{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.vt-campeones div{border-radius:14px;padding:18px;background:var(--verde);color:var(--blanco)}
+.vt-campeones div+div{background:var(--verde-claro);color:var(--verde-osc)}
+.vt-campeones small{display:block;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.vt-campeones b{display:block;font-family:var(--display);font-size:24px;line-height:1.15;margin-top:6px}
+@media (max-width:600px){.vt-cab{grid-template-columns:84px 1fr;gap:14px}.vt-sec{padding:18px}.vt-cuadro{margin:0 -18px;padding:0 18px}.vt-campeones{grid-template-columns:1fr}.vt-fila{grid-template-columns:54px 1fr;align-items:start}.vt-fila .h{padding-top:2px}.vt-fila .vs i{display:block;padding:1px 0;font-size:12px}.vt-fila .tag{grid-column:2;justify-self:start}.vt-zonas{grid-template-columns:1fr;gap:12px}.vt-lista li{padding:7px 0}}
 dialog.insc{border:0;border-radius:22px;padding:0;width:min(460px,calc(100vw - 32px));box-shadow:0 30px 80px rgba(0,0,0,.3)}
 dialog.insc::backdrop{background:rgba(16,35,26,.55)}
 .insc form,.insc .res{padding:26px;display:grid;gap:14px}
@@ -431,7 +485,7 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
       </div>
       <div class="torneos" id="lista-torneos">
         <article class="torneo prueba" data-id="prueba" data-fin="2099-12-31" hidden>
-          <img src="fotos/torneos/t-1315nov.jpg" alt="" loading="lazy" width="719" height="1280">
+          <img src="fotos/torneos/prueba.jpg" alt="Flyer: Torneo Caballeros Suma 12 (prueba)" loading="lazy" width="1080" height="1920">
           <div class="t-info">
             <p class="t-fecha">PRUEBA · SOLO VISIBLE CON EL LINK DE PRUEBA</p>
             <h3>Torneo de prueba</h3>
@@ -495,8 +549,27 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
     </div>
   </section>
 </main>
+<!-- VER TORNEO (se abre desde el botón "Ver torneo" de cada tarjeta: #torneo/<id>) -->
+<main class="vista" id="v-torneo" hidden>
+  <section>
+    <div class="in">
+      <a class="vt-volver" href="#torneos">← Todos los torneos</a>
+      <div class="vt-cab">
+        <img id="vt-flyer" src="" alt="">
+        <div>
+          <p class="eyebrow" id="vt-fecha"></p>
+          <h2 id="vt-tit">Torneo</h2>
+          <p class="t-lugar" id="vt-lugar" style="margin:8px 0 0"></p>
+        </div>
+      </div>
+      <div class="vt-cats" id="vt-cats" role="group" aria-label="Categoría"></div>
+      <div class="vt-tabs" id="vt-tabs" role="tablist" aria-label="Información del torneo" hidden></div>
+      <div id="vt-cuerpo"><p class="vt-vacio">Cargando torneo…</p></div>
+    </div>
+  </section>
+</main>
 <script>
-(function(){var hoy=new Date();var n=0;document.querySelectorAll('#lista-torneos .torneo').forEach(function(t){var f=new Date(t.dataset.fin+'T23:59:59-03:00');if(f<hoy){t.remove()}else n++});if(!n)document.getElementById('torneos-vacio').hidden=false;})();
+(function(){var hoy=new Date();var n=0;document.querySelectorAll('#lista-torneos .torneo').forEach(function(t){var f=new Date(t.dataset.fin+'T23:59:59-03:00');if(f<hoy){t.hidden=true;t.dataset.pasado='1'}else n++});if(!n)document.getElementById('torneos-vacio').hidden=false;})();
 </script>
 
 
@@ -581,15 +654,78 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
         h+='</details>'});
       box.innerHTML=h+'</div>';
       btn.disabled=e!=='abierta';btn.hidden=false;
+      if(!card.querySelector('[data-ver]')){var ver=document.createElement('a');ver.className='btn copiar';ver.dataset.ver='';ver.href='#torneo/'+id;ver.textContent='Ver torneo';card.querySelector('.t-pie').appendChild(ver)}
       var gb=card.querySelector('[data-gest]');if(gb){gb.hidden=e!=='abierta'||!cs.some(function(c){return c.inscriptos.length})}
       if(e==='antes'&&!pintar.t){var ms=new Date(cs[0].apertura+'-03:00')-Date.now()+1500;if(ms<6*36e5){pintar.t=setTimeout(function(){pintar.t=0;cargar()},Math.max(ms,1000))}}
     });
   }
+  /* ---------- Ver torneo: inscriptos, zonas, horarios, cuadro y campeones ---------- */
+  var vtCat={}, vtTab='insc';
+  var TABS=[['insc','Inscriptos'],['zonas','Zonas'],['crono','Cronograma'],['cuadro','Cuadro final']];
+  var RONDAS=[['oct','Octavos'],['cua','Cuartos'],['sem','Semis'],['fin','Final']];
+  var DIAS=['vie','sab','sáb','dom'];
+  function ronda(f){f=String(f||'').toLowerCase();for(var i=0;i<RONDAS.length;i++)if(f.indexOf(RONDAS[i][0])===0)return i;return-1}
+  function ordDia(d){d=String(d||'').toLowerCase().slice(0,3);var i=DIAS.indexOf(d);return i<0?9:(i>1?i-1:i)}
+  function gano(p,k){var g=String(p.ganador||'').trim();if(!g)return false;if(g===String(k))return true;return g.toLowerCase()===String(k===1?p.p1:p.p2).toLowerCase()}
+  function secc(t,sub,html){return'<section class="vt-sec"><h3>'+t+(sub?'<small>'+sub+'</small>':'')+'</h3>'+html+'</section>'}
+  function vacio(t){return'<p class="vt-vacio">'+t+'</p>'}
+  function verT(){
+    var h=location.hash.slice(1);if(h.indexOf('torneo/')!==0)return;
+    var id=decodeURIComponent(h.slice(7)), card=document.querySelector('.torneo[data-id="'+id+'"]');
+    var cuerpo=document.getElementById('vt-cuerpo'), chips=document.getElementById('vt-cats'), tabs=document.getElementById('vt-tabs');tabs.hidden=true;
+    if(!card){document.getElementById('vt-tit').textContent='Torneo no encontrado';chips.innerHTML='';cuerpo.innerHTML=vacio('Este torneo ya no está publicado. <a href="#torneos">Ver los torneos</a>.');return}
+    var inf=infoT(id), im=document.getElementById('vt-flyer');
+    im.src=inf.flyer||'';im.alt=inf.flyer?'Flyer del torneo':'';im.hidden=!inf.flyer;
+    var vtH=document.getElementById('vt-tit'), vtT=inf.titulo||'Torneo';
+    if(vtH.getAttribute('aria-label')!==vtT&&vtH.textContent!==vtT){vtH.removeAttribute('aria-label');vtH.textContent=vtT}
+    document.getElementById('vt-fecha').textContent=inf.fecha||'';
+    document.getElementById('vt-lugar').textContent=inf.lugar||'';
+    document.title=(inf.titulo||'Torneo')+' · Complejo Ramirez Padel Club';
+    if(!datos){chips.innerHTML='';cuerpo.innerHTML=vacio(falla?'No se pudo cargar el torneo. <button type="button" class="btn copiar" style="padding:6px 14px;font-size:13px" data-reintentar>Reintentar</button>':'Cargando torneo…');return}
+    var cs=cats(id);
+    if(!cs.length){chips.innerHTML='';cuerpo.innerHTML=vacio('Todavía no hay información cargada para este torneo.');return}
+    var sel=vtCat[id]&&cs.some(function(c){return c.categoria===vtCat[id]})?vtCat[id]:cs[0].categoria;
+    chips.innerHTML=cs.map(function(c){return'<button type="button" data-vtcat="'+esc(c.categoria)+'" aria-pressed="'+(c.categoria===sel)+'">'+esc(c.categoria)+'</button>'}).join('');
+    var c=cs.filter(function(x){return x.categoria===sel})[0];
+    var zonas=c.zonas||[], ps=c.partidos||[];
+    var sec={};
+    // Inscriptos
+    var adentro=c.inscriptos.filter(function(i){return!i.espera});
+    sec.insc=secc('Inscriptos',adentro.length+(c.cupo?' de '+c.cupo:'')+' parejas',c.inscriptos.length?'<ol class="vt-lista">'+c.inscriptos.map(function(i,n){return'<li'+(i.espera?' class="esp"':'')+'><b>'+(n+1)+'</b><span>'+esc(i.pareja)+'</span>'+(i.espera?'<small>lista de espera</small>':'')+'</li>'}).join('')+'</ol>':vacio('Todavía no hay inscriptos.'));
+    // Zonas
+    sec.zonas=secc('Zonas','',zonas.length?'<div class="vt-zonas">'+zonas.map(function(z){return'<div class="vt-zona"><p>Zona<b>'+esc(z.zona)+'</b></p><ul>'+z.parejas.map(function(p){return'<li>'+esc(p)+'</li>'}).join('')+'</ul></div>'}).join('')+'</div>':vacio('Las zonas se publican cuando cierra la inscripción.'));
+    // Horarios
+    var conHora=ps.filter(function(p){return(p.hora||p.dia)&&ronda(p.fase)<0}).slice().sort(function(a,b){return ordDia(a.dia)-ordDia(b.dia)||String(a.hora).localeCompare(String(b.hora))});
+    var dias=[];conHora.forEach(function(p){var d=p.dia||'Sin día';if(dias.indexOf(d)<0)dias.push(d)});
+    sec.crono=secc('Cronograma','',conHora.length?dias.map(function(d){return'<div class="vt-dia"><h4>'+esc(d)+'</h4>'+conHora.filter(function(p){return(p.dia||'Sin día')===d}).map(function(p){
+      return'<div class="vt-fila"><span class="h">'+esc(p.hora||'—')+'</span><span class="vs">'+esc(p.p1||'A definir')+'<i>vs</i>'+esc(p.p2||'A definir')+(p.resultado?'<span class="res">'+esc(p.resultado)+'</span>':'')+'</span>'+(p.fase?'<span class="tag">'+esc(p.fase)+'</span>':'')+'</div>'}).join('')+'</div>'}).join(''):vacio('Los horarios se publican junto con las zonas.'));
+    // Cuadro
+    var llaves=ps.filter(function(p){return ronda(p.fase)>=0});
+    if(llaves.length){
+      var desde=Math.min.apply(null,llaves.map(function(p){return ronda(p.fase)}));
+      var cols=RONDAS.slice(desde).map(function(r,k){var i=desde+k, lista=llaves.filter(function(p){return ronda(p.fase)===i}), falta=Math.pow(2,3-i)-lista.length;
+        for(var j=0;j<falta;j++)lista.push({});
+        return'<div class="vt-ronda"><p>'+r[1]+'</p><div>'+lista.map(function(p){
+          var pp=function(k){var n=k===1?p.p1:p.p2;return'<div class="p'+(gano(p,k)?' gana':'')+(n?'':' nada')+'"><span>'+esc(n||'A definir')+'</span></div>'};
+          return'<div class="vt-llave'+(i===3?' final':'')+'">'+(p.hora?'<div class="h">'+esc(p.hora)+(p.resultado?' · '+esc(p.resultado):'')+'</div>':(p.resultado?'<div class="h">'+esc(p.resultado)+'</div>':''))+pp(1)+pp(2)+'</div>'}).join('')+'</div></div>'}).join('');
+      sec.cuadro=secc('Cuadro final','','<div class="vt-cuadro"><div class="vt-rondas" style="--n:'+(4-desde)+'">'+cols+'</div></div>');
+    }else sec.cuadro=secc('Cuadro final','',vacio('El cuadro se arma cuando terminan las zonas.'));
+    // Campeones
+    var fin=llaves.filter(function(p){return ronda(p.fase)===3})[0];
+    if(fin&&(gano(fin,1)||gano(fin,2))){var g1=gano(fin,1);
+      sec.cuadro+=secc('Campeones','','<div class="vt-campeones"><div><small>Campeones</small><b>'+esc(g1?fin.p1:fin.p2)+'</b></div><div><small>Subcampeones</small><b>'+esc(g1?fin.p2:fin.p1)+'</b></div></div>');
+    }
+    tabs.innerHTML=TABS.map(function(t){return'<button type="button" role="tab" data-vttab="'+t[0]+'" aria-selected="'+(t[0]===vtTab)+'">'+t[1]+'</button>'}).join('');tabs.hidden=false;
+    cuerpo.innerHTML=sec[vtTab];
+    if(window.animarTorneo)window.animarTorneo(id);
+  }
+  document.addEventListener('click',function(ev){var t=ev.target.closest('[data-vttab]');if(t){vtTab=t.dataset.vttab;verT();return}var b=ev.target.closest('[data-vtcat]');if(!b)return;var id=decodeURIComponent(location.hash.slice(8));vtCat[id]=b.dataset.vtcat;verT()});
+  window.addEventListener('hashchange',function(){vtTab='insc';verT()});
   function cargar(){
     if(!INSC_URL){pintar();return Promise.resolve()}
     var intento=function(n){
-      return fetch(INSC_URL+(INSC_URL.indexOf('?')<0?'?':'&')+'t='+Date.now()).then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw 0;datos=j;falla=false;pintar()})
-        .catch(function(){if(n<3)return new Promise(function(ok){setTimeout(ok,1500*(n+1))}).then(function(){return intento(n+1)});falla=true;pintar()});
+      return fetch(INSC_URL+(INSC_URL.indexOf('?')<0?'?':'&')+'t='+Date.now()).then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw 0;datos=j;falla=false;pintar();verT()})
+        .catch(function(){if(n<3)return new Promise(function(ok){setTimeout(ok,1500*(n+1))}).then(function(){return intento(n+1)});falla=true;pintar();verT()});
     };
     return intento(0);
   }
@@ -598,7 +734,7 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){gerr.textContent='Escribí primero el email con el que se inscribieron.';gerr.hidden=false;return}
       fetch(INSC_URL,{method:'POST',body:JSON.stringify({accion:'reenviar',torneo:actual,torneo_nombre:nombreT(actual),torneo_info:infoT(actual),email:em})}).catch(function(){});
       gerr.textContent='Si hay una inscripción con ese email en este torneo, te reenviamos el código. Fijate en tu correo (y en spam).';gerr.hidden=false;return}
-    if(ev.target.closest('[data-reintentar]')){falla=false;pintar();cargar();return}
+    if(ev.target.closest('[data-reintentar]')){falla=false;pintar();verT();cargar();return}
     var b=ev.target.closest('[data-insc]');
     if(b){var card=b.closest('.torneo');actual=card.dataset.id;
       document.getElementById('insc-tit').textContent=card.querySelector('h3').textContent;
@@ -662,6 +798,7 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
     }).catch(function(){err.textContent='No se pudo conectar. Revisá la conexión y probá de nuevo.';err.hidden=false})
     .finally(function(){btn.disabled=false;btn.textContent='Inscribirnos'});
   });
+  verT();
   cargar();
 })();
 </script>
@@ -804,13 +941,17 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
 
 <script>
 (function(){
-  var vistas=['inicio','complejo','buffet','clases','torneos','fotos','reservas'];
+  var vistas=['inicio','complejo','buffet','clases','torneos','fotos','reservas','torneo'];
+  var titulo0=document.title;
   function mostrar(){
     var v=(location.hash||'#inicio').slice(1);
+    if(v.indexOf('torneo/')===0) v='torneo';
+    else if(document.title!==titulo0) document.title=titulo0;
     if(vistas.indexOf(v)<0) v='inicio';
     vistas.forEach(function(n){document.getElementById('v-'+n).hidden=(n!==v)});
+    var tab=v==='torneo'?'torneos':v;
     document.querySelectorAll('.tabs a[data-v]').forEach(function(a){
-      if(a.dataset.v===v){a.setAttribute('aria-current','page');try{a.scrollIntoView({block:'nearest',inline:'center'})}catch(e){}}
+      if(a.dataset.v===tab){a.setAttribute('aria-current','page');try{a.scrollIntoView({block:'nearest',inline:'center'})}catch(e){}}
       else a.removeAttribute('aria-current');
     });
     window.scrollTo(0,0);

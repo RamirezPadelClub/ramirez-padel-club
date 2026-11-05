@@ -179,6 +179,44 @@
     document.querySelectorAll('.dato').forEach(function(el){ el.classList.add('visto'); });
   }
 
+  /* ---------- Ver torneo: la vista se arma después de cargar la página ---------- */
+  var vtUltimo = null;
+  var vtGrupos = ['.vt-sec', '.vt-lista li', '.vt-zona', '.vt-dia', '.vt-fila', '.vt-ronda', '.vt-llave', '.vt-campeones div'];
+  window.animarTorneo = function(id){
+    var vista = document.getElementById('v-torneo');
+    if (!vista) return;
+    var cab = vista.querySelector('.vt-cab');
+    if (id !== vtUltimo && cab) {        // cabecera: solo al entrar a otro torneo
+      vtUltimo = id;
+      var h2 = cab.querySelector('h2');
+      if (h2 && !quieto && h2.textContent.trim() && !h2.querySelector('.ch')) enLetras(h2, 0);
+      [cab.querySelector('img'), cab.querySelector('.eyebrow'), cab.querySelector('.t-lugar')].forEach(function(el, i){
+        if (!el) return;
+        el.classList.remove('entra'); void el.offsetWidth; el.classList.add('entra');
+        el.style.animationDelay = (i === 0 ? 0 : 0.1 + i * 0.25) + 's';
+      });
+      vista.querySelectorAll('.vt-cats button').forEach(function(b, i){
+        b.classList.add('entra'); b.style.animationDelay = (0.45 + i * 0.08) + 's';
+      });
+      var tabs = vista.querySelector('.vt-tabs');
+      if (tabs) { tabs.classList.add('entra'); tabs.style.animationDelay = '.6s'; }
+    }
+    if (!obs) return;
+    vtGrupos.forEach(function(sel){
+      var porPadre = new Map();
+      vista.querySelectorAll('#vt-cuerpo ' + sel).forEach(function(el){
+        if (el.classList.contains('revela')) return;
+        var p = el.parentNode, i = porPadre.get(p) || 0;
+        porPadre.set(p, i + 1);
+        el.classList.add('revela');
+        el.style.setProperty('--i', Math.min(i, 8));
+        obs.observe(el);
+      });
+    });
+  };
+  if (location.hash.indexOf('#torneo/') === 0) window.animarTorneo(decodeURIComponent(location.hash.slice(8)));
+  window.addEventListener('hashchange', function(){ if (location.hash.indexOf('#torneo/') !== 0) vtUltimo = null; });
+
   /* ---------- Atajos con inclinación 3D (solo con mouse) ---------- */
   if (!quieto && matchMedia('(hover: hover) and (pointer: fine)').matches) {
     document.querySelectorAll('.atajo').forEach(function(a){

@@ -187,3 +187,15 @@
   .anim .galeria figure::after,.anim .extra::before{display:none}
   .galeria figure.baraja{animation:none}
 }
+
+/* ---------- Ver torneo ---------- */
+.vt-cab .pal{display:inline-block;white-space:nowrap}
+.vt-cab .ch{display:inline-block;clip-path:inset(0 0 100% 0);transform:translateY(40%);animation:corte .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.15s + var(--i) * 26ms)}
+.vt-cab .entra{opacity:0;transform:translateY(18px);animation:sube .7s cubic-bezier(.2,.8,.2,1) forwards}
+.vt-cab img.entra{transform:translateY(18px) rotate(-4deg) scale(.92);animation:sube .8s cubic-bezier(.2,.8,.2,1) forwards}
+.vt-cats button.entra,.vt-tabs.entra{opacity:0;transform:translateY(12px);animation:sube .5s cubic-bezier(.2,.8,.2,1) forwards}
+.anim .vt-llave.revela,.anim .vt-zona.revela{transform:translateY(16px) scale(.97)}
+.anim .vt-campeones div.revela{transform:scale(.92)}
+.anim .vt-campeones div.revela.visto{transform:none}
+.vt-tabs button{transition:background-color .25s,color .25s}
+@media (prefers-reduced-motion:reduce){.vt-cab .ch,.vt-cab .entra,.vt-cats button.entra,.vt-tabs.entra{animation:none!important;clip-path:none;transform:none;opacity:1}}
