@@ -62,7 +62,7 @@ h1 .ch{display:inline-block;opacity:0;filter:blur(10px);transform:translateY(14p
 .obra .fila{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
 .obra .fila span:last-child{color:var(--lima);font-variant-numeric:tabular-nums}
 .barra{height:10px;border-radius:999px;background:rgba(242,243,236,.08);overflow:hidden}
-.barra i{display:block;height:100%;width:0;border-radius:inherit;background:repeating-linear-gradient(-45deg,var(--lima) 0 10px,#B9D12C 10px 20px);background-size:28px 28px;animation:carga 4.5s cubic-bezier(.2,.8,.2,1) .8s forwards,rayas 1s linear infinite}
+.barra i{display:block;height:100%;width:0;border-radius:inherit;background:repeating-linear-gradient(-45deg,var(--lima) 0 10px,#B9D12C 10px 20px);background-size:28px 28px;animation:carga 14s cubic-bezier(.3,.6,.3,1) .8s forwards,rayas 1s linear infinite}
 @keyframes carga{to{width:87%}}
 @keyframes rayas{to{background-position:28px 0}}
 .cinta{position:relative;height:46px;overflow:hidden;transform:rotate(-2deg);margin-inline:calc(-1 * max(20px,env(safe-area-inset-left,0px)));
@@ -126,7 +126,7 @@ footer a:hover{color:var(--lima)}
   }
   var pct=document.getElementById('pct'),fin=87;
   if(quieto){pct.textContent=fin+'%';return}
-  var t0=null;function paso(ts){if(!t0)t0=ts+800;var k=Math.max(0,Math.min(1,(ts-t0)/4500)),e=1-Math.pow(1-k,3);pct.textContent=Math.round(fin*e)+'%';if(k<1)requestAnimationFrame(paso)}
+  var t0=null;function paso(ts){if(!t0)t0=ts+800;var k=Math.max(0,Math.min(1,(ts-t0)/14000)),e=1-Math.pow(1-k,2);pct.textContent=Math.round(fin*e)+'%';if(k<1)requestAnimationFrame(paso)}
   requestAnimationFrame(paso);
 })();
 </script>
