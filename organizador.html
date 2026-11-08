@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Organizadores · Carga de resultados</title>
+<link rel="icon" href="img/favicon-32.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#0E7A45">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@500;700;800&family=Unbounded:wght@600;700;800&display=swap">
+<style>
+/* Por defecto: identidad de los torneos del Complejo. Un torneo del Tour cambia a la identidad del Tour. */
+:root{--bg:#F4F5F2;--panel:#FFFFFF;--fg:#0A0F0C;--muted:#3B4A41;--line:#C9D3CC;--green:#0E7A45;--on:#FFFFFF;--soft:#E1F0E7;--err:#C0392B;
+  --display:'Big Shoulders Display','Arial Narrow',sans-serif;--body:'Space Grotesk',system-ui,sans-serif;color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-modo="tour"]{--bg:#0B0E33;--panel:#141A52;--fg:#F2F3EC;--muted:#A9AECB;--line:#2E3778;--green:#D7F03F;--on:#0B0E33;--soft:rgba(215,240,63,.14);--err:#FF7A7A;
+  --display:'Unbounded','Arial Black',sans-serif;--body:'Manrope',system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:15px/1.45 var(--body)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+[hidden]{display:none!important}
+.bar{position:sticky;top:0;z-index:5;background:#0E7A45;color:#fff;display:flex;align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px))}
+:root[data-modo="tour"] .bar{background:#141A52;border-bottom:3px solid #D7F03F}
+.bar img{width:36px;height:36px;object-fit:contain}
+.bar .t{flex:1;min-width:0}.bar b{display:block;font:900 17px/1.1 var(--display);text-transform:uppercase}.bar small{opacity:.85;font-size:12px}
+.bar button{background:transparent;border:1px solid rgba(255,255,255,.6);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:700;cursor:pointer;color:#fff}
+main{max-width:560px;margin:0 auto;padding-block:18px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font:900 30px/1 var(--display);text-transform:uppercase;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 16px;font-size:14px}
+.card{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:16px}
+.login{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:28px 18px}
+.login img{width:104px;height:104px;object-fit:contain}
+label.l{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);align-self:flex-start}
+.pin{width:100%;height:54px;font:900 26px var(--display);letter-spacing:.4em;text-align:center;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg)}
+.btn{width:100%;padding:13px;border:0;border-radius:10px;background:var(--green);color:var(--on);font:700 16px var(--body);cursor:pointer}
+.btn:disabled{opacity:.45;cursor:not-allowed}.btn.sec{background:transparent;color:var(--fg);border:1.5px solid var(--line)}
+.msg{font-size:13px;min-height:1.2em;margin:8px 0 0}.msg.err{color:var(--err)}.msg.ok{color:var(--green)}
+.install{display:flex;gap:10px;font-size:13px;background:var(--soft);border-radius:10px;padding:10px 12px;margin-bottom:14px}
+.sel{width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--panel);color:var(--fg);font:600 15px var(--body);margin-bottom:14px}
+.grupo{margin-bottom:18px}.grupo h2{font:900 18px var(--display);text-transform:uppercase;margin:0 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+.grupo h2 span{font:500 12px var(--body);text-transform:none;color:var(--muted)}
+.m{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--panel);cursor:pointer;margin-bottom:8px}
+.m:disabled{cursor:not-allowed;opacity:.6}
+.m .h{font:900 15px var(--display);color:var(--muted)}.m .p{font-size:13px;line-height:1.3}.m .p i{font-style:normal;color:var(--muted)}
+.st{font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}.st.pen{border:1px solid var(--line);color:var(--muted)}.st.wait{color:var(--muted)}
+.rs-sc{display:inline-flex;gap:12px;font-variant-numeric:tabular-nums}.rs-col{display:flex;flex-direction:column;align-items:center}
+.rs-col b{font:500 14px/calc(13px*1.3) var(--body);color:var(--muted)}.rs-col b.g{font-weight:800;color:var(--green)}
+.back{border:0;background:none;color:var(--green);font-weight:700;cursor:pointer;padding:0;margin-bottom:10px}
+.ct{font:900 22px/1.1 var(--display);text-transform:uppercase;margin:0}.cs{font-size:13px;color:var(--muted);margin:2px 0 10px}
+.step{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+.score{display:grid;grid-template-columns:1fr repeat(3,52px);gap:6px;align-items:center}
+.score .nm{font-size:14px;font-weight:700;line-height:1.2}.score .hd{font-size:11px;color:var(--muted);text-align:center;font-weight:700}
+.score input{width:100%;height:48px;text-align:center;font:900 22px var(--display);border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+.score input.bad{border-color:var(--err);color:var(--err);box-shadow:0 0 0 1px var(--err)}
+label.file{display:flex;gap:10px;align-items:center;border:1.5px dashed var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;font-size:13px}
+label.file input{position:absolute;opacity:0;width:1px;height:1px}label.file:focus-within{outline:2px solid var(--green)}
+label.file img{width:46px;height:46px;object-fit:cover;border-radius:6px;background:var(--soft)}
+.placa{display:flex;flex-direction:column;gap:10px;margin-top:12px}.placa img{width:100%;border-radius:10px;border:1px solid var(--line)}
+.done{font-weight:700;color:var(--green)}
+a.btn{display:block;text-align:center;text-decoration:none}
+.vacio{color:var(--muted);text-align:center;padding:24px 0}
+</style>
+</head>
+<body>
+<header class="bar"><img id="barLogo" src="img/logo-complejo.png" alt="Escudo"><div class="t"><b id="barT">Organizadores</b><small id="barS">Carga de resultados</small></div><button id="salir" hidden>Salir</button></header>
+<main>
+  <section id="vLogin">
+    <div class="card login">
+      <img src="img/logo-complejo.png" alt="Escudo del Complejo Ramirez Padel Club">
+      <h1>Carga de resultados</h1>
+      <p class="sub">Entrá con la clave de tu sede.</p>
+      <label class="l" for="clave">Clave</label>
+      <input id="clave" class="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8">
+      <button class="btn" id="entrar">Entrar</button>
+      <p class="msg" id="loginMsg" role="status"></p>
+    </div>
+  </section>
+
+  <section id="vLista" hidden>
+    <div class="install"><span>Para tenerla como app: en el navegador tocá Compartir o el menú ⋮ › <b>Agregar a pantalla de inicio</b>.</span></div>
+    <label class="l" for="cat">Torneo y categoría</label>
+    <select id="cat" class="sel"></select>
+    <div id="lista"><p class="vacio">Cargando partidos…</p></div>
+  </section>
+
+  <section id="vCarga" hidden>
+    <button class="back" id="volver">‹ Partidos</button>
+    <h2 class="ct" id="cT"></h2><p class="cs" id="cS"></p>
+    <div class="card">
+      <div class="step">Sets</div>
+      <div class="score" id="score"></div>
+      <div class="step">Foto del partido</div>
+      <label class="file" for="foto"><img id="fotoMini" alt=""><span id="fotoTxt">Elegí o sacá la foto de las dos parejas</span><input id="foto" type="file" accept="image/*"></label>
+      <button class="btn" id="guardar" style="margin-top:14px">Guardar resultado</button>
+      <p class="msg" id="msg" role="status"></p>
+      <div class="placa" id="placa" hidden>
+        <span class="done">Listo, ya está en la página.</span>
+        <img id="placaImg" alt="Placa del resultado para Instagram">
+        <a class="btn" id="bajar" download="resultado.jpg">Descargar placa</a>
+        <button class="btn sec" id="otro">Cargar otro partido</button>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="resultados.js"></script>
+<script>
+const URL_API='https://script.google.com/macros/s/AKfycby6BVoENl5ojrVDm1smQngTQ73Xwntpqg9V0iIAJrWytFsEYOMr13Fudd9cpvtS3y7l/exec';
+const LOGO='img/logo-complejo.png',LOGO_RUTA='img/logo-laruta.png',LOGO_RACING='img/logo-racing.png';
+const ESCUDO="data:image/svg+xml;charset=utf-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="240" height="280" viewBox="0 0 120 140"><path d="M18 4 H102 L116 18 V86 L60 136 L4 86 V18 Z" fill="#141A52" stroke="#D7F03F" stroke-width="3"/><rect x="38" y="26" width="44" height="78" fill="#2A3A8C" stroke="#F2F3EC" stroke-width="2"/><line x1="38" y1="46" x2="82" y2="46" stroke="#F2F3EC" stroke-width="1.6"/><line x1="38" y1="84" x2="82" y2="84" stroke="#F2F3EC" stroke-width="1.6"/><line x1="60" y1="46" x2="60" y2="84" stroke="#F2F3EC" stroke-width="1.6"/><line x1="34" y1="65" x2="86" y2="65" stroke="#D7F03F" stroke-width="3"/><circle cx="72" cy="76" r="4.5" fill="#D7F03F"/></svg>');
+const SEDES={complejo:'Ramírez Pádel Club',ruta:'La Ruta Pádel',racing:'Club Racing',todas:'Organización'};
+const FASES={'16':'DIECISEISAVOS DE FINAL',oct:'OCTAVOS DE FINAL',cua:'CUARTOS DE FINAL',sem:'SEMIFINAL',fin:'FINAL'};
+const $=id=>document.getElementById(id);
+const esc=t=>{const d=document.createElement('div');d.textContent=t==null?'':t;return d.innerHTML};
+let org=null,clave='',datos=null,catSel=null,C=null,sel=null,foto=null;
+try{const g=JSON.parse(sessionStorage.getItem('org')||'null');if(g){org=g.org;clave=g.clave}}catch(e){}
+
+function post(body){return fetch(URL_API,{method:'POST',body:JSON.stringify(body)}).then(r=>r.json())}
+function vista(id){['vLogin','vLista','vCarga'].forEach(v=>$(v).hidden=v!==id);window.scrollTo(0,0)}
+function modo(tour){document.documentElement.dataset.modo=tour?'tour':'complejo';$('barLogo').src=tour?ESCUDO:LOGO}
+
+/* ---------- entrar ---------- */
+async function entrar(){
+  const m=$('loginMsg'),c=$('clave').value.trim();
+  if(c.length<4){m.textContent='Escribí la clave de tu sede.';m.className='msg err';return}
+  $('entrar').disabled=true;m.className='msg';m.textContent='Entrando…';
+  try{const j=await post({accion:'org_login',clave:c});
+    if(!j.ok){m.className='msg err';m.textContent=j.error==='bloqueado'?'Demasiados intentos. Esperá unos minutos.':'La clave no es correcta.';return}
+    org={sede:j.sede,nombre:j.nombre};clave=c;try{sessionStorage.setItem('org',JSON.stringify({org,clave}))}catch(e){}
+    $('clave').value='';m.textContent='';arrancar();
+  }catch(e){m.className='msg err';m.textContent='No se pudo conectar. Revisá internet y probá de nuevo.'}
+  finally{$('entrar').disabled=false}
+}
+$('entrar').onclick=entrar;$('clave').addEventListener('keydown',e=>{if(e.key==='Enter')entrar()});
+$('salir').onclick=()=>{org=null;clave='';try{sessionStorage.removeItem('org')}catch(e){}$('salir').hidden=true;$('barT').textContent='Organizadores';$('barS').textContent='Carga de resultados';modo(false);vista('vLogin')};
+
+function puede(p){return org&&(org.sede==='todas'||(p.sede||'complejo')===org.sede)}
+async function cargar(){
+  const r=await fetch(URL_API+'?t='+Date.now());const j=await r.json();if(!j.ok)throw 0;datos=j;
+  const cats=j.categorias.filter(c=>(c.partidos||[]).some(puede));
+  const prev=$('cat').value;
+  $('cat').innerHTML=cats.length?cats.map((c,i)=>`<option value="${i}">${esc((c.nombre?c.nombre+' · ':'')+c.categoria)} (${esc(c.torneo)})</option>`).join(''):'<option>No hay partidos de tu sede</option>';
+  datos._cats=cats;if(prev&&cats[prev])$('cat').value=prev;
+}
+async function arrancar(){
+  $('salir').hidden=false;$('barT').textContent=SEDES[org.sede]||org.nombre;$('barS').textContent='Carga de resultados';
+  vista('vLista');$('lista').innerHTML='<p class="vacio">Cargando partidos…</p>';
+  try{await cargar();pintarLista()}catch(e){$('lista').innerHTML='<p class="vacio">No se pudieron cargar los partidos. <button class="btn sec" id="re">Reintentar</button></p>';$('re').onclick=arrancar}
+}
+$('cat').onchange=pintarLista;
+
+/* ---------- lista ---------- */
+function pintarLista(){
+  const cat=datos&&datos._cats[$('cat').value];
+  if(!cat){$('lista').innerHTML='<p class="vacio">Todavía no hay partidos cargados para tu sede.</p>';return}
+  catSel=cat;C=Resultados.preparar(cat);modo(cat.tipo==='tour');
+  const grupos=[];
+  C.partidos.forEach(p=>{if(!puede(p))return;const g=p.fase||'Partidos';let x=grupos.find(y=>y.f===g);if(!x){x={f:g,ps:[]};grupos.push(x)}x.ps.push(p)});
+  $('lista').innerHTML=grupos.map(g=>`<div class="grupo"><h2>${esc(g.f)}<span>${g.ps.filter(p=>p._sets.length).length} de ${g.ps.length} cargados</span></h2>`+
+    g.ps.map(p=>{const A=C.nombre(p,1),B=C.nombre(p,2),bloq=!A.ok||!B.ok;
+      return `<button class="m" type="button" data-n="${p._n}" ${bloq?'disabled':''}><span class="h">${esc(p.hora||'')}</span><span class="p">${A.ok?esc(A.n):'<i>'+esc(A.n)+'</i>'}<br>${B.ok?esc(B.n):'<i>'+esc(B.n)+'</i>'}</span>${p._sets.length?Resultados.setsHTML(p._sets):`<span class="st ${bloq?'wait':'pen'}">${bloq?'Esperando':'Cargar'}</span>`}</button>`}).join('')+'</div>').join('')||'<p class="vacio">No hay partidos de tu sede en esta categoría.</p>';
+  $('lista').querySelectorAll('.m').forEach(b=>b.onclick=()=>abrir(+b.dataset.n));
+}
+
+/* ---------- carga ---------- */
+function abrir(n){
+  sel=C.partidos[n];const A=C.nombre(sel,1),B=C.nombre(sel,2);
+  $('cT').textContent=(sel.fase||'Partido')+(sel.hora?' · '+sel.hora+' hs':'');
+  $('cS').textContent=catSel.categoria+(sel.id?' · Partido '+sel.id:'')+' · '+(SEDES[sel.sede||'complejo']||'');
+  const v=(i,j)=>sel._sets[i]?sel._sets[i][j]:'';
+  let h='<span></span><span class="hd">1° set</span><span class="hd">2° set</span><span class="hd">Súper TB</span>';
+  [A,B].forEach((L,j)=>{h+=`<span class="nm">${esc(L.n)}</span>`;for(let i=0;i<3;i++)h+=`<input id="s${i}${j}" inputmode="numeric" maxlength="2" aria-label="${esc(L.n)}, ${i<2?'set '+(i+1):'súper tie-break'}" value="${v(i,j)}">`});
+  $('score').innerHTML=h;marcar();$('msg').textContent='';$('placa').hidden=true;$('guardar').hidden=false;
+  foto=null;$('fotoMini').removeAttribute('src');$('fotoTxt').textContent='Elegí o sacá la foto de las dos parejas';$('foto').value='';
+  vista('vCarga');
+}
+function marcar(){for(let i=0;i<3;i++){const A=$('s'+i+'0'),B=$('s'+i+'1');if(!A)return;const a=A.value.trim(),b=B.value.trim();const mal=a!==''&&b!==''&&(isNaN(a)||isNaN(b)||!Resultados.setValido(i,+a,+b));[A,B].forEach(x=>{x.classList.toggle('bad',mal);x.setAttribute('aria-invalid',mal)})}}
+$('score').addEventListener('input',()=>{marcar();$('msg').textContent=''});
+function leer(){const ss=[];for(let i=0;i<3;i++){const a=$('s'+i+'0').value.trim(),b=$('s'+i+'1').value.trim();if(a===''&&b==='')continue;if(a===''||b===''||isNaN(a)||isNaN(b))return{err:'Completá los dos números de cada set.'};ss.push([+a,+b])}
+  const e=Resultados.validar(ss);return e?{err:e}:{sets:ss}}
+$('volver').onclick=$('otro').onclick=()=>{vista('vLista');pintarLista()};
+$('foto').onchange=e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{foto=fr.result;$('fotoMini').src=foto;$('fotoTxt').textContent=f.name};fr.readAsDataURL(f)};
+$('guardar').onclick=async()=>{
+  const r=leer();if(r.err){marcar();$('msg').className='msg err';$('msg').textContent=r.err;return}
+  $('guardar').disabled=true;$('msg').className='msg';$('msg').textContent='Guardando…';
+  try{
+    const j=await post({accion:'resultado',clave,torneo:catSel.torneo,categoria:catSel.categoria,id:sel.id,sets:r.sets});
+    if(!j.ok){$('msg').className='msg err';$('msg').textContent={sets:'El resultado no es válido.',sede:'Este partido no es de tu sede.',partido:'No se encontró el partido en la planilla.',clave:'Tu sesión venció: salí y volvé a entrar.',bloqueado:'Demasiados intentos. Esperá unos minutos.'}[j.error]||'No se pudo guardar.';return}
+    const A=C.nombre(sel,1).n,B=C.nombre(sel,2).n,f=sel.fase||'';
+    sel.resultado=j.resultado;sel._sets=r.sets;
+    $('msg').className='msg ok';$('msg').textContent='Resultado guardado.';$('guardar').hidden=true;
+    cargar().catch(()=>{});
+    if(foto){$('msg').textContent='Resultado guardado. Armando la placa…';
+      const k=Object.keys(FASES).find(x=>f.toLowerCase().startsWith(x)||(x==='16'&&/^diec/i.test(f)));
+      const I={cat:catSel.categoria,extra:catSel.nombre||'',fase:Resultados.esZona(f)?'FASE CLASIFICATORIA':(k?FASES[k]:f.toUpperCase()),A,B,sets:r.sets,w:Resultados.ganadorSets(r.sets)};
+      const d=await (catSel.tipo==='tour'?placaTour:placaComplejo)(I);
+      $('placaImg').src=d;$('bajar').href=d;$('bajar').download=('resultado-'+catSel.categoria+'-'+(sel.id||'')).toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.jpg';
+      $('msg').textContent='';
+    }
+    $('placa').hidden=false;$('placaImg').hidden=!foto;$('bajar').hidden=!foto;
+  }catch(e){$('msg').className='msg err';$('msg').textContent='No se pudo guardar. Revisá internet y probá de nuevo.'}
+  finally{$('guardar').disabled=false}
+};
+
+/* ---------- placas ---------- */
+const cargarImg=src=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=src});
+function chaf(c,x,y,w,h,k){c.beginPath();c.moveTo(x+k,y);c.lineTo(x+w-k,y);c.lineTo(x+w,y+k);c.lineTo(x+w,y+h);c.lineTo(x,y+h);c.lineTo(x,y+k);c.closePath()}
+async function placaTour(I){const r={sets:I.sets};
+  await Promise.all(['800 120px Unbounded','600 40px Unbounded','700 40px Unbounded','800 40px Manrope','600 30px Manrope'].map(f=>document.fonts.load(f).catch(()=>{})));
+  const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;const c=cv.getContext('2d');
+  const NOCHE='#0B0E33',ESC='#141A52',CAN='#2A3A8C',LIMA='#D7F03F',HUESO='#F2F3EC';
+  c.fillStyle=NOCHE;c.fillRect(0,0,1080,1920);
+  // líneas de cancha de fondo
+  c.strokeStyle='rgba(242,243,236,.07)';c.lineWidth=4;c.strokeRect(150,-40,780,2000);c.beginPath();c.moveTo(150,960);c.lineTo(930,960);c.moveTo(540,560);c.lineTo(540,1360);c.moveTo(150,560);c.lineTo(930,560);c.moveTo(150,1360);c.lineTo(930,1360);c.stroke();
+  const esc=await cargarImg(ESCUDO);c.drawImage(esc,470,64,140,163);
+  c.textAlign='center';c.fillStyle=HUESO;c.font='800 128px Unbounded';c.fillText('RAMIREZ',540,368);
+  c.fillStyle=LIMA;c.font='600 40px Unbounded';c.save();c.letterSpacing='16px';c.fillText('PÁDEL TOUR',548,432);c.restore();
+  c.fillStyle=HUESO;c.font='800 42px Manrope';c.textAlign='left';c.fillText(I.cat.toUpperCase(),90,540);c.textAlign='right';c.fillText((I.extra||'').toUpperCase(),990,540);
+  c.textAlign='center';c.fillStyle=LIMA;chaf(c,330,578,420,62,14);c.fill();c.fillStyle=NOCHE;c.font='700 24px Unbounded';c.save();c.letterSpacing='3px';c.fillText(I.fase,541,620);c.restore();
+  const X=90,Y=676,W=900,H=780,img=await cargarImg(foto);
+  c.save();chaf(c,X,Y,W,H,46);c.clip();
+  const s=Math.max(W/img.width,H/img.height),iw=img.width*s,ih=img.height*s;c.drawImage(img,X+(W-iw)/2,Y+(H-ih)/2,iw,ih);
+  c.restore();
+  chaf(c,X,Y,W,H,46);c.lineWidth=6;c.strokeStyle=LIMA;c.stroke();
+  // marcador debajo de la foto, pegado
+  const PY=Y+H-4,PH=190;c.fillStyle=ESC;c.fillRect(X,PY,W,PH);c.strokeStyle=LIMA;c.lineWidth=6;c.strokeRect(X,PY,W,PH);
+  c.fillStyle=LIMA;c.fillRect(X,PY,14,PH);
+  const w=I.w,L=[{n:I.A},{n:I.B}];
+  L.forEach((l,i)=>{const y=PY+78+i*76,t=l.n.toUpperCase().replace('–','-');c.textAlign='left';c.fillStyle=(w===1)===(i===0)?LIMA:HUESO;let fs=40;do{c.font='800 '+fs+'px Manrope';fs--}while(c.measureText(t).width>W-380&&fs>22);c.fillText(t,X+50,y)});
+  for(let j=0;j<3;j++){const cx=X+W-270+j*90;c.fillStyle='rgba(242,243,236,.25)';c.fillRect(cx-45,PY+26,3,PH-52);
+    [0,1].forEach(i=>{const v=r.sets[j]?r.sets[j][i]:'-',o=r.sets[j]?r.sets[j][1-i]:0;c.fillStyle=r.sets[j]&&v>o?LIMA:HUESO;c.textAlign='center';c.font='700 46px Unbounded';c.fillText(String(v),cx,PY+80+i*76)})}
+  // las tres sedes del Tour
+  const lgs=await Promise.all([LOGO,LOGO_RUTA,LOGO_RACING].map(cargarImg));const lh=150;
+  [300,540,780].forEach((cx,k)=>{const lg=lgs[k],lw=Math.min(lg.width*lh/lg.height,170);const h=lw*lg.height/lg.width;c.drawImage(lg,cx-lw/2,1712+(lh-h)/2,lw,h)});
+  return cv.toDataURL('image/jpeg',.9);
+}
+
+
+/* Placa del Complejo (1080x1920), como "Resultado del partido" de la identidad de los torneos del Complejo */
+async function placaComplejo(I){const r={sets:I.sets};
+  await Promise.all(['900 120px "Big Shoulders Display"','700 40px "Space Grotesk"'].map(f=>document.fonts.load(f).catch(()=>{})));
+  const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;const c=cv.getContext('2d');
+  const VERDE='#0E7A45',NEGRO='#0A0F0C',GRIS='#3B4A41';
+  c.fillStyle='#fff';c.fillRect(0,0,1080,1920);
+  const linea=y=>{c.fillStyle=NEGRO;c.fillRect(0,y,1080,4)};
+  // encabezado
+  c.fillStyle=NEGRO;c.font='700 24px "Space Grotesk"';c.textAlign='left';c.save();c.letterSpacing='4px';c.fillText('COMPLEJO RAMIREZ PADEL CLUB',64,128);c.restore();
+  const esc=await cargarImg(LOGO);c.drawImage(esc,1080-64-128,56,128,128);linea(240);
+  // banda verde
+  c.fillStyle=VERDE;c.fillRect(0,244,1080,300);c.fillStyle='#fff';c.font='700 28px "Space Grotesk"';c.save();c.letterSpacing='8px';c.fillText(I.cat.toUpperCase(),64,330);c.restore();
+  c.font='900 210px "Big Shoulders Display"';c.fillText('RESULTADO',58,512);linea(544);
+  // foto
+  const FY=548,FH=820,img=await cargarImg(foto);
+  c.save();c.beginPath();c.rect(0,FY,1080,FH);c.clip();const s=Math.max(1080/img.width,FH/img.height),iw=img.width*s,ih=img.height*s;c.drawImage(img,(1080-iw)/2,FY+(FH-ih)*.45,iw,ih);c.restore();
+  c.fillStyle=VERDE;c.fillRect(0,FY+FH-16,1080,16);linea(FY+FH);
+  // marcador
+  const MY=FY+FH+4,col=124,x0=1080-36-col*3;
+  c.fillStyle=VERDE;c.font='700 24px "Space Grotesk"';c.save();c.letterSpacing='5px';c.fillText(I.fase,64,MY+52);c.restore();
+  c.fillStyle=GRIS;c.font='700 22px "Space Grotesk"';c.textAlign='center';['1º SET','2º SET','3º SET'].forEach((t,j)=>c.fillText(t,x0+col*j+col/2,MY+52));
+  linea(MY+80);
+  const w=I.w,L=[{n:I.A},{n:I.B}];
+  L.forEach((l,i)=>{const y0=MY+84+i*136,gana=(w===1)===(i===0);
+    c.beginPath();c.arc(84,y0+66,10,0,7);if(gana){c.fillStyle=VERDE;c.fill()}else{c.lineWidth=4;c.strokeStyle=NEGRO;c.stroke()}
+    const t=l.n.toUpperCase().replace('–','-');c.textAlign='left';c.fillStyle=gana?NEGRO:GRIS;let fs=62;do{c.font='900 '+fs+'px "Big Shoulders Display"';fs--}while(c.measureText(t).width>x0-130&&fs>30);c.fillText(t,112,y0+88);
+    for(let j=0;j<3;j++){const cx=x0+col*j;c.fillStyle=NEGRO;c.fillRect(cx,y0,4,132);const v=r.sets[j]?r.sets[j][i]:'–',o=r.sets[j]?r.sets[j][1-i]:0;c.textAlign='center';c.fillStyle=r.sets[j]?(v>o?VERDE:NEGRO):GRIS;c.font=(r.sets[j]?'900 84px':'700 60px')+' "Big Shoulders Display"';c.fillText(String(v),cx+col/2+2,y0+96)}
+    c.fillStyle=NEGRO;c.fillRect(x0+col*3,y0,4,132);
+    if(i===0)linea(y0+132)});
+  const FT=MY+84+272;linea(FT);
+  // pie negro
+  c.fillStyle=NEGRO;c.fillRect(0,FT+4,1080,1920-FT-4);c.fillStyle='#fff';c.textAlign='left';c.font='700 32px "Space Grotesk"';c.fillText('@complejo_ramirezpadelclub',64,FT+90);
+  c.globalAlpha=.8;c.font='400 24px "Space Grotesk"';c.fillText('ramirezpadelclub.pages.dev',64,FT+134);c.globalAlpha=1;
+  c.beginPath();c.arc(1080-80,FT+100,14,0,7);c.fillStyle=VERDE;c.fill();
+  return cv.toDataURL('image/jpeg',.9);
+}
+
+
+if(org)arrancar();else vista('vLogin');
+</script>
+</body>
+</html>
