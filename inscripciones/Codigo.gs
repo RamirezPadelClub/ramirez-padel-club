@@ -8,6 +8,9 @@
  *
  * Inscripciones, bajas y cambios de disponibilidad: hasta el martes anterior al torneo, 18 hs.
  * Para dar de baja una pareja: escribí "x" en la columna "baja" de su fila.
+ *
+ * Resultados: los planilleros cargan los resultados desde ramirezpadelclub.pages.dev/organizador
+ * con la clave de su sede (hoja "Organizadores", que la página nunca lee).
  * El estado (Adentro / Lista de espera) se recalcula solo.
  */
 
@@ -22,8 +25,11 @@ const H_INSC = 'Inscripciones';
 const H_ZONAS = 'Zonas';
 const H_PARTIDOS = 'Partidos';
 const COLS_Z = ['torneo', 'categoria', 'zona', 'pareja'];
-const COLS_P = ['torneo', 'categoria', 'fase', 'dia', 'hora', 'pareja_1', 'pareja_2', 'resultado', 'ganador'];
-const COLS_T = ['torneo', 'categoria', 'cupo', 'apertura', 'cierre'];
+const COLS_P = ['torneo', 'categoria', 'fase', 'dia', 'hora', 'pareja_1', 'pareja_2', 'resultado', 'ganador', 'id', 'sede'];
+/** Claves de carga de resultados, una por sede. La página nunca lee esta hoja. */
+const H_ORG = 'Organizadores';
+const COLS_O = ['sede', 'nombre', 'clave'];
+const COLS_T = ['torneo', 'categoria', 'cupo', 'apertura', 'cierre', 'tipo', 'nombre'];
 const COLS_I = ['fecha_hora', 'torneo', 'categoria', 'jugador_1', 'jugador_2', 'telefono', 'estado', 'baja', 'disponibilidad', 'email', 'codigo'];
 const WEB = 'https://ramirezpadelclub.pages.dev/#torneos';
 /** Regla del circuito: al menos dos franjas del sábado, o el viernes completo. */
@@ -77,24 +83,39 @@ function setup() {
 }
 
 /**
- * Correr UNA vez a mano: crea las hojas "Zonas" y "Partidos" para cargar lo que se ve en "Ver torneo".
+ * Correr a mano (se puede repetir sin problema): crea o completa las hojas para "Ver torneo" y la carga de resultados.
+ *   Torneos:  suma las columnas "tipo" (complejo o tour; vacío = complejo) y "nombre" (ej. "Octava etapa", va en la placa).
  *   Zonas:    una fila por pareja → torneo | categoria | zona (A, B, C…) | pareja
- *   Partidos: una fila por partido → torneo | categoria | fase | dia | hora | pareja_1 | pareja_2 | resultado | ganador
- *             fase: "Zona A", "Zona B"… para la fase de zonas, y "Octavos", "Cuartos", "Semis" o "Final" para las llaves.
- *             dia: Viernes, Sábado o Domingo. ganador: 1 o 2 (o el nombre de la pareja); en la Final define campeones.
- * Lo que quede vacío no se muestra en la página.
+ *   Partidos: una fila por partido → torneo | categoria | fase | dia | hora | pareja_1 | pareja_2 | resultado | ganador | id | sede
+ *             fase: "Zona A", "Zona B"… en zonas; "16avos", "Octavos", "Cuartos", "Semis" o "Final" en el cuadro.
+ *             id: número del partido (el del cronograma). sede: complejo, ruta o racing (vacío = complejo).
+ *             En pareja_1 / pareja_2 se puede poner "Ganador 36", "Perdedor 36" (por el id) o "1° Zona A", "2° Zona B", "3° Zona A":
+ *             la página los reemplaza sola por los apellidos cuando se juega ese partido o se cierra esa zona.
+ *             resultado y ganador los completa la app de organizadores (o a mano: "6-3 6-4", ganador 1 o 2).
+ *   Organizadores: una fila por sede → sede | nombre | clave. Se crean claves al azar la primera vez; se pueden cambiar.
+ *             La sede "todas" puede cargar cualquier partido (para la organización).
  */
 function crearHojasTorneo() {
   const ss = libro_();
-  [[H_ZONAS, COLS_Z], [H_PARTIDOS, COLS_P]].forEach(([n, cols]) => {
+  [[H_ZONAS, COLS_Z], [H_PARTIDOS, COLS_P], [H_ORG, COLS_O], [H_TORNEOS, COLS_T]].forEach(([n, cols]) => {
     const sh = ss.getSheetByName(n) || ss.insertSheet(n);
-    if (sh.getLastRow() === 0) {
-      sh.appendRow(cols);
-      sh.setFrozenRows(1);
-      sh.getRange(1, 1, 1, cols.length).setFontWeight('bold').setBackground('#E6F2EB');
-    }
+    if (sh.getLastRow() === 0) sh.appendRow(cols);
+    const cab = sh.getRange(1, 1, 1, Math.max(sh.getLastColumn(), cols.length)).getValues()[0];
+    cols.forEach((c, k) => { if (cab[k] !== c) sh.getRange(1, k + 1).setValue(c); });
+    sh.setFrozenRows(1);
+    sh.getRange(1, 1, 1, cols.length).setFontWeight('bold').setBackground('#E6F2EB');
   });
   ss.getSheetByName(H_PARTIDOS).getRange('E:E').setNumberFormat('@');
+  ss.getSheetByName(H_PARTIDOS).getRange('H:H').setNumberFormat('@');
+  const org = ss.getSheetByName(H_ORG);
+  if (org.getLastRow() < 2) {
+    const clave = () => String(Math.floor(100000 + Math.random() * 900000));
+    org.getRange(2, 1, 4, 3).setValues([
+      ['complejo', 'Ramírez Pádel Club', clave()], ['ruta', 'La Ruta Pádel', clave()],
+      ['racing', 'Club Racing', clave()], ['todas', 'Organización', clave()],
+    ]);
+    org.getRange('C:C').setNumberFormat('@');
+  }
 }
 
 /* ---------- utilidades ---------- */
@@ -128,6 +149,7 @@ function fixture_(Z, P, t) {
     fase: txt_(r.fase, 30), dia: txt_(r.dia, 20), hora: hora_(r.hora),
     p1: txt_(r.pareja_1, 120), p2: txt_(r.pareja_2, 120),
     resultado: txt_(r.resultado, 40), ganador: txt_(r.ganador, 120),
+    id: txt_(r.id, 10), sede: txt_(r.sede, 20).toLowerCase() || 'complejo',
   }));
   return { zonas, partidos };
 }
@@ -215,6 +237,7 @@ function doGet() {
       }));
     return {
       torneo: t.torneo, categoria: t.categoria, cupo,
+      tipo: txt_(t.tipo, 20).toLowerCase() === 'tour' ? 'tour' : 'complejo', nombre: txt_(t.nombre, 80),
       apertura: fmt(t.apertura), cierre: fmt(t.cierre),
       estado: estadoVentana_(t, ahora), inscriptos: lista,
       ...fixture_(Z, P, t),
@@ -240,6 +263,8 @@ function doPost_(e) {
   if (d.web) return json_({ ok: true, estado: 'Adentro' }); // campo trampa anti-robots
   if (d.accion === 'baja' || d.accion === 'disponibilidad') return gestionar_(d);
   if (d.accion === 'reenviar') return reenviar_(d);
+  if (d.accion === 'org_login') return orgLogin_(d);
+  if (d.accion === 'resultado') return guardarResultado_(d);
 
   const j1 = limpio_(d.jugador_1), j2 = limpio_(d.jugador_2);
   const tel = String(d.telefono || '').replace(/[^\d+]/g, '').slice(0, 20);
@@ -347,6 +372,66 @@ function reenviar_(d) {
     ['Categoría', r.categoria], ['Pareja', r.jugador_1 + ' – ' + r.jugador_2], ['Disponibilidad', r.disponibilidad],
   ], r.codigo, d, T));
   return json_({ ok: true }); // no dice si existe o no, para no revelar inscripciones ajenas
+}
+
+/* ---------- carga de resultados (app de organizadores) ---------- */
+
+/** Busca la sede de una clave. Corta intentos repetidos con claves equivocadas. */
+function orgPorClave_(clave) {
+  const c = String(clave || '').replace(/\D/g, '');
+  const cache = CacheService.getScriptCache();
+  const fallas = Number(cache.get('org_fallas') || 0);
+  if (fallas >= 30) return { error: 'bloqueado' };
+  const o = c.length >= 4 && leerOpc_(H_ORG).find((r) => String(r.clave).replace(/\D/g, '') === c && r.sede);
+  if (!o) { cache.put('org_fallas', String(fallas + 1), 600); return { error: 'clave' }; }
+  return { sede: txt_(o.sede, 20).toLowerCase(), nombre: txt_(o.nombre, 60) };
+}
+
+function orgLogin_(d) {
+  const o = orgPorClave_(d.clave);
+  if (o.error) return json_({ ok: false, error: o.error });
+  return json_({ ok: true, sede: o.sede, nombre: o.nombre });
+}
+
+/** Valida un resultado de pádel: sets 6 con diferencia de 2, 7-5 o 7-6; súper tie-break a 11 con diferencia de 2. */
+function setsValidos_(sets) {
+  if (!Array.isArray(sets) || sets.length < 2 || sets.length > 3) return false;
+  const ok = sets.every((s, i) => {
+    if (!Array.isArray(s) || s.length !== 2) return false;
+    const a = Number(s[0]), b = Number(s[1]);
+    if (!Number.isInteger(a) || !Number.isInteger(b) || a < 0 || b < 0) return false;
+    const hi = Math.max(a, b), lo = Math.min(a, b);
+    if (i < 2) return (hi === 6 && lo <= 4) || (hi === 7 && (lo === 5 || lo === 6));
+    return hi >= 11 && hi - lo >= 2 && (hi === 11 || hi - lo === 2);
+  });
+  if (!ok) return false;
+  const g = (s) => (Number(s[0]) > Number(s[1]) ? 1 : 2);
+  const empate = g(sets[0]) !== g(sets[1]);
+  return empate ? sets.length === 3 : sets.length === 2;
+}
+
+/** Guarda (o borra, con sets vacío) el resultado de un partido. */
+function guardarResultado_(d) {
+  const o = orgPorClave_(d.clave);
+  if (o.error) return json_({ ok: false, error: o.error });
+  const borrar = Array.isArray(d.sets) && d.sets.length === 0;
+  if (!borrar && !setsValidos_(d.sets)) return json_({ ok: false, error: 'sets' });
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const { sh, filas } = leer_(H_PARTIDOS);
+    const p = filas.find((r) => r.torneo === d.torneo && r.categoria === d.categoria && String(r.id) === String(d.id));
+    if (!p) return json_({ ok: false, error: 'partido' });
+    const sedeP = txt_(p.sede, 20).toLowerCase() || 'complejo';
+    if (o.sede !== 'todas' && o.sede !== sedeP) return json_({ ok: false, error: 'sede' });
+    const res = borrar ? '' : d.sets.map((s) => Number(s[0]) + '-' + Number(s[1])).join(' ');
+    const gan = borrar ? '' : (d.sets.filter((s) => Number(s[0]) > Number(s[1])).length > d.sets.length / 2 ? 1 : 2);
+    sh.getRange(p._fila, COLS_P.indexOf('resultado') + 1, 1, 2).setValues([[res, gan]]);
+    SpreadsheetApp.flush();
+    return json_({ ok: true, resultado: res, ganador: gan });
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 /* ---------- listados por categoría en la carpeta "Torneo" del Drive ---------- */
