@@ -33,7 +33,7 @@ h1{font:900 30px/1 var(--display);text-transform:uppercase;margin:0 0 4px}
 .card{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:16px}
 .login{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:28px 18px}
 .login img{width:104px;height:104px;object-fit:contain}
-label.l{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);align-self:flex-start}
+.l{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);align-self:flex-start}
 .pin{width:100%;height:54px;font:900 26px var(--display);letter-spacing:.4em;text-align:center;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg)}
 .btn{width:100%;padding:13px;border:0;border-radius:10px;background:var(--green);color:var(--on);font:700 16px var(--body);cursor:pointer}
 .btn:disabled{opacity:.45;cursor:not-allowed}.btn.sec{background:transparent;color:var(--fg);border:1.5px solid var(--line)}
@@ -62,6 +62,10 @@ label.file img{width:46px;height:46px;object-fit:cover;border-radius:6px;backgro
 .done{font-weight:700;color:var(--green)}
 a.btn{display:block;text-align:center;text-decoration:none}
 .vacio{color:var(--muted);text-align:center;padding:24px 0}
+.sedes{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px;width:100%}
+.sede{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer;min-height:44px}
+.sede img{width:46px;height:46px;object-fit:contain}.sede b{font:800 13px/1.1 var(--display);text-transform:uppercase}.sede small{font-size:11px;color:var(--muted)}
+.sede[aria-pressed="true"]{border-color:var(--green);box-shadow:0 0 0 2px var(--green);background:var(--soft)}
 </style>
 </head>
 <body>
@@ -71,7 +75,8 @@ a.btn{display:block;text-align:center;text-decoration:none}
     <div class="card login">
       <img src="img/logo-complejo.png" alt="Escudo del Complejo Ramirez Padel Club">
       <h1>Carga de resultados</h1>
-      <p class="sub">Entrá con la clave de tu sede.</p>
+      <p class="sub" id="loginSub">Entrá con la clave de tu sede.</p>
+      <div id="sedesBox" hidden style="width:100%"><span class="l" style="display:block;text-align:left;margin-bottom:8px">Sede</span><div class="sedes" id="sedes" role="group" aria-label="Sede"></div></div>
       <label class="l" for="clave">Clave</label>
       <input id="clave" class="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8">
       <button class="btn" id="entrar">Entrar</button>
@@ -122,14 +127,29 @@ function vista(id){['vLogin','vLista','vCarga'].forEach(v=>$(v).hidden=v!==id);w
 function modo(tour){document.documentElement.dataset.modo=tour?'tour':'complejo';$('barLogo').src=tour?ESCUDO:LOGO;const li=document.querySelector('.login img');li.src=tour?ESCUDO:LOGO;li.alt=tour?'Escudo del Ramirez Pádel Tour':'Escudo del Complejo Ramirez Padel Club'}
 /* /organizador?tour: la pantalla de entrada ya sale con la identidad del Tour (circuitos) */
 const LINK_TOUR=/[?&]tour\b/.test(location.search);if(LINK_TOUR)modo(true);
+/* En los circuitos cada sede tiene su ingreso: se elige la sede y se pone su clave.
+   Aparecen las sedes con partidos en torneos del Tour (si no hay datos: Complejo y La Ruta). */
+const LOGOS_SEDE={complejo:LOGO,ruta:LOGO_RUTA,racing:LOGO_RACING};
+let sedeElegida=null;
+function pintarSedes(lista){
+  if(!LINK_TOUR)return;
+  $('sedesBox').hidden=false;$('loginSub').textContent='Elegí tu sede y poné su clave.';
+  $('sedes').innerHTML=lista.map(k=>`<button type="button" class="sede" data-sede="${k}" aria-pressed="${k===sedeElegida}"><img src="${LOGOS_SEDE[k]}" alt=""><b>${{complejo:'Complejo',ruta:'La Ruta',racing:'Racing'}[k]}</b><small>${esc(SEDES[k])}</small></button>`).join('');
+  $('sedes').querySelectorAll('.sede').forEach(b=>b.onclick=()=>{sedeElegida=b.dataset.sede;$('sedes').querySelectorAll('.sede').forEach(x=>x.setAttribute('aria-pressed',x===b));$('loginMsg').textContent='';$('clave').focus()});
+}
+if(LINK_TOUR){pintarSedes(['complejo','ruta']);
+  fetch(URL_API+'?t='+Date.now()).then(r=>r.json()).then(j=>{const ks=new Set();(j.categorias||[]).filter(c=>c.tipo==='tour').forEach(c=>(c.partidos||[]).forEach(p=>ks.add((p.sede||'complejo').toLowerCase())));
+    const orden=['complejo','ruta','racing'].filter(k=>ks.has(k));if(orden.length)pintarSedes(orden)}).catch(()=>{});}
 
 /* ---------- entrar ---------- */
 async function entrar(){
   const m=$('loginMsg'),c=$('clave').value.trim();
+  if(LINK_TOUR&&!sedeElegida){m.textContent='Elegí primero tu sede.';m.className='msg err';return}
   if(c.length<4){m.textContent='Escribí la clave de tu sede.';m.className='msg err';return}
   $('entrar').disabled=true;m.className='msg';m.textContent='Entrando…';
   try{const j=await post({accion:'org_login',clave:c});
     if(!j.ok){m.className='msg err';m.textContent=j.error==='bloqueado'?'Demasiados intentos. Esperá unos minutos.':'La clave no es correcta.';return}
+    if(LINK_TOUR&&j.sede!=='todas'&&j.sede!==sedeElegida){m.className='msg err';m.textContent='Esa clave no es de '+SEDES[sedeElegida]+'.';return}
     org={sede:j.sede,nombre:j.nombre};clave=c;try{sessionStorage.setItem('org',JSON.stringify({org,clave}))}catch(e){}
     $('clave').value='';m.textContent='';arrancar();
   }catch(e){m.className='msg err';m.textContent='No se pudo conectar. Revisá internet y probá de nuevo.'}
