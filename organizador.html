@@ -119,7 +119,9 @@ try{const g=JSON.parse(sessionStorage.getItem('org')||'null');if(g){org=g.org;cl
 
 function post(body){return fetch(URL_API,{method:'POST',body:JSON.stringify(body)}).then(r=>r.json())}
 function vista(id){['vLogin','vLista','vCarga'].forEach(v=>$(v).hidden=v!==id);window.scrollTo(0,0)}
-function modo(tour){document.documentElement.dataset.modo=tour?'tour':'complejo';$('barLogo').src=tour?ESCUDO:LOGO}
+function modo(tour){document.documentElement.dataset.modo=tour?'tour':'complejo';$('barLogo').src=tour?ESCUDO:LOGO;const li=document.querySelector('.login img');li.src=tour?ESCUDO:LOGO;li.alt=tour?'Escudo del Ramirez Pádel Tour':'Escudo del Complejo Ramirez Padel Club'}
+/* /organizador?tour: la pantalla de entrada ya sale con la identidad del Tour (circuitos) */
+const LINK_TOUR=/[?&]tour\b/.test(location.search);if(LINK_TOUR)modo(true);
 
 /* ---------- entrar ---------- */
 async function entrar(){
@@ -134,7 +136,7 @@ async function entrar(){
   finally{$('entrar').disabled=false}
 }
 $('entrar').onclick=entrar;$('clave').addEventListener('keydown',e=>{if(e.key==='Enter')entrar()});
-$('salir').onclick=()=>{org=null;clave='';try{sessionStorage.removeItem('org')}catch(e){}$('salir').hidden=true;$('barT').textContent='Organizadores';$('barS').textContent='Carga de resultados';modo(false);vista('vLogin')};
+$('salir').onclick=()=>{org=null;clave='';try{sessionStorage.removeItem('org')}catch(e){}$('salir').hidden=true;$('barT').textContent='Organizadores';$('barS').textContent='Carga de resultados';modo(LINK_TOUR);vista('vLogin')};
 
 function puede(p){return org&&(org.sede==='todas'||(p.sede||'complejo')===org.sede)}
 async function cargar(){
