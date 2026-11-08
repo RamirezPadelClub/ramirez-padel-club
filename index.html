@@ -746,7 +746,7 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
     sec.zonas=conRes?secc('Zonas','tablas y resultados','<div class="vt-zonas">'+RS.listaZonas().map(function(zk){var t=RS.tabla(zk),falta=t.partidos.filter(function(p){return!p._sets.length}).length;
       return'<div class="rs-zona"><p>Zona<b>'+esc(zk)+'</b></p><div class="rs-tw"><table class="rs-tab"><thead><tr><th>Pos</th><th class="l">Pareja</th><th>PG</th><th>Sets</th><th>Games</th></tr></thead><tbody>'+
         t.filas.map(function(f,i){var q=t.cerrada&&i<t.clasif;return'<tr class="'+(q?'q':'')+'"><td class="pos">'+(i+1)+'°</td><td class="l">'+esc(f.pareja)+(q?' <span class="rs-b">Clasifica</span>':'')+'</td><td>'+f.pg+'</td><td>'+f.sf+'-'+f.sc+'</td><td>'+f.gf+'-'+f.gc+'</td></tr>'}).join('')+
-        '</tbody></table></div><div class="rs-n">'+(t.cerrada?(t.clasif===3?'Zona terminada: clasifican 1°, 2° y 3°.':'Zona terminada: clasifican 1° y 2°.'):(falta?'Faltan '+falta+' partido'+(falta>1?'s':'')+'.':''))+'</div>'+
+        '</tbody></table></div><div class="rs-n">'+(t.cerrada?(t.clasif===3?'Zona terminada: clasifican 1°, 2° y 3°.':'Zona terminada: clasifican 1° y 2°.'):(falta?(falta>1?'Faltan '+falta+' partidos.':'Falta 1 partido.'):''))+'</div>'+
         t.partidos.map(function(p){var A=RS.nombre(p,1),B=RS.nombre(p,2),w=p._sets.length?Resultados.ganadorSets(p._sets):0;
           return'<div class="rs-p"><span class="h">'+esc(p.hora||'')+'</span><span class="ps"><span class="'+(w===1?'w':'')+'">'+(A.ok?esc(A.n):'<i>'+esc(A.n)+'</i>')+'</span><span class="'+(w===2?'w':'')+'">'+(B.ok?esc(B.n):'<i>'+esc(B.n)+'</i>')+'</span></span>'+(p._sets.length?Resultados.setsHTML(p._sets):'<span class="pend">'+esc(p.dia||'Por jugar')+'</span>')+'</div>'}).join('')+'</div>'}).join('')+'</div>'):secc('Zonas','',zonas.length?'<div class="vt-zonas">'+zonas.map(function(z){return'<div class="vt-zona"><p>Zona<b>'+esc(z.zona)+'</b></p><ul>'+z.parejas.map(function(p){return'<li>'+esc(p)+'</li>'}).join('')+'</ul></div>'}).join('')+'</div>':vacio('Las zonas se publican cuando cierra la inscripción.'));
     // Horarios
@@ -777,10 +777,15 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
   }
   document.addEventListener('click',function(ev){var t=ev.target.closest('[data-vttab]');if(t){vtTab=t.dataset.vttab;verT();return}var b=ev.target.closest('[data-vtcat]');if(!b)return;var id=decodeURIComponent(location.hash.slice(8));vtCat[id]=b.dataset.vtcat;verT()});
   window.addEventListener('hashchange',function(){vtTab='insc';verT()});
-  function cargar(){
+  var ultimoJSON='';
+  function cargar(silencioso){
     if(!INSC_URL){pintar();return Promise.resolve()}
+    if(silencioso)return fetch(INSC_URL+(INSC_URL.indexOf('?')<0?'?':'&')+'t='+Date.now()).then(function(r){return r.json()}).then(function(j){
+      if(!j||!j.ok)return;var s=JSON.stringify(j.categorias);if(s===ultimoJSON)return;ultimoJSON=s;datos=j;falla=false;pintar();verT();
+      document.querySelectorAll('#vt-cuerpo .revela').forEach(function(e){e.style.transition='none';e.classList.add('visto')});
+    }).catch(function(){});
     var intento=function(n){
-      return fetch(INSC_URL+(INSC_URL.indexOf('?')<0?'?':'&')+'t='+Date.now()).then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw 0;datos=j;falla=false;pintar();verT()})
+      return fetch(INSC_URL+(INSC_URL.indexOf('?')<0?'?':'&')+'t='+Date.now()).then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw 0;ultimoJSON=JSON.stringify(j.categorias);datos=j;falla=false;pintar();verT()})
         .catch(function(){if(n<3)return new Promise(function(ok){setTimeout(ok,1500*(n+1))}).then(function(){return intento(n+1)});falla=true;pintar();verT()});
     };
     return intento(0);
@@ -856,6 +861,9 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
   });
   verT();
   cargar();
+  /* Ver torneo abierto: trae resultados nuevos solo (cada 30 s y al volver a la pestaña) */
+  setInterval(function(){if(!document.hidden&&location.hash.indexOf('#torneo/')===0)cargar(true)},30000);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden&&location.hash.indexOf('#torneo/')===0)cargar(true)});
 })();
 </script>
 <!-- FOTOS -->

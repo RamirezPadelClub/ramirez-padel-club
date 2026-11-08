@@ -195,6 +195,7 @@
 .vt-cab img.entra{transform:translateY(18px) rotate(-4deg) scale(.92);animation:sube .8s cubic-bezier(.2,.8,.2,1) forwards}
 .vt-cats button.entra,.vt-tabs.entra{opacity:0;transform:translateY(12px);animation:sube .5s cubic-bezier(.2,.8,.2,1) forwards}
 .anim .vt-llave.revela,.anim .vt-zona.revela{transform:translateY(16px) scale(.97)}
+.anim .vt-llave.revela.visto,.anim .vt-zona.revela.visto{transform:none}
 .anim .vt-campeones div.revela{transform:scale(.92)}
 .anim .vt-campeones div.revela.visto{transform:none}
 .vt-tabs button{transition:background-color .25s,color .25s}
