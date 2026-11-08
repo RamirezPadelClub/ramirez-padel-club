@@ -650,6 +650,7 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
   </form>
   <div class="res" id="insc-res" hidden></div>
 </dialog>
+<script src="demo-resultados.js"></script>
 <script>
 (function(){
   /* URL del Apps Script publicado (la planilla de inscripciones). */
@@ -745,17 +746,19 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
     if(fin&&(gano(fin,1)||gano(fin,2))){var g1=gano(fin,1);
       sec.cuadro+=secc('Campeones','','<div class="vt-campeones"><div><small>Campeones</small><b>'+esc(g1?fin.p1:fin.p2)+'</b></div><div><small>Subcampeones</small><b>'+esc(g1?fin.p2:fin.p1)+'</b></div></div>');
     }
+    if(window.DEMO&&id==='prueba'){sec.zonas=DEMO.zonasHTML();sec.cuadro=DEMO.cuadroHTML()}
     tabs.innerHTML=TABS.map(function(t){return'<button type="button" role="tab" data-vttab="'+t[0]+'" aria-selected="'+(t[0]===vtTab)+'">'+t[1]+'</button>'}).join('');tabs.hidden=false;
     cuerpo.innerHTML=sec[vtTab];
     if(window.animarTorneo)window.animarTorneo(id);
   }
   document.addEventListener('click',function(ev){var t=ev.target.closest('[data-vttab]');if(t){vtTab=t.dataset.vttab;verT();return}var b=ev.target.closest('[data-vtcat]');if(!b)return;var id=decodeURIComponent(location.hash.slice(8));vtCat[id]=b.dataset.vtcat;verT()});
   window.addEventListener('hashchange',function(){vtTab='insc';verT()});
+  window.addEventListener('storage',function(){if(window.DEMO&&datos){DEMO.mezclar(datos);pintar();verT()}});
   function cargar(){
     if(!INSC_URL){pintar();return Promise.resolve()}
     var intento=function(n){
-      return fetch(INSC_URL+(INSC_URL.indexOf('?')<0?'?':'&')+'t='+Date.now()).then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw 0;datos=j;falla=false;pintar();verT()})
-        .catch(function(){if(n<3)return new Promise(function(ok){setTimeout(ok,1500*(n+1))}).then(function(){return intento(n+1)});falla=true;pintar();verT()});
+      return fetch(INSC_URL+(INSC_URL.indexOf('?')<0?'?':'&')+'t='+Date.now()).then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw 0;datos=j;if(window.DEMO)DEMO.mezclar(datos);falla=false;pintar();verT()})
+        .catch(function(){if(n<3)return new Promise(function(ok){setTimeout(ok,1500*(n+1))}).then(function(){return intento(n+1)});if(window.DEMO){datos={ok:true,categorias:[]};DEMO.mezclar(datos);falla=false}else falla=true;pintar();verT()});
     };
     return intento(0);
   }
