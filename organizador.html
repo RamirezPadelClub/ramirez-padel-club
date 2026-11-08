@@ -21,6 +21,10 @@
 :root[data-modo="complejo"] .site-bar{color:#fff;border-bottom:2px solid #0A0F0C}
 :root[data-modo="complejo"] .phone,:root[data-modo="complejo"] .site{border-width:2px}
 :root[data-modo="complejo"] h1{font-size:40px}
+img.logo{object-fit:contain}
+:root[data-modo="complejo"] .login img{width:104px;height:104px}
+:root[data-modo="complejo"] .app-bar img{width:36px;height:36px}
+:root[data-modo="complejo"] .site-bar img{width:42px;height:42px}
 :root[data-modo="complejo"] .sc .col b.g{color:var(--green)}
 .modo{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:3px;align-self:flex-start;margin-top:4px}
 .modo button{border:0;background:transparent;padding:8px 14px;border-radius:999px;font:700 13px var(--body);cursor:pointer;color:var(--fg)}
@@ -261,7 +265,6 @@ function aplicarModo(){
   $('siteT').textContent=T.siteT;$('siteS').textContent=T.siteS;$('loginTxt').textContent=T.login;$('claves').textContent=T.claves;
   document.querySelector('.sedes').hidden=modo==='complejo';
   document.querySelectorAll('img.logo').forEach(i=>{i.src=modo==='tour'?ESCUDO:LOGO;i.alt=modo==='tour'?'Escudo del Ramirez Pádel Tour':'Escudo del Complejo Ramirez Padel Club'});
-  if(modo==='complejo')document.querySelectorAll('img.logo').forEach(i=>{i.style.height=i.closest('.login')?'96px':'';});
   // salir de la app al cambiar
   sede=null;$('salir').hidden=true;$('barTitle').textContent='Organizadores';$('barSub').textContent=T.bar;mostrar('scrLogin');
   document.querySelectorAll('.sede').forEach(x=>x.setAttribute('aria-pressed','false'));
