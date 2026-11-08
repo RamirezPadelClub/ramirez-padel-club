@@ -199,7 +199,21 @@ function abrir(n){
   vista('vCarga');
 }
 function marcar(){for(let i=0;i<3;i++){const A=$('s'+i+'0'),B=$('s'+i+'1');if(!A)return;const a=A.value.trim(),b=B.value.trim();const mal=a!==''&&b!==''&&(isNaN(a)||isNaN(b)||!Resultados.setValido(i,+a,+b));[A,B].forEach(x=>{x.classList.toggle('bad',mal);x.setAttribute('aria-invalid',mal)})}}
-$('score').addEventListener('input',()=>{marcar();$('msg').textContent=''});
+$('score').addEventListener('input',e=>{marcar();$('msg').textContent='';saltar(e.target)});
+/* Al escribir un número que ya está completo, pasa solo al siguiente casillero:
+   sets de 0 a 7 al toque; súper tie-break cuando tiene 2 cifras o una cifra que no puede seguir (0, 2-9). */
+$('score').addEventListener('focusin',e=>{if(e.target.tagName==='INPUT')e.target.select()});
+function saltar(el){
+  const m=/^s(\d)(\d)$/.exec(el.id||'');if(!m)return;
+  const i=+m[1],j=+m[2];el.value=el.value.replace(/\D/g,'');if(i<2&&el.value.length>1)el.value=el.value.slice(-1);marcar();const v=el.value;if(v==='')return;
+  const listo=i<2?(v.length===1&&+v<=7):(v.length>=2||(v.length===1&&v!=='1'));
+  if(!listo)return;
+  if(j===0){$('s'+i+'1').focus();$('s'+i+'1').select();return}
+  if(i===0){$('s10').focus();$('s10').select();return}
+  if(i===1){const a=$('s00').value,b=$('s01').value,c=$('s10').value,d=$('s11').value;
+    const g1=+a>+b,g2=+c>+d;if(a!==''&&b!==''&&g1!==g2){$('s20').focus();$('s20').select();return}}
+  el.blur();
+}
 function leer(){const ss=[];for(let i=0;i<3;i++){const a=$('s'+i+'0').value.trim(),b=$('s'+i+'1').value.trim();if(a===''&&b==='')continue;if(a===''||b===''||isNaN(a)||isNaN(b))return{err:'Completá los dos números de cada set.'};ss.push([+a,+b])}
   const e=Resultados.validar(ss);return e?{err:e}:{sets:ss}}
 $('volver').onclick=$('otro').onclick=()=>{vista('vLista');pintarLista()};
