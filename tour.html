@@ -49,8 +49,18 @@ h1 .pal{display:inline-block;white-space:nowrap}
 .cancha .l{fill:none;stroke:var(--lima);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:traza 7s cubic-bezier(.6,0,.3,1) infinite;animation-delay:calc(var(--i) * .35s)}
 .cancha .red{stroke:var(--hueso);stroke-width:3}
 @keyframes traza{0%{stroke-dashoffset:var(--len);opacity:0}8%{opacity:1}45%{stroke-dashoffset:0;opacity:1}80%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
-.pelota{fill:var(--lima);filter:drop-shadow(0 0 6px rgba(215,240,63,.8));animation:pica 2.4s cubic-bezier(.5,0,.5,1) infinite}
-@keyframes pica{0%,100%{transform:translate(0,0)}25%{transform:translate(10px,-26px)}50%{transform:translate(20px,0)}75%{transform:translate(10px,-14px)}}
+.pelota{fill:var(--lima);filter:drop-shadow(0 0 6px rgba(215,240,63,.8));transform-box:fill-box;transform-origin:center;animation:peloteo 3.2s linear infinite}
+/* Peloteo: la pelota cruza la red de una mitad a la otra; pica en cada lado y "sube" (más grande) al pasar la red */
+@keyframes peloteo{
+  0%,100%{transform:translate(14px,40px) scale(1)}
+  12%{transform:translate(4px,18px) scale(1.35)}
+  25%{transform:translate(-6px,-4px) scale(1.55)}
+  38%{transform:translate(-14px,-28px) scale(1)}
+  50%{transform:translate(-18px,-40px) scale(1.15)}
+  62%{transform:translate(-8px,-18px) scale(1.35)}
+  75%{transform:translate(4px,4px) scale(1.55)}
+  88%{transform:translate(12px,28px) scale(1)}
+}
 .ojo{margin:0;font-weight:800;font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:var(--lima)}
 h1{margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:.88;font-size:clamp(58px,min(15vw,13vh),124px);letter-spacing:.01em;text-wrap:balance}
 h1 .ch{display:inline-block;opacity:0;filter:blur(10px);transform:translateY(14px);animation:aparece .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.4s + var(--i) * 70ms)}
@@ -75,6 +85,7 @@ h1 .ch{display:inline-block;opacity:0;filter:blur(10px);transform:translateY(14p
 footer{padding-block:28px calc(22px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;gap:12px 22px;flex-wrap:wrap;font-size:14px;color:var(--gris)}
 footer a{color:var(--hueso)}
 footer a:hover{color:var(--lima)}
+footer .firma{flex-basis:100%;text-align:center;font-size:11.5px;opacity:.7;margin:0}footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{color:var(--lima)}
 @media (prefers-reduced-motion:reduce){
   .cancha .l{animation:none;stroke-dashoffset:0;opacity:1}
   .pelota,.cinta span,.barra i{animation:none}
@@ -99,7 +110,7 @@ footer a:hover{color:var(--lima)}
         <line class="l" x1="4" y1="134" x2="96" y2="134" style="--i:2;--len:92"/>
         <line class="l" x1="50" y1="46" x2="50" y2="134" style="--i:3;--len:88"/>
         <line class="l red" x1="-4" y1="90" x2="104" y2="90" style="--i:4;--len:108"/>
-        <circle class="pelota" cx="62" cy="114" r="4.5"/>
+        <circle class="pelota" cx="50" cy="90" r="4.5"/>
       </svg>
       <p class="ojo">Temporada 2027</p>
       <h1 id="titulo">Nos renovamos</h1>
@@ -114,6 +125,7 @@ footer a:hover{color:var(--lima)}
   <footer>
     <span>Mientras tanto, seguinos en <a href="https://www.instagram.com/complejo_ramirezpadelclub/" target="_blank" rel="noopener">Instagram</a></span>
     <a href="/#torneos">Ver los torneos del Complejo</a>
+    <p class="firma">Diseño y desarrollo: Axel Acosta · <a href="https://wa.me/5493434698281" target="_blank" rel="noopener">(0343) 469-8281</a> · <a href="mailto:axelacosta1992@gmail.com">axelacosta1992@gmail.com</a></p>
   </footer>
 </div>
 <script>
