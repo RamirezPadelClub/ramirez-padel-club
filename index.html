@@ -239,6 +239,7 @@ section.blanca{background:var(--blanco)}
 .vt-ronda>div{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:10px}
 .vt-llave{border:1.5px solid var(--tinta);border-radius:10px;overflow:hidden;font-size:13px}
 .vt-llave.final{border-color:var(--verde);border-width:2px}
+.vt-llave.hueco{visibility:hidden}
 .vt-llave .h{background:var(--verde);color:var(--blanco);font-weight:800;padding:3px 10px;font-size:12px}
 .vt-llave .p{padding:7px 10px;display:flex;justify-content:space-between;gap:8px}
 .vt-llave .p+.p{border-top:1px solid var(--linea)}
@@ -761,9 +762,25 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
     var llaves=ps.filter(function(p){return ronda(p.fase)>=0});
     if(llaves.length){
       var desde=Math.min.apply(null,llaves.map(function(p){return ronda(p.fase)}));
-      var cols=RONDAS.slice(desde).map(function(r,k){var i=desde+k, lista=llaves.filter(function(p){return ronda(p.fase)===i}), falta=i===0?0:Math.pow(2,4-i)-lista.length;
-        for(var j=0;j<falta;j++)lista.push({});
+      /* Orden de cada ronda según a qué partido de la ronda siguiente alimenta ("Ganador partido 34").
+         Si una llave de la ronda siguiente no viene de esta ronda (pasa directo), queda un hueco invisible. */
+      var porRonda={};for(var ri=desde;ri<=4;ri++)porRonda[ri]=llaves.filter(function(p){return ronda(p.fase)===ri});
+      var orden={4:porRonda[4]}, arbol=true;
+      for(var ri=3;ri>=desde;ri--){
+        var pool=porRonda[ri].slice(), slots=[], usados=0;
+        (orden[ri+1]||[]).forEach(function(m){[1,2].forEach(function(k){
+          var t=m?String((k===1?m.p1:m.p2)||''):'', mm=t.match(/^gan\w*\s+(?:del\s+)?(?:partido\s+)?(?:n[°º.]?\s*)?(\d+)$/i), q=null;
+          if(mm)for(var x=0;x<pool.length;x++)if(String(pool[x].id)===mm[1]){q=pool.splice(x,1)[0];usados++;break}
+          slots.push(q)})});
+        if(!usados){arbol=false;break}
+        pool.forEach(function(q){var x=slots.indexOf(null);if(x<0)slots.push(q);else slots[x]=q});
+        orden[ri]=slots;
+      }
+      var cols=RONDAS.slice(desde).map(function(r,k){var i=desde+k, lista, falta;
+        if(arbol){lista=orden[i].map(function(p){return p||{hueco:1}})}
+        else{lista=porRonda[i].slice();falta=i===0?0:Math.pow(2,4-i)-lista.length;for(var j=0;j<falta;j++)lista.push({})}
         return'<div class="vt-ronda"><p>'+r[1]+'</p><div>'+lista.map(function(p){
+          if(p.hueco)return'<div class="vt-llave hueco" aria-hidden="true"><div class="h">&nbsp;</div><div class="p"><span>&nbsp;</span></div><div class="p"><span>&nbsp;</span></div></div>';
           var pp=function(k){var n=p.p1||p.p2?nom(p,k).n:'';return'<div class="p'+(gano(p,k)?' gana':'')+(n?'':' nada')+'"><span>'+esc(n||'A definir')+'</span></div>'};
           return'<div class="vt-llave'+(i===4?' final':'')+'">'+(p.hora?'<div class="h">'+esc(p.hora)+(p.resultado?' · '+esc(p.resultado):'')+'</div>':(p.resultado?'<div class="h">'+esc(p.resultado)+'</div>':''))+pp(1)+pp(2)+'</div>'}).join('')+'</div></div>'}).join('');
       sec.cuadro=secc('Cuadro final','','<div class="vt-cuadro"><div class="vt-rondas" style="--n:'+(5-desde)+'">'+cols+'</div></div>');
