@@ -57,6 +57,7 @@ h1{font:900 30px/1 var(--display);text-transform:uppercase;margin:0 0 4px}
 .score input.bad{border-color:var(--err);color:var(--err);box-shadow:0 0 0 1px var(--err)}
 label.file{display:flex;gap:10px;align-items:center;border:1.5px dashed var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;font-size:13px}
 label.file input{position:absolute;opacity:0;width:1px;height:1px}label.file:focus-within{outline:2px solid var(--green)}
+#ajuste{margin-top:10px}#ajCv{display:block;width:100%;height:auto;border-radius:8px;touch-action:none;cursor:grab;background:var(--soft)}.ajz{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12px;color:var(--muted)}.ajz input{flex:1;accent-color:var(--green)}.ajt{margin:6px 0 0;font-size:12px;color:var(--muted)}
 label.file img{width:46px;height:46px;object-fit:cover;border-radius:6px;background:var(--soft)}
 .placa{display:flex;flex-direction:column;gap:10px;margin-top:12px}.placa img{width:100%;border-radius:10px;border:1px solid var(--line)}
 .done{font-weight:700;color:var(--green)}
@@ -99,6 +100,7 @@ a.btn{display:block;text-align:center;text-decoration:none}
       <div class="score" id="score"></div>
       <div class="step">Foto del partido</div>
       <label class="file" for="foto"><img id="fotoMini" alt=""><span id="fotoTxt">Elegí o sacá la foto de las dos parejas</span><input id="foto" type="file" accept="image/*"></label>
+      <div class="ajuste" id="ajuste" hidden><canvas id="ajCv" aria-label="Encuadre de la foto: arrastrala para acomodarla"></canvas><div class="ajz"><span>Achicar</span><input type="range" id="ajZoom" min="0" max="100" value="0" aria-label="Tamaño de la foto"><span>Agrandar</span></div><p class="ajt">Arrastrá la foto para acomodarla. Que se vean las cabezas de los cuatro.</p></div>
       <button class="btn" id="guardar" style="margin-top:14px">Guardar resultado</button>
       <p class="msg" id="msg" role="status"></p>
       <div class="placa" id="placa" hidden>
@@ -195,7 +197,7 @@ function abrir(n){
   let h='<span></span><span class="hd">1° set</span><span class="hd">2° set</span><span class="hd">Súper TB</span>';
   [A,B].forEach((L,j)=>{h+=`<span class="nm">${esc(L.n)}</span>`;for(let i=0;i<3;i++)h+=`<input id="s${i}${j}" inputmode="numeric" maxlength="2" aria-label="${esc(L.n)}, ${i<2?'set '+(i+1):'súper tie-break'}" value="${v(i,j)}">`});
   $('score').innerHTML=h;marcar();$('msg').textContent='';$('placa').hidden=true;$('guardar').hidden=false;
-  foto=null;$('fotoMini').removeAttribute('src');$('fotoTxt').textContent='Elegí o sacá la foto de las dos parejas';$('foto').value='';
+  foto=null;ajImg=null;$('ajuste').hidden=true;$('fotoMini').removeAttribute('src');$('fotoTxt').textContent='Elegí o sacá la foto de las dos parejas';$('foto').value='';
   vista('vCarga');
 }
 function marcar(){for(let i=0;i<3;i++){const A=$('s'+i+'0'),B=$('s'+i+'1');if(!A)return;const a=A.value.trim(),b=B.value.trim();const mal=a!==''&&b!==''&&(isNaN(a)||isNaN(b)||!Resultados.setValido(i,+a,+b));[A,B].forEach(x=>{x.classList.toggle('bad',mal);x.setAttribute('aria-invalid',mal)})}}
@@ -217,7 +219,7 @@ function saltar(el){
 function leer(){const ss=[];for(let i=0;i<3;i++){const a=$('s'+i+'0').value.trim(),b=$('s'+i+'1').value.trim();if(a===''&&b==='')continue;if(a===''||b===''||isNaN(a)||isNaN(b))return{err:'Completá los dos números de cada set.'};ss.push([+a,+b])}
   const e=Resultados.validar(ss);return e?{err:e}:{sets:ss}}
 $('volver').onclick=$('otro').onclick=()=>{vista('vLista');pintarLista()};
-$('foto').onchange=e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{foto=fr.result;$('fotoMini').src=foto;$('fotoTxt').textContent=f.name};fr.readAsDataURL(f)};
+$('foto').onchange=e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{foto=fr.result;$('fotoMini').src=foto;$('fotoTxt').textContent=f.name;ajIniciar(foto).catch(()=>{})};fr.readAsDataURL(f)};
 $('guardar').onclick=async()=>{
   const r=leer();if(r.err){marcar();$('msg').className='msg err';$('msg').textContent=r.err;return}
   $('guardar').disabled=true;$('msg').className='msg';$('msg').textContent='Guardando…';
@@ -241,6 +243,25 @@ $('guardar').onclick=async()=>{
 };
 
 /* ---------- placas ---------- */
+/* Encuadre de la foto: por defecto entra entera a lo ancho (no se corta a nadie de los costados) y,
+   si es alta, se recorta sobre todo de abajo (piernas). El planillero la puede mover y achicar/agrandar. */
+const CUADRO={complejo:[1080,820],tour:[900,780]},TINTE={complejo:'rgba(14,122,69,.88)',tour:'rgba(11,14,51,.86)'};
+let aj={s:null,px:.5,py:.25},ajImg=null;
+function ajLim(img,W,H){return{smin:Math.min(W/img.width,H/img.height),smax:Math.max(W/img.width,H/img.height)}}
+function fotoDibujar(c,img,X,Y,W,H,a,tinte){const L=ajLim(img,W,H),k=W/img.width,s=Math.min(L.smax,Math.max(L.smin,a.s==null?k:a.s*k)),iw=img.width*s,ih=img.height*s;
+  if(iw<W-1||ih<H-1){c.drawImage(img,X+(W-img.width*L.smax)/2,Y+(H-img.height*L.smax)/2,img.width*L.smax,img.height*L.smax);c.fillStyle=tinte;c.fillRect(X,Y,W,H)}
+  c.drawImage(img,iw>W?X-(iw-W)*a.px:X+(W-iw)/2,ih>H?Y-(ih-H)*a.py:Y+(H-ih)/2,iw,ih)}
+function ajCuadro(){return CUADRO[catSel&&catSel.tipo==='tour'?'tour':'complejo']}
+function ajPintar(){if(!ajImg)return;const cv=$('ajCv'),[W,H]=ajCuadro();cv.width=W;cv.height=H;const c=cv.getContext('2d');c.clearRect(0,0,W,H);fotoDibujar(c,ajImg,0,0,W,H,aj,TINTE[catSel&&catSel.tipo==='tour'?'tour':'complejo'])}
+function ajZoom(){if(!ajImg)return;const [W,H]=ajCuadro(),L=ajLim(ajImg,W,H),k=W/ajImg.width,v=$('ajZoom').value/100;aj.s=Math.exp(Math.log(L.smin)+(Math.log(L.smax)-Math.log(L.smin))*v)/k;ajPintar()}
+async function ajIniciar(src){ajImg=await cargarImg(src);aj={s:null,px:.5,py:.25};const [W,H]=ajCuadro(),L=ajLim(ajImg,W,H),k=W/ajImg.width;
+  $('ajZoom').value=L.smax>L.smin?Math.round(100*(Math.log(Math.min(L.smax,Math.max(L.smin,k)))-Math.log(L.smin))/(Math.log(L.smax)-Math.log(L.smin))):0;$('ajuste').hidden=false;ajPintar()}
+(function(){let ini=null;const cv=$('ajCv');
+  cv.addEventListener('pointerdown',e=>{if(!ajImg)return;cv.setPointerCapture(e.pointerId);ini={x:e.clientX,y:e.clientY,px:aj.px,py:aj.py}});
+  cv.addEventListener('pointermove',e=>{if(!ini)return;const [W,H]=ajCuadro(),L=ajLim(ajImg,W,H),k=W/ajImg.width,s=Math.min(L.smax,Math.max(L.smin,aj.s==null?k:aj.s*k)),r=W/cv.getBoundingClientRect().width,ow=ajImg.width*s-W,oh=ajImg.height*s-H;
+    if(ow>1)aj.px=Math.min(1,Math.max(0,ini.px-(e.clientX-ini.x)*r/ow));if(oh>1)aj.py=Math.min(1,Math.max(0,ini.py-(e.clientY-ini.y)*r/oh));ajPintar()});
+  const fin=()=>{ini=null};cv.addEventListener('pointerup',fin);cv.addEventListener('pointercancel',fin);
+  $('ajZoom').addEventListener('input',ajZoom)})();
 const cargarImg=src=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=src});
 function chaf(c,x,y,w,h,k){c.beginPath();c.moveTo(x+k,y);c.lineTo(x+w-k,y);c.lineTo(x+w,y+k);c.lineTo(x+w,y+h);c.lineTo(x,y+h);c.lineTo(x,y+k);c.closePath()}
 async function placaTour(I){const r={sets:I.sets};
@@ -257,7 +278,7 @@ async function placaTour(I){const r={sets:I.sets};
   c.textAlign='center';c.fillStyle=LIMA;chaf(c,330,578,420,62,14);c.fill();c.fillStyle=NOCHE;c.font='700 24px Unbounded';c.save();c.letterSpacing='3px';c.fillText(I.fase,541,620);c.restore();
   const X=90,Y=676,W=900,H=780,img=await cargarImg(foto);
   c.save();chaf(c,X,Y,W,H,46);c.clip();
-  const s=Math.max(W/img.width,H/img.height),iw=img.width*s,ih=img.height*s;c.drawImage(img,X+(W-iw)/2,Y+(H-ih)/2,iw,ih);
+  fotoDibujar(c,img,X,Y,W,H,aj,TINTE.tour);
   c.restore();
   chaf(c,X,Y,W,H,46);c.lineWidth=6;c.strokeStyle=LIMA;c.stroke();
   // marcador debajo de la foto, pegado
@@ -289,7 +310,7 @@ async function placaComplejo(I){const r={sets:I.sets};
   c.font='900 210px "Big Shoulders Display"';c.fillText('RESULTADO',58,512);linea(544);
   // foto
   const FY=548,FH=820,img=await cargarImg(foto);
-  c.save();c.beginPath();c.rect(0,FY,1080,FH);c.clip();const s=Math.max(1080/img.width,FH/img.height),iw=img.width*s,ih=img.height*s;c.drawImage(img,(1080-iw)/2,FY+(FH-ih)*.45,iw,ih);c.restore();
+  c.save();c.beginPath();c.rect(0,FY,1080,FH);c.clip();fotoDibujar(c,img,0,FY,1080,FH,aj,TINTE.complejo);c.restore();
   c.fillStyle=VERDE;c.fillRect(0,FY+FH-16,1080,16);linea(FY+FH);
   // marcador
   const MY=FY+FH+4,col=124,x0=1080-36-col*3;
