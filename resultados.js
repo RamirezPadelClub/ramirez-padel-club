@@ -2,7 +2,7 @@
    Reglas del circuito:
    - Sets: 6 con diferencia de 2, 7-5 o 7-6. Tercer set: súper tie-break a 11 con diferencia de 2 (para games cuenta 7-6).
    - Zona de 3: clasifican 2. Orden: partidos ganados; si empatan dos, el partido entre ellos; después sets y games.
-   - Zona de 4: clasifican 3. 1° el que ganó los dos partidos; 2° y 3°: si se enfrentaron, ese partido; si no, coeficiente de games.
+   - Zona de 4: clasifican 3. 1° el que ganó los dos partidos; 2° y 3°: si se enfrentaron, ese partido; si no, diferencia de sets y después de games.
    - En las parejas de un partido se puede escribir "Ganador 36", "Perdedor 36" o "1° Zona A": se reemplaza solo. */
 (function () {
   function sets(txt) {
@@ -69,7 +69,7 @@
       if (!z && !jugados.length) return null;
       var parejas = z ? z.parejas.slice() : [];
       var st = {}; parejas.forEach(function (n) { st[n.toLowerCase()] = { pareja: n, pj: 0, pg: 0, sf: 0, sc: 0, gf: 0, gc: 0 }; });
-      var cruces = [], cerrada = jugados.length > 0, primero = {};
+      var cruces = [], cerrada = jugados.length > 0;
       C._tab[zk] = { zona: zk, filas: [], cerrada: false, clasif: parejas.length >= 4 ? 3 : 2 }; // evita vueltas infinitas
       jugados.forEach(function (p) {
         var A = nombre(p, 1), B = nombre(p, 2), ss = p._sets;
@@ -77,8 +77,7 @@
         var w = ganadorSets(ss);
         [[A.n, 0], [B.n, 1]].forEach(function (x) {
           var k = x[0].toLowerCase(); if (!st[k]) st[k] = { pareja: x[0], pj: 0, pg: 0, sf: 0, sc: 0, gf: 0, gc: 0 };
-          var s = st[k], gano = (w === 1) === (x[1] === 0); s.pj++; if (gano) s.pg++;
-          if (!(k in primero)) primero[k] = gano ? 1 : 0;
+          var s = st[k]; s.pj++; if ((w === 1) === (x[1] === 0)) s.pg++;
           ss.forEach(function (set, n) { var m = set[x[1]], o = set[1 - x[1]]; if (n === 2) { var g = m > o; m = g ? 7 : 6; o = g ? 6 : 7; } if (m > o) s.sf++; else s.sc++; s.gf += m; s.gc += o; });
         });
         cruces.push({ a: A.n.toLowerCase(), b: B.n.toLowerCase(), w: (w === 1 ? A.n : B.n).toLowerCase() });
@@ -90,8 +89,9 @@
       filas.sort(function (x, y) {
         var a = x.pareja.toLowerCase(), b = y.pareja.toLowerCase();
         if (y.pg !== x.pg) return y.pg - x.pg;
-        /* Zona de 4 (ganadoras y perdedoras): con los mismos partidos ganados, va primero la que ganó su primer partido. */
-        if (clasif === 3) return h2h(a, b) || ((primero[b] || 0) - (primero[a] || 0)) || dif(y) - dif(x);
+        /* Zona de 4: con los mismos partidos ganados, si se cruzaron en la zona define el partido entre sí;
+           si no, la diferencia de sets y después la de games. */
+        if (clasif === 3) return h2h(a, b) || (y.sf - y.sc) - (x.sf - x.sc) || dif(y) - dif(x);
         var empatados = filas.filter(function (f) { return f.pg === x.pg; }).length;
         return (empatados === 2 ? h2h(a, b) : 0) || (y.sf - y.sc) - (x.sf - x.sc) || dif(y) - dif(x);
       });
