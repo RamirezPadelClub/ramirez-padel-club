@@ -787,7 +787,7 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
         return'<div class="vt-ronda"><p>'+r[1]+'</p><div>'+lista.map(function(p){
           if(p.hueco)return'<div class="vt-llave hueco" aria-hidden="true"><div class="h">&nbsp;</div><div class="p"><span>&nbsp;</span></div><div class="p"><span>&nbsp;</span></div></div>';
           var pp=function(k){var n=p.p1||p.p2?nom(p,k).n:'';return'<div class="p'+(gano(p,k)?' gana':'')+(n?'':' nada')+'"><span>'+esc(n||'A definir')+'</span></div>'};
-          return'<div class="vt-llave'+(i===4?' final':'')+'">'+(p.hora?'<div class="h">'+esc(p.hora)+(p.resultado?' · '+esc(p.resultado):'')+'</div>':(p.resultado?'<div class="h">'+esc(p.resultado)+'</div>':''))+pp(1)+pp(2)+'</div>'}).join('')+'</div></div>'}).join('');
+          var cab=[p.id?'Partido '+p.id:'',p.resultado||p.hora||''].filter(Boolean).join(' · ');return'<div class="vt-llave'+(i===4?' final':'')+'">'+(cab?'<div class="h">'+esc(cab)+'</div>':'')+pp(1)+pp(2)+'</div>'}).join('')+'</div></div>'}).join('');
       sec.cuadro=secc('Cuadro final','','<div class="vt-cuadro"><div class="vt-rondas" style="--n:'+(5-desde)+'">'+cols+'</div></div>');
     }else sec.cuadro=secc('Cuadro final','',vacio('El cuadro se arma cuando terminan las zonas.'));
     // Campeones
