@@ -106,7 +106,7 @@ a.btn{display:block;text-align:center;text-decoration:none}
       <div class="placa" id="placa" hidden>
         <span class="done">Listo, ya está en la página.</span>
         <img id="placaImg" alt="Placa del resultado para Instagram">
-        <a class="btn" id="bajar" download="resultado.jpg">Descargar placa</a>
+        <a class="btn" id="bajar" download="resultado.jpg">Guardar placa</a>
         <button class="btn sec" id="otro">Cargar otro partido</button>
       </div>
     </div>
@@ -219,6 +219,11 @@ function saltar(el){
 function leer(){const ss=[];for(let i=0;i<3;i++){const a=$('s'+i+'0').value.trim(),b=$('s'+i+'1').value.trim();if(a===''&&b==='')continue;if(a===''||b===''||isNaN(a)||isNaN(b))return{err:'Completá los dos números de cada set.'};ss.push([+a,+b])}
   const e=Resultados.validar(ss);return e?{err:e}:{sets:ss}}
 $('volver').onclick=$('otro').onclick=()=>{vista('vLista');pintarLista()};
+/* Guardar la placa: en el celular abre el menú de compartir con la imagen, donde «Guardar imagen» la manda directo a Fotos.
+   Si el navegador no lo permite (por ejemplo en la compu), se descarga como archivo. */
+let placaArchivo=null;
+$('bajar').onclick=e=>{const f=placaArchivo;if(!f||!navigator.share||!navigator.canShare||!navigator.canShare({files:[f]}))return;
+  e.preventDefault();navigator.share({files:[f]}).catch(err=>{if(!err||err.name!=='AbortError'){const a=document.createElement('a');a.href=$('bajar').href;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}})};
 $('foto').onchange=e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{foto=fr.result;$('fotoMini').src=foto;$('fotoTxt').textContent=f.name;ajIniciar(foto).catch(()=>{})};fr.readAsDataURL(f)};
 $('guardar').onclick=async()=>{
   const r=leer();if(r.err){marcar();$('msg').className='msg err';$('msg').textContent=r.err;return}
@@ -234,7 +239,7 @@ $('guardar').onclick=async()=>{
       const k=Object.keys(FASES).find(x=>f.toLowerCase().startsWith(x)||(x==='16'&&/^diec/i.test(f)));
       const I={cat:catSel.categoria,extra:catSel.nombre||'',fase:Resultados.esZona(f)?'FASE CLASIFICATORIA':(k?FASES[k]:f.toUpperCase()),A,B,sets:r.sets,w:Resultados.ganadorSets(r.sets)};
       const d=await (catSel.tipo==='tour'?placaTour:placaComplejo)(I);
-      $('placaImg').src=d;$('bajar').href=d;$('bajar').download=('resultado-'+catSel.categoria+'-'+(sel.id||'')).toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.jpg';
+      $('placaImg').src=d;$('bajar').href=d;placaArchivo=null;fetch(d).then(r=>r.blob()).then(b=>{placaArchivo=new File([b],$('bajar').download||'resultado.jpg',{type:'image/jpeg'})}).catch(()=>{});$('bajar').download=('resultado-'+catSel.categoria+'-'+(sel.id||'')).toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.jpg';
       $('msg').textContent='';
     }
     $('placa').hidden=false;$('placaImg').hidden=!foto;$('bajar').hidden=!foto;
