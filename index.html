@@ -215,6 +215,7 @@ section.blanca{background:var(--blanco)}
 .rs-tab th,.rs-tab td{padding:8px 6px;border-bottom:1px solid var(--linea);text-align:center;font-size:14px;white-space:nowrap}
 .rs-tab th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-2)}
 .rs-tab .l{text-align:left;white-space:normal}.rs-tab .pos{font-weight:800;width:34px}.rs-tab tr.q .pos{color:var(--verde)}
+.dg{font-weight:800}.dg.pos{color:var(--verde)}.dg.neg{color:#C62828}.dg.cero{color:#8A948F}
 .rs-b{font-size:11px;font-weight:800;color:var(--verde);background:#E1F0E7;border-radius:999px;padding:2px 7px;white-space:nowrap}
 .rs-n{margin:6px 12px 2px;font-size:13px;color:var(--tinta-2)}
 .rs-p{display:grid;grid-template-columns:50px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 12px;border-top:1px solid var(--linea)}
@@ -749,7 +750,7 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
     var conRes=RS&&RS.partidos.some(function(p){return Resultados.esZona(p.fase)});
     sec.zonas=conRes?secc('Zonas','tablas y resultados','<div class="vt-zonas">'+RS.listaZonas().map(function(zk){var t=RS.tabla(zk),falta=t.partidos.filter(function(p){return!p._sets.length}).length;
       return'<div class="rs-zona"><p>Zona<b>'+esc(zk)+'</b></p><div class="rs-tw"><table class="rs-tab"><thead><tr><th>Pos</th><th class="l">Pareja</th><th>PG</th><th>Sets</th><th>Games</th></tr></thead><tbody>'+
-        t.filas.map(function(f,i){var q=t.cerrada&&i<t.clasif;return'<tr class="'+(q?'q':'')+'"><td class="pos">'+(i+1)+'°</td><td class="l">'+esc(f.pareja)+(q?' <span class="rs-b">Clasifica</span>':'')+'</td><td>'+f.pg+'</td><td>'+f.sf+'-'+f.sc+'</td><td>'+f.gf+'-'+f.gc+'</td></tr>'}).join('')+
+        t.filas.map(function(f,i){var q=t.cerrada&&i<t.clasif;return'<tr class="'+(q?'q':'')+'"><td class="pos">'+(i+1)+'°</td><td class="l">'+esc(f.pareja)+(q?' <span class="rs-b">Clasifica</span>':'')+'</td><td>'+f.pg+'</td><td>'+f.sf+'-'+f.sc+'</td><td>'+(function(d){return'<span class="dg '+(d>0?'pos':d<0?'neg':'cero')+'">'+(d>0?'+'+d:d<0?'−'+(-d):'0')+'</span>'})(f.gf-f.gc)+'</td></tr>'}).join('')+
         '</tbody></table></div><div class="rs-n">'+(t.cerrada?(t.clasif===3?'Zona terminada: clasifican 1°, 2° y 3°.':'Zona terminada: clasifican 1° y 2°.'):(falta?(falta>1?'Faltan '+falta+' partidos.':'Falta 1 partido.'):''))+'</div>'+
         t.partidos.map(function(p){var A=RS.nombre(p,1),B=RS.nombre(p,2),w=p._sets.length?Resultados.ganadorSets(p._sets):0;
           return'<div class="rs-p"><span class="h">'+esc(p.hora||'')+'</span><span class="ps"><span class="'+(w===1?'w':'')+'">'+(A.ok?esc(A.n):'<i>'+esc(A.n)+'</i>')+'</span><span class="'+(w===2?'w':'')+'">'+(B.ok?esc(B.n):'<i>'+esc(B.n)+'</i>')+'</span></span>'+(p._sets.length?Resultados.setsHTML(p._sets):'<span class="pend">'+esc(p.dia||'Por jugar')+'</span>')+'</div>'}).join('')+'</div>'}).join('')+'</div>'):secc('Zonas','',zonas.length?'<div class="vt-zonas">'+zonas.map(function(z){return'<div class="vt-zona"><p>Zona<b>'+esc(z.zona)+'</b></p><ul>'+z.parejas.map(function(p){return'<li>'+esc(p)+'</li>'}).join('')+'</ul></div>'}).join('')+'</div>':vacio('Las zonas se publican cuando cierra la inscripción.'));
