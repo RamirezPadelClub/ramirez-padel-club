@@ -108,10 +108,11 @@
   }
 
   /* HTML del resultado: cada set en columna, el número de cada pareja a la altura de su nombre. */
+  /* Siempre 3 lugares: si no hubo súper tie-break, el 3ro queda vacío para que los sets queden alineados. */
   function setsHTML(ss) {
-    return '<span class="rs-sc" aria-label="' + ss.map(function (s) { return s.join('-'); }).join(' ') + '">' + ss.map(function (s) {
-      return '<span class="rs-col"><b class="' + (s[0] > s[1] ? 'g' : '') + '">' + s[0] + '</b><b class="' + (s[1] > s[0] ? 'g' : '') + '">' + s[1] + '</b></span>';
-    }).join('') + '</span>';
+    var col = function (s, cls) { return '<span class="rs-col' + cls + '"><b class="' + (s[0] > s[1] ? 'g' : '') + '">' + s[0] + '</b><b class="' + (s[1] > s[0] ? 'g' : '') + '">' + s[1] + '</b></span>'; };
+    return '<span class="rs-sc" aria-label="' + ss.map(function (s) { return s.join('-'); }).join(' ') + '">' +
+      col(ss[0] || [0, 0], '') + col(ss[1] || [0, 0], '') + (ss[2] ? col(ss[2], ' tb') : '<span class="rs-col tb vacio" aria-hidden="true"><b>00</b><b>00</b></span>') + '</span>';
   }
 
   window.Resultados = { sets: sets, setValido: setValido, validar: validar, ganadorSets: ganadorSets, esZona: esZona, preparar: preparar, setsHTML: setsHTML };
