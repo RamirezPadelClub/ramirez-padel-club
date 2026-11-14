@@ -758,7 +758,7 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
     // Horarios: cronograma de todas las categorías juntas, ordenado por día y hora
     var conHora=[];cs.forEach(function(cc,ci){var pss=cc.partidos||[],R=window.Resultados?Resultados.preparar(cc):null,cat=String(cc.categoria||'').split(' ')[0];
       pss.forEach(function(p){if((p.hora||p.dia)&&ronda(p.fase)<0)conHora.push({p:p,ci:ci,cat:cs.length>1?cat:'',nm:function(k){if(!R)return(k===1?p.p1:p.p2)||'A definir';return R.nombre(R.partidos[pss.indexOf(p)],k).n}})})});
-    conHora.sort(function(a,b){return ordDia(a.p.dia)-ordDia(b.p.dia)||String(a.p.hora).localeCompare(String(b.p.hora))||a.ci-b.ci});
+    conHora.sort(function(a,b){return ordDia(a.p.dia)-ordDia(b.p.dia)||String(a.p.hora).localeCompare(String(b.p.hora))||(+a.p.id||0)-(+b.p.id||0)||a.ci-b.ci});
     var dias=[];conHora.forEach(function(x){var d=x.p.dia||'Sin día';if(dias.indexOf(d)<0)dias.push(d)});
     sec.crono=secc('Cronograma','',conHora.length?dias.map(function(d){return'<div class="vt-dia"><h4>'+esc(d)+'</h4>'+conHora.filter(function(x){return(x.p.dia||'Sin día')===d}).map(function(x){var p=x.p;
       var ss=window.Resultados?Resultados.sets(p.resultado):[];
