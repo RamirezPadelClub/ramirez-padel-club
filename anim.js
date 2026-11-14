@@ -192,6 +192,8 @@
   var vtUltimo = null;
   var vtGrupos = ['.vt-sec', '.vt-lista li', '.vt-zona', '.vt-dia', '.vt-fila', '.vt-ronda', '.vt-llave', '.vt-campeones div'];
   window.animarTorneo = function(id){
+    /* Sin animaciones en la vista del torneo: todo tiene que verse apenas carga, sin bajar ni mover la página. */
+    return;
     var vista = document.getElementById('v-torneo');
     if (!vista) return;
     var cab = vista.querySelector('.vt-cab');
