@@ -136,11 +136,11 @@ function post(body){return fetch(URL_API,{method:'POST',body:JSON.stringify(body
 function vista(id){['vLogin','vLista','vCarga'].forEach(v=>$(v).hidden=v!==id);window.scrollTo(0,0)}
 /* Tipo de placa e identidad de cada torneo: tour (2027), master (Máster Final, identidad 2026), conj (en conjunto con La Ruta) o complejo */
 /* Logo de la barra: el de la sede con la que entró el planillero (Complejo, La Ruta o Racing) */
-function logoSede(){const s=org&&org.sede;return s==='ruta'?'img/logo-laruta-fondo.png':s==='racing'?'img/logo-racing.png':'img/logo-complejo.png'}
+function logoSede(){const s=org&&org.sede;if(s==='todas')return 'img/marca-tour26.png';return s==='ruta'?'img/logo-laruta-fondo.png':s==='racing'?'img/logo-racing.png':'img/logo-complejo.png'}
 function tipoDe(cat){if(!cat)return 'complejo';const t=String(cat.tipo||'').toLowerCase();if(t==='master'||/^master-/.test(cat.torneo))return 'master';if(t==='conjunto'||t==='conj'||/^8(dam|cab)-/.test(cat.torneo))return 'conj';return t==='tour'?'master':'complejo'}
 /* Hasta presentar la temporada 2027, el Tour se muestra con la identidad 2026 (sin el escudo nuevo) */
 const TOUR26='img/marca-tour26.png';
-function modo(t){if(t===true||t==='tour')t='master';if(!t)t='complejo';const tour=t==='master';document.documentElement.dataset.modo=t;const bl=$('barLogo');bl.src=org?logoSede():(tour?TOUR26:LOGO);bl.classList.toggle('marca',!org&&tour);const li=document.querySelector('.login img');li.src=tour?TOUR26:LOGO;li.classList.toggle('marca',tour);li.alt=tour?'Ramirez Pádel Tour':'Escudo del Complejo Ramirez Padel Club'}
+function modo(t){if(t===true||t==='tour')t='master';if(!t)t='complejo';const tour=t==='master';document.documentElement.dataset.modo=t;const bl=$('barLogo');bl.src=org?logoSede():(tour?TOUR26:LOGO);bl.classList.toggle('marca',org?org.sede==='todas':tour);const li=document.querySelector('.login img');li.src=tour?TOUR26:LOGO;li.classList.toggle('marca',tour);li.alt=tour?'Ramirez Pádel Tour':'Escudo del Complejo Ramirez Padel Club'}
 /* /organizador?tour: la pantalla de entrada ya sale con la identidad del Tour (circuitos) */
 /* /organizador?demo: vista previa sin clave ni planilla (los resultados no se guardan en ningún lado) */
 const DEMO=/[?&]demo\b/.test(location.search);
@@ -191,7 +191,7 @@ async function cargar(){
   datos._cats=cats;if(prev&&cats[prev])$('cat').value=prev;
 }
 async function arrancar(){
-  $('salir').hidden=false;$('barT').textContent=SEDES[org.sede]||org.nombre;$('barLogo').src=logoSede();$('barLogo').classList.remove('marca');$('barS').textContent='Carga de resultados';
+  $('salir').hidden=false;$('barT').textContent=SEDES[org.sede]||org.nombre;$('barLogo').src=logoSede();$('barLogo').classList.toggle('marca',org.sede==='todas');$('barS').textContent='Carga de resultados';
   vista('vLista');$('lista').innerHTML='<p class="vacio">Cargando partidos…</p>';
   try{await cargar();pintarLista()}catch(e){$('lista').innerHTML='<p class="vacio">No se pudieron cargar los partidos. <button class="btn sec" id="re">Reintentar</button></p>';$('re').onclick=arrancar}
 }
