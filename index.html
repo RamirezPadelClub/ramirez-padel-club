@@ -97,7 +97,7 @@ a{color:inherit}
 .dato span{font-size:13px;color:var(--tinta-2)}
 @media (max-width:760px){.datos .in{grid-template-columns:1fr 1fr}.dato{padding-left:0;border-left:0}.dato:nth-child(even){padding-left:18px;border-left:1px solid var(--linea)}.dato:nth-child(-n+2){border-bottom:1px solid var(--linea)}}
 
-.atajos{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.atajos{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .atajo{position:relative;display:block;aspect-ratio:3/4;border-radius:20px;overflow:hidden;text-decoration:none;color:var(--blanco);background:var(--verde-osc);max-width:100%}
 .atajo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
 .atajo:hover img{transform:scale(1.05)}
@@ -379,6 +379,11 @@ footer a,.firma a{display:inline-block;padding:14px 4px;margin:-14px -4px}
 }
 
 @media (min-width:901px){.atajo div span{display:block;min-height:3.2em}}
+.slides{position:relative;margin:0;aspect-ratio:4/3;overflow:hidden;background:var(--verde-claro)}
+.slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease}
+.slides img.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.slides img{transition:none}}
+@media (max-width:760px){.canchas{grid-template-columns:1fr}}
 /* Menú del celular */
 .burger{display:none;margin-left:auto;width:44px;height:44px;border:0;border-radius:12px;background:rgba(255,255,255,.1);color:var(--blanco);align-items:center;justify-content:center;cursor:pointer;flex:none}
 .burger:hover{background:rgba(255,255,255,.18)}
@@ -410,7 +415,6 @@ body.mc-abierto{overflow:hidden}
     <a class="marca" href="#inicio"><img src="img/logo-complejo-128.webp" alt="" width="40" height="40">Ramirez Padel Club</a>
     <nav class="tabs" aria-label="Secciones">
       <a href="#inicio" data-v="inicio">Inicio</a>
-      <a href="#complejo" data-v="complejo">El complejo</a>
       <a href="#buffet" data-v="buffet">Buffet</a>
       <a href="#clases" data-v="clases">Clases</a>
       <a href="#torneos" data-v="torneos">Torneos</a>
@@ -427,7 +431,6 @@ body.mc-abierto{overflow:hidden}
   </div>
   <nav class="mc-links" aria-label="Secciones">
     <a href="#inicio" data-v="inicio">Inicio</a>
-    <a href="#complejo" data-v="complejo">El complejo</a>
     <a href="#buffet" data-v="buffet">Buffet</a>
     <a href="#clases" data-v="clases">Clases</a>
     <a href="#torneos" data-v="torneos">Torneos</a>
@@ -455,12 +458,36 @@ body.mc-abierto{overflow:hidden}
       <img class="escudo" src="img/logo-complejo-600.webp" alt="Escudo del Ramirez Padel Club" width="290" height="290">
     </div>
   </div>
+  <section id="el-complejo">
+    <div class="in">
+      <div class="cab">
+        <h2>Para jugar, mirar y quedarse</h2>
+        <p>Las dos canchas son techadas y de césped sintético, con buena luz, para que ni la lluvia ni el horario te corten el partido.</p>
+      </div>
+      <div class="canchas">
+        <article class="cancha">
+          <figure class="slides"><img class="on" src="fotos/cancha-blindex.webp" srcset="fotos/cancha-blindex-480.webp 480w, fotos/cancha-blindex.webp 825w" sizes="(max-width:760px) 100vw, 50vw" alt="Cancha de blindex con césped sintético azul" loading="lazy"><img class="" src="fotos/partido-blindex.webp" srcset="fotos/partido-blindex-480.webp 480w, fotos/partido-blindex.webp 825w" sizes="(max-width:760px) 100vw, 50vw" alt="Partido en la cancha de blindex" loading="lazy"><img class="" src="fotos/partido-blindex-2.webp" srcset="fotos/partido-blindex-2-480.webp 480w, fotos/partido-blindex-2.webp 825w" sizes="(max-width:760px) 100vw, 50vw" alt="Partido en la cancha de blindex visto desde el costado" loading="lazy"></figure>
+          <div><span class="tag">Cancha 1</span><h3>Sintético con blindex</h3><p>Paredes de vidrio templado: el rebote más parejo y la mejor vista para el que mira.</p></div>
+        </article>
+        <article class="cancha">
+          <figure class="slides"><img class="on" src="fotos/cancha-hormigon.webp" srcset="fotos/cancha-hormigon-480.webp 480w, fotos/cancha-hormigon.webp 825w" sizes="(max-width:760px) 100vw, 50vw" alt="Partido en la cancha de paredes de hormigón verdes" loading="lazy"><img class="" src="fotos/cancha2-vacia.webp" srcset="fotos/cancha2-vacia-480.webp 480w, fotos/cancha2-vacia.webp 825w" sizes="(max-width:760px) 100vw, 50vw" alt="Cancha de hormigón vacía" loading="lazy"><img class="" src="fotos/partido-saque.webp" srcset="fotos/partido-saque-480.webp 480w, fotos/partido-saque.webp 825w" sizes="(max-width:760px) 100vw, 50vw" alt="Saque en la cancha de hormigón" loading="lazy"></figure>
+          <div><span class="tag">Cancha 2</span><h3>Sintético con hormigón</h3><p>Paredes de hormigón y el mismo césped sintético. Techada e iluminada como la otra.</p></div>
+        </article>
+      </div>
+      <div class="extras">
+        <div class="extra"><h3>Pasillo de jugadores</h3><p>Abajo, un pasillo para entrar y salir de cancha sin cruzarte con el partido de al lado.</p></div>
+        <div class="extra"><h3>Pasarela arriba</h3><p>Desde arriba se ven las dos canchas mientras comés, tomás algo o compartís unos mates.</p></div>
+        <div class="extra"><h3>Buffet</h3><p>Abierto todo el día: tartas, empanadas, pizzas, tostados y bebidas. <a href="#buffet" style="color:var(--verde);font-weight:700">Ver el menú →</a></p></div>
+        <div class="extra"><h3>Vestuarios con duchas</h3><p>Baños y duchas para cambiarte antes y después de jugar.</p></div>
+      </div>
+      <a class="aviso-clases" href="#clases"><span><b>¿Querés aprender o mejorar?</b> Mirá las clases con nuestros profes</span><span aria-hidden="true">→</span></a>
+    </div>
+  </section>
   <section>
     <div class="in">
       <div class="cab"><h2>¿Qué estás buscando?</h2></div>
       <div class="atajos">
-        <a class="atajo ancho" href="#torneos"><img src="fotos/torneo-pasarela-llena.webp" srcset="fotos/torneo-pasarela-llena-480.webp 480w, fotos/torneo-pasarela-llena.webp 825w" sizes="(max-width:760px) 100vw, 825px" alt="" loading="lazy"><div><h3>Torneos</h3><span>Fechas e inscripción</span></div></a>
-        <a class="atajo" href="#complejo"><img src="fotos/pasarela.webp" srcset="fotos/pasarela-480.webp 480w, fotos/pasarela.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="" loading="lazy"><div><h3>El complejo</h3><span>Canchas, pasarela y vestuarios</span></div></a>
+        <a class="atajo" href="#torneos"><img src="fotos/torneo-pasarela-llena.webp" srcset="fotos/torneo-pasarela-llena-480.webp 480w, fotos/torneo-pasarela-llena.webp 825w" sizes="(max-width:760px) 100vw, 825px" alt="" loading="lazy"><div><h3>Torneos</h3><span>Fechas e inscripción</span></div></a>
         <a class="atajo" href="#clases"><img src="fotos/clases.webp" srcset="fotos/clases-480.webp 480w, fotos/clases.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="" loading="lazy"><div><h3>Clases</h3><span>Con Thomas y Franco</span></div></a>
         <a class="atajo" href="#fotos"><img src="fotos/juego/juego-remate.webp" srcset="fotos/juego/juego-remate-480.webp 480w, fotos/juego/juego-remate.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="" loading="lazy"><div><h3>Fotos</h3><span>Así se vive el club</span></div></a>
         <a class="atajo" href="#reservas"><img src="fotos/cancha-blindex.webp" srcset="fotos/cancha-blindex-480.webp 480w, fotos/cancha-blindex.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="" loading="lazy"><div><h3>Reservas</h3><span>Turnos por WhatsApp</span></div></a>
@@ -474,35 +501,6 @@ body.mc-abierto{overflow:hidden}
         <a class="btn verde" href="#fotos">Ver todas las fotos</a>
       </div>
       <div class="tira"><a href="#fotos"><img src="fotos/juego/juego-bandeja.webp" srcset="fotos/juego/juego-bandeja-480.webp 480w, fotos/juego/juego-bandeja.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Bandeja" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-choque.webp" srcset="fotos/juego/gente-choque-480.webp 480w, fotos/juego/gente-choque.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Choque de manos en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-derecha.webp" srcset="fotos/juego/juego-derecha-480.webp 480w, fotos/juego/juego-derecha.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Derecha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-estirada.webp" srcset="fotos/juego/juego-estirada-480.webp 480w, fotos/juego/juego-estirada.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugadora estirándose a la pelota" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-dobles.webp" srcset="fotos/juego/juego-dobles-480.webp 480w, fotos/juego/juego-dobles.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Partido de dobles" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-red.webp" srcset="fotos/juego/juego-red-480.webp 480w, fotos/juego/juego-red.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Volea en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-smash.webp" srcset="fotos/juego/juego-smash-480.webp 480w, fotos/juego/juego-smash.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Smash" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-festejo.webp" srcset="fotos/juego/gente-festejo-480.webp 480w, fotos/juego/gente-festejo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Festejo después del punto" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-globo.webp" srcset="fotos/juego/juego-globo-480.webp 480w, fotos/juego/juego-globo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Globo" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-sonrisas.webp" srcset="fotos/juego/gente-sonrisas-480.webp 480w, fotos/juego/gente-sonrisas.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Sonrisas en la cancha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-volea.webp" srcset="fotos/juego/juego-volea-480.webp 480w, fotos/juego/juego-volea.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Volea" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-remate-damas.webp" srcset="fotos/juego/juego-remate-damas-480.webp 480w, fotos/juego/juego-remate-damas.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Remate" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-grupo.webp" srcset="fotos/juego/gente-grupo-480.webp 480w, fotos/juego/gente-grupo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Grupo en el club" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-salto.webp" srcset="fotos/juego/juego-salto-480.webp 480w, fotos/juego/juego-salto.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Salto a la pelota" loading="lazy"></a></div>
-    </div>
-  </section>
-</main>
-
-<!-- EL COMPLEJO -->
-<main class="vista" id="v-complejo" hidden>
-  <section>
-    <div class="in">
-      <div class="cab">
-        <h2>Para jugar, mirar y quedarse</h2>
-        <p>Las dos canchas son techadas y de césped sintético, con buena luz, para que ni la lluvia ni el horario te corten el partido.</p>
-      </div>
-      <div class="canchas">
-        <article class="cancha">
-          <img src="fotos/cancha-blindex.webp" srcset="fotos/cancha-blindex-480.webp 480w, fotos/cancha-blindex.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Cancha de blindex con césped sintético azul y una pelota" width="825" height="619" loading="lazy">
-          <div><span class="tag">Cancha 1</span><h3>Sintético con blindex</h3><p>Paredes de vidrio templado: el rebote más parejo y la mejor vista para el que mira.</p></div>
-        </article>
-        <article class="cancha">
-          <img src="fotos/cancha-hormigon.webp" srcset="fotos/cancha-hormigon-480.webp 480w, fotos/cancha-hormigon.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Partido en la cancha de paredes de hormigón verdes" width="825" height="619" loading="lazy">
-          <div><span class="tag">Cancha 2</span><h3>Sintético con hormigón</h3><p>Paredes de hormigón y el mismo césped sintético. Techada e iluminada como la otra.</p></div>
-        </article>
-      </div>
-      <div class="extras">
-        <div class="extra"><h3>Pasillo de jugadores</h3><p>Abajo, un pasillo para entrar y salir de cancha sin cruzarte con el partido de al lado.</p></div>
-        <div class="extra"><h3>Pasarela arriba</h3><p>Desde arriba se ven las dos canchas mientras comés, tomás algo o compartís unos mates.</p></div>
-        <div class="extra"><h3>Buffet</h3><p>Abierto todo el día: tartas, empanadas, pizzas, tostados y bebidas. <a href="#buffet" style="color:var(--verde);font-weight:700">Ver el menú →</a></p></div>
-        <div class="extra"><h3>Vestuarios con duchas</h3><p>Baños y duchas para cambiarte antes y después de jugar.</p></div>
-      </div>
-      <a class="aviso-clases" href="#clases"><span><b>¿Querés aprender o mejorar?</b> Mirá las clases con nuestros profes</span><span aria-hidden="true">→</span></a>
     </div>
   </section>
 </main>
@@ -1147,7 +1145,7 @@ body.mc-abierto{overflow:hidden}
 
 <script>
 (function(){
-  var vistas=['inicio','complejo','buffet','clases','torneos','fotos','reservas','torneo','album'];
+  var vistas=['inicio','buffet','clases','torneos','fotos','reservas','torneo','album'];
   var titulo0=document.title;
   var SOLO=document.documentElement.getAttribute('data-solo');
   function mostrar(){
@@ -1156,6 +1154,7 @@ body.mc-abierto{overflow:hidden}
     if(v.indexOf('torneo/')===0) v='torneo';
     else if(v.indexOf('album/')===0) v='album';
     else if(document.title!==titulo0) document.title=titulo0;
+    var irComplejo=(v==='complejo');
     if(vistas.indexOf(v)<0) v='inicio';
     vistas.forEach(function(n){document.getElementById('v-'+n).hidden=(n!==v)});
     var tab=v==='torneo'?'torneos':v==='album'?'fotos':v;
@@ -1165,6 +1164,7 @@ body.mc-abierto{overflow:hidden}
       else a.removeAttribute('aria-current');
     });
     window.scrollTo(0,0);
+    if(irComplejo){var ec=document.getElementById('el-complejo');if(ec)setTimeout(function(){ec.scrollIntoView()},50)}
   }
   // filtros de fotos
   var figs=[].slice.call(document.querySelectorAll('#galeria figure'));
@@ -1239,4 +1239,5 @@ b.addEventListener('click',abrir);c.addEventListener('click',cerrar);
 m.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){m.hidden=true;b.setAttribute('aria-expanded','false');document.body.classList.remove('mc-abierto')})});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrar()});
 window.addEventListener('resize',function(){if(window.innerWidth>720)cerrar()});})();</script>
+<script>(function(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;document.querySelectorAll('.slides').forEach(function(f,n){var im=f.querySelectorAll('img'),i=0;if(im.length<2)return;setTimeout(function(){setInterval(function(){im[i].classList.remove('on');i=(i+1)%im.length;im[i].classList.add('on')},4500)},n*2200)})})();</script>
 </body></html>
