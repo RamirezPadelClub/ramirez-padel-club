@@ -273,6 +273,8 @@ var LISTAS={
 'Suma 8 Caballeros':[['Cavagna Ignacio',5750,'Godoy Gerónimo',1400],['Reichel Francisco',5650,'Vera Eduardo',2350],['Randazzo Mateo',5350,'Gaitán Joaquín',900],['Riffel Facundo',4750,'Pérez Beltrán',2750],['Randazzo Nahuel',4300,'Arredondo Uriel',750],['Schonals Gustavo',4300,'Gross Joaquín',1500],['Martínez Diego',3950,'Cardenal Valentín',1400],['Martínez Carlos',3800,'Eichman Gonzalo',1000],['Salcedo Guillermo',3600,'Gieco Franco',2200],['Momparler Tomás',3400,'Sosa Lucas',2550],['Rosales Angelo',3100,'Sánchez Joaquín',2050],['Martínez Juan',2950,'Acosta Axel',1400]]
 };
 /* Zonas del Máster: preclasificados por zona (metodología oficial). Se muestran mientras la planilla no tenga zonas cargadas. */
+/* Inscriptas del 8° Damas (lista que pasó Axel; Cattaneo – Holman sin nombres todavía) */
+var NOMBRES={'8° Damas':['Godoy Debora – Richard Victoria','Reichel Martina – García Candela','Cattaneo – Holman','Del Prado Rocio – Maak Elizabeth','Estebenet Sandra – Costa Viviana','Romero Fabiana – Vittori Andrea','Lell Naara – Aguilera Karen','Quintana Maria – Coceres Alejandra','Catalano Karen – Tiraboschi Karen','Nievas Candela – Nievas Tatiana']};
 var ZONAS_MASTER=[['A',[1,8,12]],['B',[2,7,11]],['C',[3,6,10]],['D',[4,5,9]]];
 
 var datos=null,vista=null,cat=0,tab='inscriptos',dia=null;
@@ -360,6 +362,7 @@ function inscriptos(T,i){
   var c=catDatos(T,i),L=LISTAS[c.categoria],items;
   if(c.inscriptos&&c.inscriptos.length) items=c.inscriptos.filter(function(x){return !x.espera}).map(function(x){return '<span>'+esc(x.pareja)+'</span>'});
   else if(L) items=L.map(function(r){return '<span><span class="j">'+esc(r[0])+'<span class="pts">'+r[1]+' P</span></span><span class="sep">–</span><span class="j">'+esc(r[2])+'<span class="pts">'+r[3]+' P</span></span></span>'});
+  else if(NOMBRES[c.categoria]) items=NOMBRES[c.categoria].map(function(n){return '<span>'+esc(n)+'</span>'});
   else return vacio('La lista de inscriptas se publica en breve.');
   return '<div class="caja lista"><span class="etq">Lista de parejas</span><ol>'+items.map(function(h,n){return '<li><span class="n">'+(n+1)+'</span>'+h+'</li>'}).join('')+'</ol></div>';
 }
