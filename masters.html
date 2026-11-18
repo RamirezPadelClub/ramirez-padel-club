@@ -183,6 +183,13 @@ a{color:inherit}
   .etq{font-size:22px;min-width:0;letter-spacing:.14em}
 }
 @media (prefers-reduced-motion:reduce){.mf b{animation:none}.card{transition:none}}
+
+/* Mejoras auditoría 18/11 */
+h1.mf{margin-bottom:0;font-size:inherit;font-weight:inherit}
+::selection{background:#d7ea46;color:#00214d}
+.conj ::selection{background:#fff;color:#0b0b0b}
+@media (max-width:760px){.panel{margin-top:46px}}
+.firma a{display:inline-block;padding:14px 4px;margin:-14px -4px}
 </style>
 </head>
 <body>
@@ -227,7 +234,7 @@ a{color:inherit}
     <header class="cab" id="cabM">
       <div class="r">RAMIREZ</div>
       <div class="t">Pádel Tour</div>
-      <div class="mf"><i></i><s></s><b>MÁSTER FINAL</b><s></s><i></i></div>
+      <h1 class="mf"><i></i><s></s><b>MÁSTER FINAL</b><s></s><i></i></h1>
       <div class="sub" id="subM">20 · 21 · 22 NOV</div>
     </header>
     <header class="cabc" id="cabC" hidden>
@@ -334,6 +341,7 @@ function ruta(){
   if(!vista){location.replace('/#torneos');return}
   document.body.classList.toggle('conj',!!vista&&TORNEOS[vista].tema==='conj');
   $('portada').hidden=!!vista;$('torneo').hidden=!vista;
+  document.title=vista==='8damas'?'Torneo 8° Damas · Ramírez Pádel Club × La Ruta Pádel':'Máster Final 2026 · Ramirez Pádel Tour';
   if(vista){cat=0;tab='inscriptos';dia=null;armarPills();pintar();window.scrollTo(0,0)}
 }
 function armarPills(){
