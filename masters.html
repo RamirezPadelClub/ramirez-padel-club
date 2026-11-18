@@ -106,6 +106,10 @@ a{color:inherit}
 .conj .sede{border-color:#fff}.conj .sede h3{font-family:Archivo,sans-serif;font-weight:900;font-stretch:70%;font-size:30px;letter-spacing:.02em}.conj .sede h3 small{font:600 13px Archivo,sans-serif;letter-spacing:.2em;color:#9a9a9a}
 .zonas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 22px}
 .zona{padding:38px 16px 16px}
+.zona.zm{padding:38px 16px 10px}
+.zona.zm ol{width:auto!important;margin:0!important}
+.zona.zm li{grid-template-columns:38px minmax(0,1fr)!important;font-size:19px!important;padding:10px 0!important}
+.zm-nota{text-align:center;font:400 italic 18px 'Cormorant Garamond',serif;color:var(--lima);margin:26px 0 0}
 .tabla{width:100%;border-collapse:collapse;font:400 17px Oswald,sans-serif}
 .tabla th{font:600 13px 'Cormorant Garamond',serif;letter-spacing:.2em;color:var(--lima);text-align:center;padding:4px 2px}
 .tabla th:nth-child(2){text-align:left}
@@ -262,10 +266,12 @@ var SEDES={complejo:{n:'RAMÍREZ PÁDEL CLUB',c:'CRPC',logo:'img/logo-complejo-2
 /* Lista oficial del Máster (doc "MÁSTER FINALS", con los puntos de cada jugador). Se usa mientras la planilla no tenga inscriptos. */
 var LISTAS={
 '6° Damas':[['Albornoz Daniela',5650,'Cavallo Valentina',2850],['Sterzer Ivana',4600,'Muñoz Nilda',2250],['Roldán Lucía',4350,'Truffer Valentina',800],['Alzugaray Jacqueline',4050,'De Angeli Candela',600],['Sigvardt Julia',3900,'Heffele Pamela',2600],['Seiffert Florencia',3750,'Gabirondo Yésica',450],['Aguilar Vanesa',3700,'Tonutti Camila',2950],['Urchueguia Alfonsina',3600,'Weber Ivana',1750],['Olmedo Ileana',3550,'Herman Nancy',2200],['Sigvardt Luz',3200,'Tonutti Soledad',2950],['Erbes Martina',3100,'Clementin Flavia',2600],['Ramallo Silvina',3050,'Passadore Daiana',900]],
-'5° Damas':[['Marinelli Marianela',5450,'González Marianela',1400],['Riffel Jésica',5400,'Heintze Paola',1300],['Ronco Sara',4950,'La Barba Débora',2600],['Kramer Karen',4700,'Müller Melanie',2500],['Rodríguez Marianela',3650,'Ringlofer Patricia',2450],['Pissano Antonella',3450,'Lorenzatto Gabriela',2800],['Márquez Dariana',3400,'Esquivel Mónica',1500],['Gelroth Verónica',3400,'Graff Angelina',2400],['Mingiaca Mercedes',3350,'Reh Eleonora',2300],['Martínez Karen',3300,'Vergara María',300],['Markel Antonella',3250,'Sánchez Estefanía',750],['Villanueva Ana',3150,'Valle Zuazaga',1750]],
-'7° Caballeros':[['González Augusto',4650,'Gottig Adrián',1800],['Schreiner Eduardo',4150,'Schreiner Francis',1600],['Bolzan Gastón',4150,'Zárate Federico',2250],['Markel Damián',3950,'Nievas Leonel',1750],['Castro Maximiliano',3950,'Balbi Antonio',2500],['Dalinger Facundo',3900,'Friss Diego',1600],['Folmer Gonzalo',3500,'Morales Facundo',1850],['Riquel David',3100,'Mantovani Andrés',2100],['Randazzo Diego',2850,'Mayer Matías',1650],['Rojas Amilcar',2750,'Eurich Mauro',2200],['Folmer Mateo',2650,'Jeckeln Joaquín',1450],['Tablada Gustavo',2650,'Eckhardt Hernán',1100]],
-'Suma 8 Caballeros':[['Cavagna Ignacio',5750,'Godoy Gerónimo',1400],['Reichel Francisco',5650,'Vera Eduardo',2350],['Randazzo Mateo',5350,'Gaitán Joaquín',900],['Riffel Facundo',4750,'Pérez Beltrán',2750],['Schonals Gustavo',4300,'Gross Joaquín',1500],['Randazzo Nahuel',4300,'Arredondo Uriel',750],['Martínez Diego',3950,'Cardenal Valentín',1400],['Martínez Carlos',3800,'Eichman Gonzalo',1000],['Salcedo Guillermo',3600,'Gieco Franco',2200],['Momparler Tomás',3400,'Sosa Lucas',2550],['Rosales Angelo',3100,'Sánchez Joaquín',2050],['Martínez Juan',2950,'Acosta Axel',1400]]
+'5° Damas':[['Marinelli Marianela',5450,'González Marianela',1400],['Riffel Jésica',5400,'Heintze Paola',1300],['Ronco Sara',4950,'La Barba Débora',2600],['Kramer Karen',4700,'Müller Melanie',2500],['Rodríguez Marianela',3650,'Ringlofer Patricia',2450],['Pissano Antonella',3450,'Lorenzatto Gabriela',2800],['Gelroth Verónica',3400,'Graff Angelina',2400],['Márquez Dariana',3400,'Esquivel Mónica',1500],['Mingiaca Mercedes',3350,'Reh Eleonora',2300],['Martínez Karen',3300,'Vergara María',300],['Markel Antonella',3250,'Sánchez Estefanía',750],['Villanueva Ana',3150,'Valle Zuazaga',1750]],
+'7° Caballeros':[['González Augusto',4650,'Gottig Adrián',1800],['Bolzan Gastón',4150,'Zárate Federico',2250],['Schreiner Eduardo',4150,'Schreiner Francis',1600],['Markel Damián',3950,'Nievas Leonel',1750],['Castro Maximiliano',3950,'Balbi Antonio',2500],['Dalinger Facundo',3900,'Friss Diego',1600],['Folmer Gonzalo',3500,'Morales Facundo',1850],['Riquel David',3100,'Mantovani Andrés',2100],['Randazzo Diego',2850,'Mayer Matías',1650],['Rojas Amilcar',2750,'Eurich Mauro',2200],['Folmer Mateo',2650,'Jeckeln Joaquín',1450],['Tablada Gustavo',2650,'Eckhardt Hernán',1100]],
+'Suma 8 Caballeros':[['Cavagna Ignacio',5750,'Godoy Gerónimo',1400],['Reichel Francisco',5650,'Vera Eduardo',2350],['Randazzo Mateo',5350,'Gaitán Joaquín',900],['Riffel Facundo',4750,'Pérez Beltrán',2750],['Randazzo Nahuel',4300,'Arredondo Uriel',750],['Schonals Gustavo',4300,'Gross Joaquín',1500],['Martínez Diego',3950,'Cardenal Valentín',1400],['Martínez Carlos',3800,'Eichman Gonzalo',1000],['Salcedo Guillermo',3600,'Gieco Franco',2200],['Momparler Tomás',3400,'Sosa Lucas',2550],['Rosales Angelo',3100,'Sánchez Joaquín',2050],['Martínez Juan',2950,'Acosta Axel',1400]]
 };
+/* Zonas del Máster: preclasificados por zona (metodología oficial). Se muestran mientras la planilla no tenga zonas cargadas. */
+var ZONAS_MASTER=[['A',[1,8,12]],['B',[2,7,11]],['C',[3,6,10]],['D',[4,5,9]]];
 
 var datos=null,vista=null,cat=0,tab='inscriptos',dia=null;
 var $=function(id){return document.getElementById(id)};
@@ -358,7 +364,14 @@ function inscriptos(T,i){
 
 function zonas(T,i){
   var c=catDatos(T,i),C=R.preparar(c),ks=C.listaZonas();
-  if(!ks.length)return vacio('Las zonas se publican cuando cierre el armado del torneo.');
+  if(!ks.length){
+    var L=LISTAS[c.categoria];
+    if(!L)return vacio('Las zonas se publican cuando cierre el armado del torneo.');
+    return '<div class="zonas">'+ZONAS_MASTER.map(function(z){
+      return '<div class="caja zona lista zm"><span class="etq">Zona '+z[0]+'</span><ol>'+z[1].map(function(n){var r=L[n-1];
+        return '<li><span class="n">'+n+'</span><span><span class="j">'+esc(r[0])+'<span class="pts">'+r[1]+' P</span></span><span class="sep">–</span><span class="j">'+esc(r[2])+'</span></span></li>'}).join('')+'</ol></div>';
+    }).join('')+'</div><p class="zm-nota">El número es el preclasificado de cada pareja. Horarios y resultados se publican cuando se arme el cronograma.</p>';
+  }
   var porSede={};
   ks.forEach(function(k){
     var ps=C.partidos.filter(function(p){return R.esZona(p.fase)===k}),s=(ps[0]&&ps[0].sede)||'complejo';
