@@ -1,4 +1,14 @@
-<!doctype html><html lang="es"><head><script>if(location.hostname==='ramirezpadelclub.pages.dev')location.replace('https://ramirezpadelclub.com.ar'+location.pathname+location.search+location.hash)</script><meta charset=utf8><meta name="google-site-verification" content="XvOYWTEwAHaldKH7BwBF8n5pSmI9QNwHCzascK-G59k"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<!doctype html><html lang="es"><head><script>if(location.hostname==='ramirezpadelclub.pages.dev')location.replace('https://ramirezpadelclub.com.ar'+location.pathname+location.search+location.hash)</script><meta charset=utf8><meta name="google-site-verification" content="XvOYWTEwAHaldKH7BwBF8n5pSmI9QNwHCzascK-G59k"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+/* Mejoras auditoría 18/11 */
+::selection{background:#bfe6cd;color:#033d22}
+.visor .cerrar,.visor .nav{display:flex;align-items:center;justify-content:center}
+.tit-paso{font-family:var(--display);font-size:24px;color:var(--verde-osc);margin:0}
+footer a,.firma a{display:inline-block;padding:14px 4px;margin:-14px -4px}
+@media (max-width:760px){
+  .tabs{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
+  .tabs.al-final{-webkit-mask-image:none;mask-image:none}
+}
+</style>
 <title>Ramirez Padel Club · Pádel en General Ramírez, Entre Ríos</title>
 <meta name="description" content="Dos canchas techadas de césped sintético, buffet abierto todo el día, clases y torneos en General Ramírez, Entre Ríos. Reservá tu turno por WhatsApp.">
 <meta property="og:type" content="website">
@@ -79,7 +89,7 @@ a{color:inherit}
 .btn.copiar{background:none;border:1.5px solid var(--verde);color:var(--verde)}
 
 /* Inicio */
-.hero{background:linear-gradient(100deg,rgba(2,74,41,.96) 0%,rgba(3,120,65,.88) 45%,rgba(3,120,65,.55) 100%),url("fotos/frente.jpg") center 40%/cover,var(--verde);color:var(--blanco);position:relative}
+.hero{background:linear-gradient(100deg,rgba(2,74,41,.96) 0%,rgba(3,120,65,.88) 45%,rgba(3,120,65,.55) 100%),url("fotos/frente.webp") center 40%/cover,var(--verde);color:var(--blanco);position:relative}
 .hero::after{content:"";position:absolute;inset:auto 0 0;height:12px;background:repeating-linear-gradient(90deg,var(--blanco) 0 40px,var(--verde-osc) 40px 80px)}
 .hero .in{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center;padding-block:56px 72px}
 .hero .eyebrow{color:var(--verde-claro)}
@@ -371,7 +381,7 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
 
 <header class="top">
   <div class="in">
-    <a class="marca" href="#inicio"><img src="img/logo-complejo.png" alt="" width="40" height="40">Ramirez Padel Club</a>
+    <a class="marca" href="#inicio"><img src="img/logo-complejo-128.webp" alt="" width="40" height="40">Ramirez Padel Club</a>
     <nav class="tabs" aria-label="Secciones">
       <a href="#inicio" data-v="inicio">Inicio</a>
       <a href="#complejo" data-v="complejo">El complejo</a>
@@ -396,35 +406,27 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
           <a class="btn blanco" href="#reservas">Reservar cancha</a>
         </div>
       </div>
-      <img class="escudo" src="img/logo-complejo.png" alt="Escudo del Ramirez Padel Club" width="290" height="290">
-    </div>
-  </div>
-  <div class="datos">
-    <div class="in">
-      <div class="dato"><b>2</b><span>canchas techadas de césped sintético</span></div>
-      <div class="dato"><b>9 a 24 h</b><span>todos los días</span></div>
-      <div class="dato"><b>Buffet</b><span>abierto siempre</span></div>
-      <div class="dato"><b>Clases</b><span>con 2 profes</span></div>
+      <img class="escudo" src="img/logo-complejo-600.webp" alt="Escudo del Ramirez Padel Club" width="290" height="290">
     </div>
   </div>
   <section>
     <div class="in">
-      <div class="cab"><p class="eyebrow">Explorá</p><h2>¿Qué estás buscando?</h2></div>
+      <div class="cab"><h2>¿Qué estás buscando?</h2></div>
       <div class="atajos">
-        <a class="atajo" href="#complejo"><img src="fotos/pasarela.jpg" alt="" loading="lazy"><div><h3>El complejo</h3><span>Canchas, pasarela y vestuarios</span></div></a>
-        <a class="atajo" href="#clases"><img src="fotos/clases.jpg" alt="" loading="lazy"><div><h3>Clases</h3><span>Con Thomas y Franco</span></div></a>
-        <a class="atajo" href="#fotos"><img src="fotos/juego/juego-remate.jpg" alt="" loading="lazy"><div><h3>Fotos</h3><span>Así se vive el club</span></div></a>
-        <a class="atajo" href="#reservas"><img src="fotos/cancha-blindex.jpg" alt="" loading="lazy"><div><h3>Reservas</h3><span>Turnos por WhatsApp</span></div></a>
+        <a class="atajo" href="#complejo"><img src="fotos/pasarela.webp" srcset="fotos/pasarela-480.webp 480w, fotos/pasarela.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="" loading="lazy"><div><h3>El complejo</h3><span>Canchas, pasarela y vestuarios</span></div></a>
+        <a class="atajo" href="#clases"><img src="fotos/clases.webp" srcset="fotos/clases-480.webp 480w, fotos/clases.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="" loading="lazy"><div><h3>Clases</h3><span>Con Thomas y Franco</span></div></a>
+        <a class="atajo" href="#fotos"><img src="fotos/juego/juego-remate.webp" srcset="fotos/juego/juego-remate-480.webp 480w, fotos/juego/juego-remate.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="" loading="lazy"><div><h3>Fotos</h3><span>Así se vive el club</span></div></a>
+        <a class="atajo" href="#reservas"><img src="fotos/cancha-blindex.webp" srcset="fotos/cancha-blindex-480.webp 480w, fotos/cancha-blindex.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="" loading="lazy"><div><h3>Reservas</h3><span>Turnos por WhatsApp</span></div></a>
       </div>
     </div>
   </section>
   <section class="blanca">
     <div class="in">
       <div class="tira-cab">
-        <div class="cab"><p class="eyebrow">En la cancha</p><h2>Así se juega en el club</h2></div>
+        <div class="cab"><h2>Así se juega en el club</h2></div>
         <a class="btn verde" href="#fotos">Ver todas las fotos</a>
       </div>
-      <div class="tira"><a href="#fotos"><img src="fotos/juego/juego-bandeja.jpg" alt="Bandeja" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-choque.jpg" alt="Choque de manos en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-derecha.jpg" alt="Derecha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-estirada.jpg" alt="Jugadora estirándose a la pelota" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-dobles.jpg" alt="Partido de dobles" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-red.jpg" alt="Volea en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-smash.jpg" alt="Smash" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-festejo.jpg" alt="Festejo después del punto" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-globo.jpg" alt="Globo" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-sonrisas.jpg" alt="Sonrisas en la cancha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-volea.jpg" alt="Volea" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-remate-damas.jpg" alt="Remate" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-grupo.jpg" alt="Grupo en el club" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-salto.jpg" alt="Salto a la pelota" loading="lazy"></a></div>
+      <div class="tira"><a href="#fotos"><img src="fotos/juego/juego-bandeja.webp" srcset="fotos/juego/juego-bandeja-480.webp 480w, fotos/juego/juego-bandeja.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Bandeja" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-choque.webp" srcset="fotos/juego/gente-choque-480.webp 480w, fotos/juego/gente-choque.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Choque de manos en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-derecha.webp" srcset="fotos/juego/juego-derecha-480.webp 480w, fotos/juego/juego-derecha.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Derecha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-estirada.webp" srcset="fotos/juego/juego-estirada-480.webp 480w, fotos/juego/juego-estirada.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugadora estirándose a la pelota" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-dobles.webp" srcset="fotos/juego/juego-dobles-480.webp 480w, fotos/juego/juego-dobles.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Partido de dobles" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-red.webp" srcset="fotos/juego/juego-red-480.webp 480w, fotos/juego/juego-red.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Volea en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-smash.webp" srcset="fotos/juego/juego-smash-480.webp 480w, fotos/juego/juego-smash.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Smash" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-festejo.webp" srcset="fotos/juego/gente-festejo-480.webp 480w, fotos/juego/gente-festejo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Festejo después del punto" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-globo.webp" srcset="fotos/juego/juego-globo-480.webp 480w, fotos/juego/juego-globo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Globo" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-sonrisas.webp" srcset="fotos/juego/gente-sonrisas-480.webp 480w, fotos/juego/gente-sonrisas.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Sonrisas en la cancha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-volea.webp" srcset="fotos/juego/juego-volea-480.webp 480w, fotos/juego/juego-volea.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Volea" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-remate-damas.webp" srcset="fotos/juego/juego-remate-damas-480.webp 480w, fotos/juego/juego-remate-damas.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Remate" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-grupo.webp" srcset="fotos/juego/gente-grupo-480.webp 480w, fotos/juego/gente-grupo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Grupo en el club" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-salto.webp" srcset="fotos/juego/juego-salto-480.webp 480w, fotos/juego/juego-salto.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Salto a la pelota" loading="lazy"></a></div>
     </div>
   </section>
 </main>
@@ -434,17 +436,16 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
   <section>
     <div class="in">
       <div class="cab">
-        <p class="eyebrow">El complejo</p>
         <h2>Para jugar, mirar y quedarse</h2>
         <p>Las dos canchas son techadas y de césped sintético, con buena luz, para que ni la lluvia ni el horario te corten el partido.</p>
       </div>
       <div class="canchas">
         <article class="cancha">
-          <img src="fotos/cancha-blindex.jpg" alt="Cancha de blindex con césped sintético azul y una pelota" width="825" height="619" loading="lazy">
+          <img src="fotos/cancha-blindex.webp" srcset="fotos/cancha-blindex-480.webp 480w, fotos/cancha-blindex.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Cancha de blindex con césped sintético azul y una pelota" width="825" height="619" loading="lazy">
           <div><span class="tag">Cancha 1</span><h3>Sintético con blindex</h3><p>Paredes de vidrio templado: el rebote más parejo y la mejor vista para el que mira.</p></div>
         </article>
         <article class="cancha">
-          <img src="fotos/cancha-hormigon.jpg" alt="Partido en la cancha de paredes de hormigón verdes" width="825" height="619" loading="lazy">
+          <img src="fotos/cancha-hormigon.webp" srcset="fotos/cancha-hormigon-480.webp 480w, fotos/cancha-hormigon.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Partido en la cancha de paredes de hormigón verdes" width="825" height="619" loading="lazy">
           <div><span class="tag">Cancha 2</span><h3>Sintético con hormigón</h3><p>Paredes de hormigón y el mismo césped sintético. Techada e iluminada como la otra.</p></div>
         </article>
       </div>
@@ -464,7 +465,6 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
   <section>
     <div class="in">
       <div class="cab">
-        <p class="eyebrow">Buffet</p>
         <h2>Comé y tomá algo en el complejo</h2>
         <p>Abierto todo el día. Para antes, durante o después del partido, en las mesas o arriba en la pasarela mirando las canchas.</p>
       </div>
@@ -493,27 +493,26 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
     <div class="in">
       <div class="clases-top">
         <div class="cab" style="margin-bottom:0">
-          <p class="eyebrow">Clases de pádel</p>
           <h2>Aprendé con los profes del complejo</h2>
           <p>Para arrancar de cero o pulir el juego. Las clases se dan en nuestras canchas techadas de césped sintético; escribile al profe por WhatsApp y coordinan día y horario.</p>
         </div>
-        <img class="clases-foto" src="fotos/clases.jpg" alt="Paleta apoyada en la red junto a conos de entrenamiento" loading="lazy" width="825" height="1100">
+        <img class="clases-foto" src="fotos/clases.webp" srcset="fotos/clases-480.webp 480w, fotos/clases.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Paleta apoyada en la red junto a conos de entrenamiento" loading="lazy" width="825" height="1100">
       </div>
 
       <div class="profes">
         <article class="profe">
-          <div class="avatar" aria-hidden="true"><img src="fotos/profes/thomas.jpg" alt="" width="72" height="72"></div>
+          <div class="avatar" aria-hidden="true"><img src="fotos/profes/thomas.webp" alt="" width="72" height="72"></div>
           <div class="profe-info"><h3>Thomas Momparler</h3><small>Profe de pádel</small></div>
           <div class="btns"><a class="btn verde" href="https://wa.me/5493434634771?text=Hola%20Thomas!%20Quiero%20info%20sobre%20las%20clases%20de%20p%C3%A1del" target="_blank" rel="noopener">Escribile por WhatsApp</a></div>
         </article>
         <article class="profe">
-          <div class="avatar" aria-hidden="true"><img src="fotos/profes/franco.jpg" alt="" width="72" height="72"></div>
+          <div class="avatar" aria-hidden="true"><img src="fotos/profes/franco.webp" alt="" width="72" height="72"></div>
           <div class="profe-info"><h3>Franco Schmidt</h3><small>Profe de pádel</small></div>
           <div class="btns"><a class="btn verde" href="https://wa.me/5493435035049?text=Hola%20Franco!%20Quiero%20info%20sobre%20las%20clases%20de%20p%C3%A1del" target="_blank" rel="noopener">Escribile por WhatsApp</a></div>
         </article>
       </div>
 
-      <div class="cab" style="margin-top:56px;margin-bottom:24px"><p class="eyebrow">Cómo arrancar</p></div>
+      <div class="cab" style="margin-top:56px;margin-bottom:24px"><h3 class="tit-paso">Cómo arrancar</h3></div>
       <ol class="pasos pasos-fila">
         <li><div><b>Elegí tu profe</b><span>Thomas o Franco, el que te quede mejor.</span></div></li>
         <li><div><b>Escribile por WhatsApp</b><span>Contale tu nivel y qué días podés.</span></div></li>
@@ -528,7 +527,6 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
   <section>
     <div class="in">
       <div class="cab">
-        <p class="eyebrow">Torneos</p>
         <h2>Próximas fechas</h2>
         <p>Los torneos que se vienen en el complejo. Para anotarte tocá "Inscribirme" y te contestamos por WhatsApp.</p>
       </div>
@@ -617,7 +615,6 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
       <p class="t-vacio" id="torneos-vacio" hidden>Por ahora no hay fechas anunciadas. Seguinos en <a href="https://www.instagram.com/complejo_ramirezpadelclub/" target="_blank" rel="noopener">Instagram</a> para enterarte de los próximos torneos.</p>
       <div id="jugados" hidden>
         <div class="cab" style="margin-top:56px">
-          <p class="eyebrow">Ya se jugaron</p>
           <h2>Torneos jugados</h2>
           <p>Mirá cómo se desarrolló cada torneo: zonas, cronograma, resultados y campeones.</p>
         </div>
@@ -947,56 +944,56 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
 <main class="vista" id="v-fotos" hidden>
   <section>
     <div class="in">
-      <div class="cab"><p class="eyebrow">Fotos</p><h2>Así se vive el complejo</h2></div>
+      <div class="cab"><h2>Así se vive el complejo</h2></div>
       <div class="albumes-bloque" id="sec-albumes" hidden>
         <div class="albumes-tit"><h3>Álbumes de torneos</h3><span>Buscá tus fotos y descargalas</span></div>
         <div class="albumes" id="albumes"></div>
       </div>
       <div class="galeria" id="galeria">
-        <figure data-c="juego"><img src="fotos/juego/juego-remate.jpg" alt="Jugador rematando con la pelota en el aire" loading="lazy"><figcaption>Remate</figcaption></figure>
-        <figure data-c="gente"><img src="fotos/juego/gente-grupo.jpg" alt="Grupo de jugadoras sonriendo en el complejo" loading="lazy"><figcaption>Las chicas del torneo</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/juego/juego-salto.jpg" alt="Jugadora saltando a rematar" loading="lazy"><figcaption>Al aire</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/juego/juego-red-damas.jpg" alt="Dos jugadoras defendiendo en la red" loading="lazy"><figcaption>En la red</figcaption></figure>
-        <figure data-c="gente"><img src="fotos/juego/gente-saludo.jpg" alt="Dos jugadores dándose la mano al terminar" loading="lazy"><figcaption>Buen partido</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/juego/juego-smash.jpg" alt="Jugador saltando para el smash" loading="lazy"><figcaption>Smash</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/juego/juego-globo.jpg" alt="Jugadora pegando un globo frente a la pared verde" loading="lazy"><figcaption>Globo</figcaption></figure>
-        <figure data-c="gente"><img src="fotos/juego/gente-sonrisas.jpg" alt="Pareja de jugadores sonriendo a cámara" loading="lazy"><figcaption>Pareja</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/juego/juego-reves.jpg" alt="Jugador agachado pegando un revés" loading="lazy"><figcaption>Revés</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/juego/juego-remate-damas.jpg" alt="Jugadora preparando el remate" loading="lazy"><figcaption>Remate</figcaption></figure>
-        <figure data-c="gente"><img src="fotos/juego/gente-festejo.jpg" alt="Compañeros chocando las manos" loading="lazy"><figcaption>Festejo</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/juego/juego-volea.jpg" alt="Jugador en salto de volea" loading="lazy"><figcaption>Volea</figcaption></figure>
-        <figure data-c="canchas"><img src="fotos/juego/cancha-tras-red.jpg" alt="Dos jugadoras vistas a través de la red" loading="lazy"><figcaption>Desde la red</figcaption></figure>
-        <figure data-c="gente"><img src="fotos/juego/gente-pasillo.jpg" alt="Jugadores esperando en el pasillo" loading="lazy"><figcaption>Previa</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/torneo-tribuna.jpg" alt="Jugador esperando la pelota con la pasarela llena de público" loading="lazy"><figcaption>Noche de torneo</figcaption></figure>
-        <figure data-c="pasarela"><img src="fotos/pasarela-arriba.jpg" alt="Gente mirando un partido desde la pasarela de madera" loading="lazy"><figcaption>La pasarela</figcaption></figure>
-        <figure data-c="canchas"><img src="fotos/cancha-blindex.jpg" alt="Pelota sobre el césped azul de la cancha de blindex" loading="lazy"><figcaption>Cancha 1 · Blindex</figcaption></figure>
-        <figure data-c="afuera"><img src="fotos/entrada.jpg" alt="Entrada del complejo con galería techada" loading="lazy"><figcaption>La entrada</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/partido-pasarela.jpg" alt="Partido de pádel con la pasarela llena de público" loading="lazy"><figcaption>Torneo</figcaption></figure>
-        <figure data-c="canchas"><img src="fotos/cancha2-vacia.jpg" alt="Cancha de hormigón con paredes verdes, vacía" loading="lazy"><figcaption>Cancha 2 · Hormigón</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/festejo.jpg" alt="Jugadores saludándose en la red al terminar el partido" loading="lazy"><figcaption>Fin del partido</figcaption></figure>
-        <figure data-c="pasarela"><img src="fotos/pasarela-mesas.jpg" alt="Mesas y bancos sobre la pasarela entre las dos canchas" loading="lazy"><figcaption>Mesas arriba</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/torneo-pasarela-llena.jpg" alt="Partido con la tribuna completa al fondo" loading="lazy"><figcaption>Tribuna llena</figcaption></figure>
-        <figure data-c="canchas"><img src="fotos/pasillo-jugadores.jpg" alt="Pasillo de jugadores entre las canchas" loading="lazy"><figcaption>Pasillo de jugadores</figcaption></figure>
-        <figure data-c="afuera"><img src="fotos/afuera-tarde.jpg" alt="Gente en el parque frente al complejo al atardecer" loading="lazy"><figcaption>El parque</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/partido-saque.jpg" alt="Jugador sacando en la cancha de blindex" loading="lazy"><figcaption>Saque</figcaption></figure>
-        <figure data-c="canchas"><img src="fotos/pelota-red.jpg" alt="Pelota junto a la red de la cancha" loading="lazy"><figcaption>Detalle</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/partido-1.jpg" alt="Partido de dobles con público en la pasarela" loading="lazy"><figcaption>En juego</figcaption></figure>
-        <figure data-c="afuera"><img src="fotos/noche-parque.jpg" alt="El complejo de noche visto desde el parque" loading="lazy"><figcaption>De noche</figcaption></figure>
-        <figure data-c="canchas"><img src="fotos/pasarela.jpg" alt="Vista de las dos canchas desde la pasarela" loading="lazy"><figcaption>Las dos canchas</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/partido-blindex-2.jpg" alt="Partido visto a través del alambrado" loading="lazy"><figcaption>Desde afuera</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/cancha-hormigon.jpg" alt="Partido en la cancha de hormigón con público arriba" loading="lazy"><figcaption>Cancha 2</figcaption></figure>
-        <figure data-c="canchas"><img src="fotos/red-arriba.jpg" alt="La red vista desde arriba" loading="lazy"><figcaption>La red</figcaption></figure>
-        <figure data-c="afuera"><img src="fotos/frente.jpg" alt="Frente verde del complejo con el cartel Ramírez Padel Club" loading="lazy"><figcaption>El frente</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/partido-2.jpg" alt="Partido de dobles con la pasarela al fondo" loading="lazy"><figcaption>Dobles</figcaption></figure>
-        <figure data-c="canchas"><img src="fotos/pelota-arriba.jpg" alt="Pelota sobre el césped azul vista desde arriba" loading="lazy"><figcaption>Césped sintético</figcaption></figure>
-        <figure data-c="juego"><img src="fotos/partido-blindex.jpg" alt="Partido visto a través del blindex" loading="lazy"><figcaption>A través del blindex</figcaption></figure>
-        <figure data-c="afuera"><img src="fotos/frente-tarde.jpg" alt="Lateral del complejo con la parrilla" loading="lazy"><figcaption>La parrilla</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/juego/juego-remate.webp" srcset="fotos/juego/juego-remate-480.webp 480w, fotos/juego/juego-remate.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugador rematando con la pelota en el aire" loading="lazy"><figcaption>Remate</figcaption></figure>
+        <figure data-c="gente"><img src="fotos/juego/gente-grupo.webp" srcset="fotos/juego/gente-grupo-480.webp 480w, fotos/juego/gente-grupo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Grupo de jugadoras sonriendo en el complejo" loading="lazy"><figcaption>Las chicas del torneo</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/juego/juego-salto.webp" srcset="fotos/juego/juego-salto-480.webp 480w, fotos/juego/juego-salto.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugadora saltando a rematar" loading="lazy"><figcaption>Al aire</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/juego/juego-red-damas.webp" srcset="fotos/juego/juego-red-damas-480.webp 480w, fotos/juego/juego-red-damas.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Dos jugadoras defendiendo en la red" loading="lazy"><figcaption>En la red</figcaption></figure>
+        <figure data-c="gente"><img src="fotos/juego/gente-saludo.webp" srcset="fotos/juego/gente-saludo-480.webp 480w, fotos/juego/gente-saludo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Dos jugadores dándose la mano al terminar" loading="lazy"><figcaption>Buen partido</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/juego/juego-smash.webp" srcset="fotos/juego/juego-smash-480.webp 480w, fotos/juego/juego-smash.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugador saltando para el smash" loading="lazy"><figcaption>Smash</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/juego/juego-globo.webp" srcset="fotos/juego/juego-globo-480.webp 480w, fotos/juego/juego-globo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugadora pegando un globo frente a la pared verde" loading="lazy"><figcaption>Globo</figcaption></figure>
+        <figure data-c="gente"><img src="fotos/juego/gente-sonrisas.webp" srcset="fotos/juego/gente-sonrisas-480.webp 480w, fotos/juego/gente-sonrisas.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Pareja de jugadores sonriendo a cámara" loading="lazy"><figcaption>Pareja</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/juego/juego-reves.webp" srcset="fotos/juego/juego-reves-480.webp 480w, fotos/juego/juego-reves.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugador agachado pegando un revés" loading="lazy"><figcaption>Revés</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/juego/juego-remate-damas.webp" srcset="fotos/juego/juego-remate-damas-480.webp 480w, fotos/juego/juego-remate-damas.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Jugadora preparando el remate" loading="lazy"><figcaption>Remate</figcaption></figure>
+        <figure data-c="gente"><img src="fotos/juego/gente-festejo.webp" srcset="fotos/juego/gente-festejo-480.webp 480w, fotos/juego/gente-festejo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Compañeros chocando las manos" loading="lazy"><figcaption>Festejo</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/juego/juego-volea.webp" srcset="fotos/juego/juego-volea-480.webp 480w, fotos/juego/juego-volea.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugador en salto de volea" loading="lazy"><figcaption>Volea</figcaption></figure>
+        <figure data-c="canchas"><img src="fotos/juego/cancha-tras-red.webp" srcset="fotos/juego/cancha-tras-red-480.webp 480w, fotos/juego/cancha-tras-red.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Dos jugadoras vistas a través de la red" loading="lazy"><figcaption>Desde la red</figcaption></figure>
+        <figure data-c="gente"><img src="fotos/juego/gente-pasillo.webp" srcset="fotos/juego/gente-pasillo-480.webp 480w, fotos/juego/gente-pasillo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugadores esperando en el pasillo" loading="lazy"><figcaption>Previa</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/torneo-tribuna.webp" srcset="fotos/torneo-tribuna-480.webp 480w, fotos/torneo-tribuna.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Jugador esperando la pelota con la pasarela llena de público" loading="lazy"><figcaption>Noche de torneo</figcaption></figure>
+        <figure data-c="pasarela"><img src="fotos/pasarela-arriba.webp" srcset="fotos/pasarela-arriba-480.webp 480w, fotos/pasarela-arriba.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Gente mirando un partido desde la pasarela de madera" loading="lazy"><figcaption>La pasarela</figcaption></figure>
+        <figure data-c="canchas"><img src="fotos/cancha-blindex.webp" srcset="fotos/cancha-blindex-480.webp 480w, fotos/cancha-blindex.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Pelota sobre el césped azul de la cancha de blindex" loading="lazy"><figcaption>Cancha 1 · Blindex</figcaption></figure>
+        <figure data-c="afuera"><img src="fotos/entrada.webp" srcset="fotos/entrada-480.webp 480w, fotos/entrada.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Entrada del complejo con galería techada" loading="lazy"><figcaption>La entrada</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/partido-pasarela.webp" srcset="fotos/partido-pasarela-480.webp 480w, fotos/partido-pasarela.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Partido de pádel con la pasarela llena de público" loading="lazy"><figcaption>Torneo</figcaption></figure>
+        <figure data-c="canchas"><img src="fotos/cancha2-vacia.webp" srcset="fotos/cancha2-vacia-480.webp 480w, fotos/cancha2-vacia.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Cancha de hormigón con paredes verdes, vacía" loading="lazy"><figcaption>Cancha 2 · Hormigón</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/festejo.webp" srcset="fotos/festejo-480.webp 480w, fotos/festejo.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Jugadores saludándose en la red al terminar el partido" loading="lazy"><figcaption>Fin del partido</figcaption></figure>
+        <figure data-c="pasarela"><img src="fotos/pasarela-mesas.webp" srcset="fotos/pasarela-mesas-480.webp 480w, fotos/pasarela-mesas.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Mesas y bancos sobre la pasarela entre las dos canchas" loading="lazy"><figcaption>Mesas arriba</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/torneo-pasarela-llena.webp" srcset="fotos/torneo-pasarela-llena-480.webp 480w, fotos/torneo-pasarela-llena.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Partido con la tribuna completa al fondo" loading="lazy"><figcaption>Tribuna llena</figcaption></figure>
+        <figure data-c="canchas"><img src="fotos/pasillo-jugadores.webp" srcset="fotos/pasillo-jugadores-480.webp 480w, fotos/pasillo-jugadores.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Pasillo de jugadores entre las canchas" loading="lazy"><figcaption>Pasillo de jugadores</figcaption></figure>
+        <figure data-c="afuera"><img src="fotos/afuera-tarde.webp" srcset="fotos/afuera-tarde-480.webp 480w, fotos/afuera-tarde.webp 619w" sizes="(max-width:760px) 60vw, 619px" alt="Gente en el parque frente al complejo al atardecer" loading="lazy"><figcaption>El parque</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/partido-saque.webp" srcset="fotos/partido-saque-480.webp 480w, fotos/partido-saque.webp 619w" sizes="(max-width:760px) 60vw, 619px" alt="Jugador sacando en la cancha de blindex" loading="lazy"><figcaption>Saque</figcaption></figure>
+        <figure data-c="canchas"><img src="fotos/pelota-red.webp" srcset="fotos/pelota-red-480.webp 480w, fotos/pelota-red.webp 734w" sizes="(max-width:760px) 60vw, 734px" alt="Pelota junto a la red de la cancha" loading="lazy"><figcaption>Detalle</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/partido-1.webp" srcset="fotos/partido-1-480.webp 480w, fotos/partido-1.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Partido de dobles con público en la pasarela" loading="lazy"><figcaption>En juego</figcaption></figure>
+        <figure data-c="afuera"><img src="fotos/noche-parque.webp" srcset="fotos/noche-parque-480.webp 480w, fotos/noche-parque.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="El complejo de noche visto desde el parque" loading="lazy"><figcaption>De noche</figcaption></figure>
+        <figure data-c="canchas"><img src="fotos/pasarela.webp" srcset="fotos/pasarela-480.webp 480w, fotos/pasarela.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Vista de las dos canchas desde la pasarela" loading="lazy"><figcaption>Las dos canchas</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/partido-blindex-2.webp" srcset="fotos/partido-blindex-2-480.webp 480w, fotos/partido-blindex-2.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Partido visto a través del alambrado" loading="lazy"><figcaption>Desde afuera</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/cancha-hormigon.webp" srcset="fotos/cancha-hormigon-480.webp 480w, fotos/cancha-hormigon.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Partido en la cancha de hormigón con público arriba" loading="lazy"><figcaption>Cancha 2</figcaption></figure>
+        <figure data-c="canchas"><img src="fotos/red-arriba.webp" srcset="fotos/red-arriba-480.webp 480w, fotos/red-arriba.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="La red vista desde arriba" loading="lazy"><figcaption>La red</figcaption></figure>
+        <figure data-c="afuera"><img src="fotos/frente.webp" srcset="fotos/frente-480.webp 480w, fotos/frente.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Frente verde del complejo con el cartel Ramírez Padel Club" loading="lazy"><figcaption>El frente</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/partido-2.webp" srcset="fotos/partido-2-480.webp 480w, fotos/partido-2.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Partido de dobles con la pasarela al fondo" loading="lazy"><figcaption>Dobles</figcaption></figure>
+        <figure data-c="canchas"><img src="fotos/pelota-arriba.webp" srcset="fotos/pelota-arriba-480.webp 480w, fotos/pelota-arriba.webp 619w" sizes="(max-width:760px) 60vw, 619px" alt="Pelota sobre el césped azul vista desde arriba" loading="lazy"><figcaption>Césped sintético</figcaption></figure>
+        <figure data-c="juego"><img src="fotos/partido-blindex.webp" srcset="fotos/partido-blindex-480.webp 480w, fotos/partido-blindex.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Partido visto a través del blindex" loading="lazy"><figcaption>A través del blindex</figcaption></figure>
+        <figure data-c="afuera"><img src="fotos/frente-tarde.webp" srcset="fotos/frente-tarde-480.webp 480w, fotos/frente-tarde.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="Lateral del complejo con la parrilla" loading="lazy"><figcaption>La parrilla</figcaption></figure>
       </div>
       <div class="visor" id="visor" hidden>
-        <button type="button" class="cerrar" id="v-cerrar" aria-label="Cerrar">✕</button>
-        <button type="button" class="nav ant" id="v-ant" aria-label="Foto anterior">‹</button>
+        <button type="button" class="cerrar" id="v-cerrar" aria-label="Cerrar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button type="button" class="nav ant" id="v-ant" aria-label="Foto anterior"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
         <figure><img id="v-img" src="" alt=""><figcaption id="v-cap"></figcaption></figure>
-        <button type="button" class="nav sig" id="v-sig" aria-label="Foto siguiente">›</button>
+        <button type="button" class="nav sig" id="v-sig" aria-label="Foto siguiente"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
       </div>
     </div>
   </section>
@@ -1015,10 +1012,10 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
   <div class="visor" id="al-visor" hidden role="dialog" aria-modal="true" aria-label="Foto en grande">
     <a class="bajar" id="al-bajar" href="#" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Descargar</a>
     <span class="num" id="al-num"></span>
-    <button type="button" class="cerrar" id="al-cerrar" aria-label="Cerrar">✕</button>
-    <button type="button" class="nav ant" id="al-ant" aria-label="Foto anterior">‹</button>
+    <button type="button" class="cerrar" id="al-cerrar" aria-label="Cerrar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button type="button" class="nav ant" id="al-ant" aria-label="Foto anterior"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
     <figure><img id="al-img" src="" alt=""></figure>
-    <button type="button" class="nav sig" id="al-sig" aria-label="Foto siguiente">›</button>
+    <button type="button" class="nav sig" id="al-sig" aria-label="Foto siguiente"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
   </div>
 </main>
 
@@ -1027,7 +1024,6 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
   <section>
     <div class="in">
       <div class="cab">
-        <p class="eyebrow">Reservas</p>
         <h2>Reservá por WhatsApp</h2>
         <p>Los turnos libres se publican en nuestro grupo de WhatsApp. Elegís horario y lo confirmás con un mensaje por WhatsApp.</p>
         <div class="botones" style="margin-top:8px"><a class="btn verde" href="https://chat.whatsapp.com/Klp4KId7n97Hj8FIT1krsR" target="_blank" rel="noopener">Unirme al grupo de turnos</a></div>
@@ -1047,7 +1043,6 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
       </div>
       <div class="contacto">
         <div>
-          <p class="eyebrow">Contacto</p>
           <h3>Te esperamos en la cancha</h3>
           <p>Para reservar, sumarte al grupo de turnos o consultar por clases, escribinos por WhatsApp o por Instagram.</p>
         </div>
@@ -1096,7 +1091,7 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
 
 <footer>
   <div class="in">
-    <img src="img/logo-complejo.png" alt="Ramirez Padel Club" width="42" height="42">
+    <img src="img/logo-complejo-128.webp" alt="Ramirez Padel Club" width="42" height="42">
     <span>Complejo Ramirez Padel Club · French y Urquiza, General Ramírez, Entre Ríos</span>
     <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="https://www.instagram.com/complejo_ramirezpadelclub/" target="_blank" rel="noopener">Instagram</a></span>
     <p class="firma">Diseño y desarrollo: Axel Acosta · <a href="https://wa.me/5493434698281" target="_blank" rel="noopener">(0343) 469-8281</a> · <a href="mailto:axelacosta1992@gmail.com">axelacosta1992@gmail.com</a></p>
@@ -1188,4 +1183,5 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
 </script>
 
 <script src="anim.js" defer></script>
+<script>(function(){var t=document.querySelector('.tabs');if(!t)return;function f(){t.classList.toggle('al-final',t.scrollLeft+t.clientWidth>=t.scrollWidth-4)}t.addEventListener('scroll',f,{passive:true});window.addEventListener('resize',f);f()})();</script>
 </body></html>
