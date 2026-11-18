@@ -757,7 +757,7 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
       cs.forEach(function(c){
         var adentro=c.inscriptos.filter(function(i){return!i.espera}).length, esp=c.inscriptos.length-adentro;
         h+='<details><summary><span>'+esc(c.categoria)+'</span><span>'+adentro+(c.cupo?'/'+c.cupo:'')+(esp?' · '+esp+' en espera':'')+'</span></summary>';
-        h+=c.inscriptos.length?'<ol>'+c.inscriptos.map(function(i){return'<li'+(i.espera?' class="esp"':'')+'>'+esc(i.pareja)+'<small>'+esc(i.hora)+(i.espera?' · espera':'')+'</small></li>'}).join('')+'</ol>':'<p style="margin:6px 0 0;color:var(--tinta-2)">Todavía no hay inscriptos.</p>';
+        h+=c.inscriptos.length?'<ol>'+c.inscriptos.map(function(i){return'<li'+(i.espera?' class="esp"':'')+'>'+esc(i.pareja)+(i.espera?'<small>lista de espera</small>':'')+'</li>'}).join('')+'</ol>':'<p style="margin:6px 0 0;color:var(--tinta-2)">Todavía no hay inscriptos.</p>';
         h+='</details>'});
       box.innerHTML=h+'</div>';
       btn.disabled=e!=='abierta';btn.hidden=false;
