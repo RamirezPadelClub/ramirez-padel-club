@@ -9,7 +9,7 @@
  * Inscripciones, bajas y cambios de disponibilidad: hasta el martes anterior al torneo, 18 hs.
  * Para dar de baja una pareja: escribí "x" en la columna "baja" de su fila.
  *
- * Resultados: los planilleros cargan los resultados desde ramirezpadelclub.pages.dev/organizador
+ * Resultados: los planilleros cargan los resultados desde ramirezpadelclub.com.ar/organizador
  * con la clave de su sede (hoja "Organizadores", que la página nunca lee).
  * El estado (Adentro / Lista de espera) se recalcula solo.
  */
@@ -31,7 +31,7 @@ const H_ORG = 'Organizadores';
 const COLS_O = ['sede', 'nombre', 'clave'];
 const COLS_T = ['torneo', 'categoria', 'cupo', 'apertura', 'cierre', 'tipo', 'nombre'];
 const COLS_I = ['fecha_hora', 'torneo', 'categoria', 'jugador_1', 'jugador_2', 'telefono', 'estado', 'baja', 'disponibilidad', 'email', 'codigo'];
-const WEB = 'https://ramirezpadelclub.pages.dev/#torneos';
+const WEB = 'https://ramirezpadelclub.com.ar/#torneos';
 /** Regla del circuito: al menos dos franjas del sábado, o el viernes completo. */
 function dispValida_(disp) { return disp.some((f) => f.indexOf('Viernes') === 0) || disp.filter((f) => f.indexOf('Sábado') === 0).length >= 2; }
 const FRANJAS = ['Viernes 14 a 00 hs', 'Sábado mañana 9 a 13 hs', 'Sábado siesta/tarde 13 a 18 hs', 'Sábado noche 18 a 00 hs'];
