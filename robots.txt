@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /guardado/
+Disallow: /sitio-tour/
 Disallow: /organizador
 
 Sitemap: https://ramirezpadelclub.com.ar/sitemap.xml

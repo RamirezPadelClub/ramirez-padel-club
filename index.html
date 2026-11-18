@@ -97,7 +97,7 @@ a{color:inherit}
 .dato span{font-size:13px;color:var(--tinta-2)}
 @media (max-width:760px){.datos .in{grid-template-columns:1fr 1fr}.dato{padding-left:0;border-left:0}.dato:nth-child(even){padding-left:18px;border-left:1px solid var(--linea)}.dato:nth-child(-n+2){border-bottom:1px solid var(--linea)}}
 
-.atajos{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.atajos{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .atajo{position:relative;display:block;aspect-ratio:3/4;border-radius:20px;overflow:hidden;text-decoration:none;color:var(--blanco);background:var(--verde-osc);max-width:100%}
 .atajo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
 .atajo:hover img{transform:scale(1.05)}
@@ -379,7 +379,6 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
       <a href="#torneos" data-v="torneos">Torneos</a>
       <a href="#fotos" data-v="fotos">Fotos</a>
       <a href="#reservas" data-v="reservas">Reservas</a>
-      <a class="tour" href="tour.html">Ramirez Pádel Tour →</a>
     </nav>
   </div>
 </header>
@@ -394,7 +393,6 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
         <p class="lead">Dos canchas techadas e iluminadas, ambas de césped sintético, buffet abierto todo el día y una pasarela arriba para ver los partidos.</p>
         <div class="botones">
           <a class="btn blanco" href="#reservas">Reservar cancha</a>
-          <a class="btn borde" href="tour.html">Ramirez Pádel Tour</a>
         </div>
       </div>
       <img class="escudo" src="img/logo-complejo.png" alt="Escudo del Ramirez Padel Club" width="290" height="290">
@@ -416,10 +414,6 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
         <a class="atajo" href="#clases"><img src="fotos/clases.jpg" alt="" loading="lazy"><div><h3>Clases</h3><span>Con Thomas y Franco</span></div></a>
         <a class="atajo" href="#fotos"><img src="fotos/juego/juego-remate.jpg" alt="" loading="lazy"><div><h3>Fotos</h3><span>Así se vive el club</span></div></a>
         <a class="atajo" href="#reservas"><img src="fotos/cancha-blindex.jpg" alt="" loading="lazy"><div><h3>Reservas</h3><span>Turnos por WhatsApp</span></div></a>
-        <a class="atajo tour" href="tour.html">
-          <svg viewBox="0 0 100 180" aria-hidden="true" fill="none" stroke="#D7F03F" stroke-width="3" stroke-linecap="round"><rect x="6" y="6" width="88" height="168" rx="2"/><line x1="6" y1="46" x2="94" y2="46"/><line x1="6" y1="134" x2="94" y2="134"/><line x1="50" y1="46" x2="50" y2="134"/><line x1="-2" y1="90" x2="102" y2="90" stroke="#F2F3EC" stroke-width="4"/><circle cx="62" cy="114" r="5" fill="#D7F03F" stroke="none"/></svg>
-          <div><h3>Ramirez Pádel Tour</h3><span>Temporada 2027 · Muy pronto</span></div>
-        </a>
       </div>
     </div>
   </section>
@@ -812,7 +806,7 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
     var conHora=[];cs.forEach(function(cc,ci){var pss=cc.partidos||[],R=window.Resultados?Resultados.preparar(cc):null,cat=(function(n){var w=n.split(' ')[0];return/^[\d+]|^suma$/i.test(w)?n:w})(String(cc.categoria||''));
       pss.forEach(function(p){if(p.hora||p.dia)conHora.push({p:p,ci:ci,cat:cs.length>1?cat:'',nm:function(k){if(!R)return(k===1?p.p1:p.p2)||'A definir';return R.nombre(R.partidos[pss.indexOf(p)],k).n}})})});
     conHora.sort(function(a,b){return ordDia(a.p.dia)-ordDia(b.p.dia)||String(a.p.hora).localeCompare(String(b.p.hora))||(+a.p.id||0)-(+b.p.id||0)||a.ci-b.ci});
-    var SEDE_N={complejo:'Complejo',ruta:'La Ruta',racing:'Racing'},multiSede=conHora.some(function(x){return x.p.sede&&x.p.sede!=='complejo'});
+    var SEDE_N={complejo:'Complejo',ruta:'La Ruta'},multiSede=conHora.some(function(x){return x.p.sede&&x.p.sede!=='complejo'});
     var dias=[];conHora.forEach(function(x){var d=x.p.dia||'Sin día';if(dias.indexOf(d)<0)dias.push(d)});
     var hoy=['dom','lun','mar','mié','jue','vie','sáb'][new Date().getDay()],diaSel=dias.indexOf(vtDia)>=0?vtDia:(dias.filter(function(d){return d.toLowerCase().slice(0,3)===hoy})[0]||dias[0]);
     var botDias=dias.length>1?'<div class="vt-cats" role="group" aria-label="Día">'+dias.map(function(d){return'<button type="button" data-vtdia="'+esc(d)+'" aria-pressed="'+(d===diaSel)+'">'+esc(String(d).split(' ')[0])+'</button>'}).join('')+'</div>':'';
@@ -1103,7 +1097,7 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
   <div class="in">
     <img src="img/logo-complejo.png" alt="Ramirez Padel Club" width="42" height="42">
     <span>Complejo Ramirez Padel Club · French y Urquiza, General Ramírez, Entre Ríos</span>
-    <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="https://www.instagram.com/complejo_ramirezpadelclub/" target="_blank" rel="noopener">Instagram</a><a href="tour.html">Ramirez Pádel Tour →</a></span>
+    <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="https://www.instagram.com/complejo_ramirezpadelclub/" target="_blank" rel="noopener">Instagram</a></span>
     <p class="firma">Diseño y desarrollo: Axel Acosta · <a href="https://wa.me/5493434698281" target="_blank" rel="noopener">(0343) 469-8281</a> · <a href="mailto:axelacosta1992@gmail.com">axelacosta1992@gmail.com</a></p>
   </div>
 </footer>
