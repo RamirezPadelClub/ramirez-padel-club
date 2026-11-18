@@ -1,14 +1,4 @@
-<!doctype html><html lang="es"><head><script>if(location.hostname==='ramirezpadelclub.pages.dev')location.replace('https://ramirezpadelclub.com.ar'+location.pathname+location.search+location.hash)</script><meta charset=utf8><meta name="google-site-verification" content="XvOYWTEwAHaldKH7BwBF8n5pSmI9QNwHCzascK-G59k"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
-/* Mejoras auditoría 18/11 */
-::selection{background:#bfe6cd;color:#033d22}
-.visor .cerrar,.visor .nav{display:flex;align-items:center;justify-content:center}
-.tit-paso{font-family:var(--display);font-size:24px;color:var(--verde-osc);margin:0}
-footer a,.firma a{display:inline-block;padding:14px 4px;margin:-14px -4px}
-@media (max-width:760px){
-  .tabs{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
-  .tabs.al-final{-webkit-mask-image:none;mask-image:none}
-}
-</style>
+<!doctype html><html lang="es"><head><script>if(location.hostname==='ramirezpadelclub.pages.dev')location.replace('https://ramirezpadelclub.com.ar'+location.pathname+location.search+location.hash)</script><meta charset=utf8><meta name="google-site-verification" content="XvOYWTEwAHaldKH7BwBF8n5pSmI9QNwHCzascK-G59k"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <title>Ramirez Padel Club · Pádel en General Ramírez, Entre Ríos</title>
 <meta name="description" content="Dos canchas techadas de césped sintético, buffet abierto todo el día, clases y torneos en General Ramírez, Entre Ríos. Reservá tu turno por WhatsApp.">
 <meta property="og:type" content="website">
@@ -377,6 +367,41 @@ footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);pad
 footer .firma{flex-basis:100%;border-top:1px solid rgba(255,255,255,.14);padding-top:12px;font-size:11.5px;color:rgba(255,255,255,.6);text-align:center}
 html[data-solo] .tabs,html[data-solo] .vt-volver,html[data-solo] footer a[href="tour.html"]{display:none!important}html[data-solo] .marca{pointer-events:none}
 footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-decoration:underline}
+
+/* Mejoras auditoría 18/11 */
+::selection{background:#bfe6cd;color:#033d22}
+.visor .cerrar,.visor .nav{display:flex;align-items:center;justify-content:center}
+.tit-paso{font-family:var(--display);font-size:24px;color:var(--verde-osc);margin:0}
+footer a,.firma a{display:inline-block;padding:14px 4px;margin:-14px -4px}
+@media (max-width:760px){
+  .tabs{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
+  .tabs.al-final{-webkit-mask-image:none;mask-image:none}
+}
+
+/* Menú del celular */
+.burger{display:none;margin-left:auto;width:44px;height:44px;border:0;border-radius:12px;background:rgba(255,255,255,.1);color:var(--blanco);align-items:center;justify-content:center;cursor:pointer;flex:none}
+.burger:hover{background:rgba(255,255,255,.18)}
+.menu-cel{position:fixed;inset:0;z-index:50;background:var(--verde-osc);color:var(--blanco);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 8px) 20px calc(env(safe-area-inset-bottom,0px) + 24px);overflow-y:auto;animation:mc-in .22s ease-out}
+.menu-cel[hidden]{display:none}
+@keyframes mc-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.mc-cab{display:flex;align-items:center;justify-content:space-between;min-height:52px}
+.mc-cab .burger{display:flex}
+.mc-cab .marca{font-size:17px}.mc-cab .marca img{width:34px;height:34px}
+.mc-links{display:flex;flex-direction:column;margin-top:22px}
+.mc-links a{font-family:var(--display);font-size:30px;text-decoration:none;color:rgba(255,255,255,.85);padding:12px 4px;border-bottom:1px solid rgba(255,255,255,.12)}
+.mc-links a[aria-current="page"]{color:var(--blanco)}
+.mc-links a[aria-current="page"]::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--verde-claro);margin-right:12px;vertical-align:middle}
+.mc-pie{margin-top:auto;padding-top:28px;display:flex;gap:12px;flex-wrap:wrap}
+.mc-pie .btn{flex:1 1 140px;justify-content:center;text-align:center}
+.mc-pie .btn.borde{border:1.5px solid rgba(255,255,255,.55);color:var(--blanco);background:transparent}
+@media (max-width:720px){
+  .top .in{flex-direction:row!important;align-items:center!important}
+  .top .tabs{display:none}
+  .top .burger{display:flex}
+}
+@media (prefers-reduced-motion:reduce){.menu-cel{animation:none}}
+html[data-solo] .burger{display:none!important}
+body.mc-abierto{overflow:hidden}
 </style>
 
 <header class="top">
@@ -391,8 +416,28 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
       <a href="#fotos" data-v="fotos">Fotos</a>
       <a href="#reservas" data-v="reservas">Reservas</a>
     </nav>
+    <button type="button" class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-cel"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </header>
+<div class="menu-cel" id="menu-cel" hidden>
+  <div class="mc-cab">
+    <span class="marca"><img src="img/logo-complejo-128.webp" alt="" width="34" height="34">Ramirez Padel Club</span>
+    <button type="button" class="burger" id="mc-cerrar" aria-label="Cerrar menú"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <nav class="mc-links" aria-label="Secciones">
+    <a href="#inicio" data-v="inicio">Inicio</a>
+    <a href="#complejo" data-v="complejo">El complejo</a>
+    <a href="#buffet" data-v="buffet">Buffet</a>
+    <a href="#clases" data-v="clases">Clases</a>
+    <a href="#torneos" data-v="torneos">Torneos</a>
+    <a href="#fotos" data-v="fotos">Fotos</a>
+    <a href="#reservas" data-v="reservas">Reservas</a>
+  </nav>
+  <div class="mc-pie">
+    <a class="btn blanco" href="#reservas">Reservar cancha</a>
+    <a class="btn borde" href="https://www.instagram.com/complejo_ramirezpadelclub/" target="_blank" rel="noopener">Instagram</a>
+  </div>
+</div>
 
 <!-- INICIO -->
 <main class="vista" id="v-inicio">
@@ -1112,6 +1157,7 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
     if(vistas.indexOf(v)<0) v='inicio';
     vistas.forEach(function(n){document.getElementById('v-'+n).hidden=(n!==v)});
     var tab=v==='torneo'?'torneos':v==='album'?'fotos':v;
+    document.querySelectorAll('.mc-links a[data-v]').forEach(function(a){if(a.dataset.v===tab)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
     document.querySelectorAll('.tabs a[data-v]').forEach(function(a){
       if(a.dataset.v===tab){a.setAttribute('aria-current','page');try{a.scrollIntoView({block:'nearest',inline:'center'})}catch(e){}}
       else a.removeAttribute('aria-current');
@@ -1184,4 +1230,11 @@ footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-de
 
 <script src="anim.js" defer></script>
 <script>(function(){var t=document.querySelector('.tabs');if(!t)return;function f(){t.classList.toggle('al-final',t.scrollLeft+t.clientWidth>=t.scrollWidth-4)}t.addEventListener('scroll',f,{passive:true});window.addEventListener('resize',f);f()})();</script>
+<script>(function(){var m=document.getElementById('menu-cel'),b=document.getElementById('burger'),c=document.getElementById('mc-cerrar');if(!m||!b)return;
+function abrir(){m.hidden=false;b.setAttribute('aria-expanded','true');document.body.classList.add('mc-abierto');c.focus()}
+function cerrar(){if(m.hidden)return;m.hidden=true;b.setAttribute('aria-expanded','false');document.body.classList.remove('mc-abierto');b.focus()}
+b.addEventListener('click',abrir);c.addEventListener('click',cerrar);
+m.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){m.hidden=true;b.setAttribute('aria-expanded','false');document.body.classList.remove('mc-abierto')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrar()});
+window.addEventListener('resize',function(){if(window.innerWidth>720)cerrar()});})();</script>
 </body></html>
