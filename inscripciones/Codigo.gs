@@ -95,7 +95,7 @@ function setup() {
  *   Zonas:    una fila por pareja → torneo | categoria | zona (A, B, C…) | pareja
  *   Partidos: una fila por partido → torneo | categoria | fase | dia | hora | pareja_1 | pareja_2 | resultado | ganador | id | sede
  *             fase: "Zona A", "Zona B"… en zonas; "16avos", "Octavos", "Cuartos", "Semis" o "Final" en el cuadro.
- *             id: número del partido (el del cronograma). sede: complejo, ruta o racing (vacío = complejo).
+ *             id: número del partido (el del cronograma). sede: complejo o ruta (vacío = complejo).
  *             En pareja_1 / pareja_2 se puede poner "Ganador 36", "Perdedor 36" (por el id) o "1° Zona A", "2° Zona B", "3° Zona A":
  *             la página los reemplaza sola por los apellidos cuando se juega ese partido o se cierra esa zona.
  *             resultado y ganador los completa la app de organizadores (o a mano: "6-3 6-4", ganador 1 o 2).
@@ -117,9 +117,9 @@ function crearHojasTorneo() {
   const org = ss.getSheetByName(H_ORG);
   if (org.getLastRow() < 2) {
     const clave = () => String(Math.floor(100000 + Math.random() * 900000));
-    org.getRange(2, 1, 4, 3).setValues([
+    org.getRange(2, 1, 3, 3).setValues([
       ['complejo', 'Ramírez Pádel Club', clave()], ['ruta', 'La Ruta Pádel', clave()],
-      ['racing', 'Club Racing', clave()], ['todas', 'Organización', clave()],
+      ['todas', 'Organización', clave()],
     ]);
     org.getRange('C:C').setNumberFormat('@');
   }
