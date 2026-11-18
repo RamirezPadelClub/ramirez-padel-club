@@ -97,7 +97,7 @@ a{color:inherit}
 .dato span{font-size:13px;color:var(--tinta-2)}
 @media (max-width:760px){.datos .in{grid-template-columns:1fr 1fr}.dato{padding-left:0;border-left:0}.dato:nth-child(even){padding-left:18px;border-left:1px solid var(--linea)}.dato:nth-child(-n+2){border-bottom:1px solid var(--linea)}}
 
-.atajos{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.atajos{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
 .atajo{position:relative;display:block;aspect-ratio:3/4;border-radius:20px;overflow:hidden;text-decoration:none;color:var(--blanco);background:var(--verde-osc);max-width:100%}
 .atajo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
 .atajo:hover img{transform:scale(1.05)}
@@ -107,7 +107,7 @@ a{color:inherit}
 .atajo.tour{background:#0B0E33}
 .atajo.tour div{background:linear-gradient(transparent,rgba(11,14,51,.95) 45%)}
 .atajo.tour svg{position:absolute;top:22%;left:50%;transform:translateX(-50%);width:42%}
-@media (max-width:900px){.atajos{grid-template-columns:1fr 1fr}.atajo{aspect-ratio:4/5}.atajo h3{font-size:20px}.atajo.tour{grid-column:1/-1;aspect-ratio:2/1}.atajo.tour svg{top:14%;width:22%}}
+@media (max-width:900px){.atajos{grid-template-columns:1fr 1fr}.atajo{aspect-ratio:4/5}.atajo h3{font-size:20px}.atajo.tour,.atajo.ancho{grid-column:1/-1;aspect-ratio:2/1}.atajo.tour svg{top:14%;width:22%}}
 @media (prefers-reduced-motion:reduce){.atajo img{transition:none}}
 
 /* Secciones genéricas */
@@ -378,6 +378,7 @@ footer a,.firma a{display:inline-block;padding:14px 4px;margin:-14px -4px}
   .tabs.al-final{-webkit-mask-image:none;mask-image:none}
 }
 
+@media (min-width:901px){.atajo div span{display:block;min-height:3.2em}}
 /* Menú del celular */
 .burger{display:none;margin-left:auto;width:44px;height:44px;border:0;border-radius:12px;background:rgba(255,255,255,.1);color:var(--blanco);align-items:center;justify-content:center;cursor:pointer;flex:none}
 .burger:hover{background:rgba(255,255,255,.18)}
@@ -458,6 +459,7 @@ body.mc-abierto{overflow:hidden}
     <div class="in">
       <div class="cab"><h2>¿Qué estás buscando?</h2></div>
       <div class="atajos">
+        <a class="atajo ancho" href="#torneos"><img src="fotos/torneo-pasarela-llena.webp" srcset="fotos/torneo-pasarela-llena-480.webp 480w, fotos/torneo-pasarela-llena.webp 825w" sizes="(max-width:760px) 100vw, 825px" alt="" loading="lazy"><div><h3>Torneos</h3><span>Fechas e inscripción</span></div></a>
         <a class="atajo" href="#complejo"><img src="fotos/pasarela.webp" srcset="fotos/pasarela-480.webp 480w, fotos/pasarela.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="" loading="lazy"><div><h3>El complejo</h3><span>Canchas, pasarela y vestuarios</span></div></a>
         <a class="atajo" href="#clases"><img src="fotos/clases.webp" srcset="fotos/clases-480.webp 480w, fotos/clases.webp 825w" sizes="(max-width:760px) 60vw, 825px" alt="" loading="lazy"><div><h3>Clases</h3><span>Con Thomas y Franco</span></div></a>
         <a class="atajo" href="#fotos"><img src="fotos/juego/juego-remate.webp" srcset="fotos/juego/juego-remate-480.webp 480w, fotos/juego/juego-remate.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="" loading="lazy"><div><h3>Fotos</h3><span>Así se vive el club</span></div></a>
