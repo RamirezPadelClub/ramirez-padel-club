@@ -42,8 +42,8 @@ async function placaMaster(I){
   c.textAlign='center';
   for(let j=0;j<3;j++)[0,1].forEach(i=>{const s=I.sets[j],v=s?s[i]:'-',gana=s&&s[i]>s[1-i];c.fillStyle=gana?LIMA:'#fff';c.font=(gana?'700':'500')+' 32px Montserrat';c.fillText(String(v),SX+33+66*j,BY+44+i*44)});
   // logos de las sedes
-  const lgs=await Promise.all(['img/logo-racing.png','img/logo-complejo.png','img/logo-laruta-fondo.png'].map(cargarImg));
-  let x=328;[[128,128],[128,128],[116,128]].forEach(([lw,lh],j)=>{const im=lgs[j],s=Math.min(lw/im.width,lh/im.height),dw=im.width*s,dh=im.height*s;c.drawImage(im,x+(lw-dw)/2,1722+(lh-dh)/2,dw,dh);x+=lw+26});
+  const lgs=await Promise.all(['img/logo-complejo.png','img/logo-laruta-fondo.png'].map(cargarImg));
+  let x=405;[[128,128],[116,128]].forEach(([lw,lh],j)=>{const im=lgs[j],s=Math.min(lw/im.width,lh/im.height),dw=im.width*s,dh=im.height*s;c.drawImage(im,x+(lw-dw)/2,1722+(lh-dh)/2,dw,dh);x+=lw+26});
   return cv.toDataURL('image/jpeg',.9);
 }
 
