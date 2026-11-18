@@ -200,3 +200,13 @@
 .anim .vt-campeones div.revela.visto{transform:none}
 .vt-tabs button{transition:background-color .25s,color .25s}
 @media (prefers-reduced-motion:reduce){.vt-cab .ch,.vt-cab .entra,.vt-cats button.entra,.vt-tabs.entra{animation:none!important;clip-path:none;transform:none;opacity:1}}
+
+/* Sin animación al hacer scroll: todo se ve de entrada (pedido 18/11/2026). */
+.revela,.dato{opacity:1!important;transform:none!important;transition:none!important}
+.cab.revela h2{color:var(--verde-osc);background:none}
+.anim .cancha.revela img{clip-path:none!important;transition:none!important}
+.anim .extra.revela::before{transform:scaleX(1)!important;transition:none!important}
+.anim .menu.revela .chips li{opacity:1!important;transform:none!important;animation:none!important}
+.anim .pasos li.revela::before{transform:none!important;animation:none!important}
+.anim .galeria figure.revela::after{transform:scaleX(0)!important;transition:none!important}
+.anim .horario.revela div{opacity:1!important;transform:none!important;transition:none!important}
