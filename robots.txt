@@ -3,4 +3,4 @@ Allow: /
 Disallow: /guardado/
 Disallow: /organizador
 
-Sitemap: https://ramirezpadelclub.pages.dev/sitemap.xml
+Sitemap: https://ramirezpadelclub.com.ar/sitemap.xml
