@@ -35,6 +35,13 @@ const WEB = 'https://ramirezpadelclub.pages.dev/#torneos';
 /** Regla del circuito: al menos dos franjas del sábado, o el viernes completo. */
 function dispValida_(disp) { return disp.some((f) => f.indexOf('Viernes') === 0) || disp.filter((f) => f.indexOf('Sábado') === 0).length >= 2; }
 const FRANJAS = ['Viernes 14 a 00 hs', 'Sábado mañana 9 a 13 hs', 'Sábado siesta/tarde 13 a 18 hs', 'Sábado noche 18 a 00 hs'];
+/** Franjas de los torneos propios del complejo (la página las elige por torneo; la regla es la misma: el viernes o dos del sábado). */
+const FRANJAS_COMPLEJO = ['Viernes desde 16 hs', 'Sábado mañana 8:30 a 11:30 hs', 'Sábado desde 16 hs'];
+const TODAS_FRANJAS = FRANJAS.concat(FRANJAS_COMPLEJO);
+function dispTexto_(disp) {
+  const completa = (lista) => lista.length === disp.length && lista.every((f) => disp.includes(f));
+  return completa(FRANJAS) || completa(FRANJAS_COMPLEJO) ? 'Completa' : disp.join(' / ');
+}
 
 /** Correr UNA vez a mano: crea las hojas con los torneos de noviembre. */
 function setup() {
@@ -268,7 +275,7 @@ function doPost_(e) {
 
   const j1 = limpio_(d.jugador_1), j2 = limpio_(d.jugador_2);
   const tel = String(d.telefono || '').replace(/[^\d+]/g, '').slice(0, 20);
-  const disp = (Array.isArray(d.disponibilidad) ? d.disponibilidad : []).filter((f) => FRANJAS.includes(f));
+  const disp = (Array.isArray(d.disponibilidad) ? d.disponibilidad : []).filter((f) => TODAS_FRANJAS.includes(f));
   const email = mail_(d.email);
   if (j1.split(' ').length < 2 || j2.split(' ').length < 2 || tel.length < 8 || !dispValida_(disp) || !email) {
     return json_({ ok: false, error: 'datos' });
@@ -297,7 +304,7 @@ function doPost_(e) {
     const pos = misma.length + 1;
     const estado = cupo && pos > cupo ? 'Lista de espera' : 'Adentro';
     asegurarColumnas_();
-    const dispTxt = disp.length === FRANJAS.length ? 'Completa' : disp.join(' / ');
+    const dispTxt = dispTexto_(disp);
     const codigo = codigo_();
     sh.appendRow([ahora, d.torneo, d.categoria, j1, j2, "'" + tel, estado, '', dispTxt, email, codigo]);
     SpreadsheetApp.flush();
@@ -323,7 +330,7 @@ function gestionar_(d) {
   if (!email || cod.length !== 6) return json_({ ok: false, error: 'datos' });
   let disp = [];
   if (d.accion === 'disponibilidad') {
-    disp = (Array.isArray(d.disponibilidad) ? d.disponibilidad : []).filter((f) => FRANJAS.includes(f));
+    disp = (Array.isArray(d.disponibilidad) ? d.disponibilidad : []).filter((f) => TODAS_FRANJAS.includes(f));
     if (!dispValida_(disp)) return json_({ ok: false, error: 'franjas' });
   }
   const lock = LockService.getScriptLock();
@@ -351,7 +358,7 @@ function gestionar_(d) {
       // Sin email: la baja se confirma en pantalla (ahorra cupo diario de Gmail).
       return json_({ ok: true, accion: 'baja', pareja, categoria: r.categoria });
     }
-    const dispTxt = disp.length === FRANJAS.length ? 'Completa' : disp.join(' / ');
+    const dispTxt = dispTexto_(disp);
     sh.getRange(r._fila, COLS_I.indexOf('disponibilidad') + 1).setValue(dispTxt);
     SpreadsheetApp.flush();
     actualizarListados_(r.torneo, r.categoria);
@@ -554,8 +561,8 @@ function bloqueTorneo_(d, t) {
     const dia = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'][Number(Utilities.formatDate(c, TZ, 'u')) % 7];
     filas.push(['Cierre de inscripción', dia + ' ' + Utilities.formatDate(c, TZ, "dd/MM 'a las' HH:mm 'hs'")]);
   }
-  filas.push(['Disponibilidad horaria', 'Viernes 14 a 00 hs · Sábado mañana 9 a 13 hs · Sábado siesta/tarde 13 a 18 hs · Sábado noche 18 a 00 hs. Domingo: llaves finales.']);
-  const flyer = /^https:\/\/ramirezpadelclub\.(pages\.dev|netlify\.app)\/fotos\/torneos\/[\w-]+\.jpg$/.test(String(i.flyer || '')) ? i.flyer : '';
+  filas.push(['Disponibilidad horaria', i.franjas ? txt_(i.franjas, 240) : 'Viernes 14 a 00 hs · Sábado mañana 9 a 13 hs · Sábado siesta/tarde 13 a 18 hs · Sábado noche 18 a 00 hs. Domingo: llaves finales.']);
+  const flyer = /^https:\/\/(www\.)?ramirezpadelclub\.(pages\.dev|netlify\.app|com\.ar)\/fotos\/torneos\/[\w-]+\.jpg$/.test(String(i.flyer || '')) ? i.flyer : '';
   return { filas, flyer };
 }
 
