@@ -159,6 +159,9 @@ section.blanca{background:var(--blanco)}
 .torneos{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .torneo{display:grid;grid-template-columns:150px 1fr;gap:22px;background:var(--blanco);border:1px solid var(--linea);border-radius:20px;padding:18px;min-width:0}
 .torneo img{width:100%;height:auto;align-self:start;aspect-ratio:9/16;object-fit:cover;border-radius:12px;display:block}
+.torneo>img{cursor:zoom-in}
+#fly-visor img{max-height:calc(100vh - 90px);max-width:100%;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+#fly-visor{padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
 .t-info{display:flex;flex-direction:column;gap:10px;min-width:0}
 .t-fecha{font-family:var(--display);color:var(--verde);font-size:15px;letter-spacing:.04em}
 .torneo h3{font-size:22px;color:var(--verde-osc);line-height:1.15}
@@ -1246,4 +1249,19 @@ m.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(
 document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrar()});
 window.addEventListener('resize',function(){if(window.innerWidth>720)cerrar()});})();</script>
 <script>(function(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;document.querySelectorAll('.slides').forEach(function(f,n){var im=f.querySelectorAll('img'),i=0;if(im.length<2)return;setTimeout(function(){setInterval(function(){im[i].classList.remove('on');i=(i+1)%im.length;im[i].classList.add('on')},4500)},n*2200)})})();</script>
+<div class="visor" id="fly-visor" hidden role="dialog" aria-modal="true" aria-label="Flyer en grande">
+    <button type="button" class="cerrar" id="fly-cerrar" aria-label="Cerrar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <img id="fly-img" src="" alt="">
+  </div>
+<script>
+/* Flyer en grande: al tocar la imagen de un torneo */
+(function(){
+  var v=document.getElementById('fly-visor'),im=document.getElementById('fly-img');if(!v)return;
+  function cerrar(){v.hidden=true;document.body.style.overflow='';im.src=''}
+  document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.torneo>img');if(!t)return;e.preventDefault();im.src=t.currentSrc||t.src;im.alt=t.alt;v.hidden=false;document.body.style.overflow='hidden'});
+  document.getElementById('fly-cerrar').onclick=cerrar;
+  v.addEventListener('click',function(e){if(e.target===v)cerrar()});
+  document.addEventListener('keydown',function(e){if(!v.hidden&&e.key==='Escape')cerrar()});
+})();
+</script>
 </body></html>
