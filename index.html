@@ -785,7 +785,11 @@ body.mc-abierto{overflow:hidden}
   function nombreT(id){var c=document.querySelector('.torneo[data-id="'+id+'"]');return c?c.querySelector('h3').textContent+' · '+c.querySelector('.t-fecha').textContent.toLowerCase():id}
   function cats(id){return datos?datos.categorias.filter(function(c){return c.torneo===id}):[]}
   function pintar(){
-    document.querySelectorAll('#lista-torneos .torneo').forEach(function(card){if(card.querySelector('[data-insc]'))return;var old=card.querySelector('.t-cierre');if(old)old.remove();if(!datos)return;var h=cierreHTML(cats(card.dataset.id));if(h)card.querySelector('.t-pie').insertAdjacentHTML('beforebegin',h)});
+    document.querySelectorAll('#lista-torneos .torneo').forEach(function(card){if(card.querySelector('[data-insc]'))return;var old=card.querySelector('.t-cierre');if(old)old.remove();var oe=card.querySelector('.t-estado-wa');if(oe)oe.remove();if(!datos)return;var cw=cats(card.dataset.id),h=cierreHTML(cw);if(h)card.querySelector('.t-pie').insertAdjacentHTML('beforebegin',h);
+      /* Torneos con inscripción por WhatsApp: pasado el cierre, se saca el botón Inscribirme */
+      var wa=card.querySelector('.t-pie a.btn.verde[href*="wa.me"]');if(!wa||!cw.length)return;
+      var cerro=cw[0].estado==='cerrada'||(cw[0].cierre&&new Date(cw[0].cierre+'-03:00')<new Date());
+      wa.hidden=cerro;if(cerro)card.querySelector('.t-pie').insertAdjacentHTML('beforebegin','<span class="t-estado off t-estado-wa">Inscripción cerrada</span>')});
     document.querySelectorAll('.torneo [data-insc]').forEach(function(btn){
       var card=btn.closest('.torneo'), id=card.dataset.id, cs=cats(id);
       var box=card.querySelector('.t-insc');
