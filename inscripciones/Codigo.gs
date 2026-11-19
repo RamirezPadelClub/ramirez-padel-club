@@ -36,8 +36,9 @@ const WEB = 'https://ramirezpadelclub.com.ar/#torneos';
 function dispValida_(disp) { return disp.some((f) => f.indexOf('Viernes') === 0) || disp.filter((f) => f.indexOf('Sábado') === 0).length >= 2; }
 const FRANJAS = ['Viernes 14 a 00 hs', 'Sábado mañana 9 a 13 hs', 'Sábado siesta/tarde 13 a 18 hs', 'Sábado noche 18 a 00 hs'];
 /** Franjas de los torneos propios del complejo (la página las elige por torneo; la regla es la misma: el viernes o dos del sábado). */
-const FRANJAS_COMPLEJO = ['Viernes desde 16 hs', 'Sábado mañana 8:30 a 11:30 hs', 'Sábado desde 16 hs'];
-const TODAS_FRANJAS = FRANJAS.concat(FRANJAS_COMPLEJO);
+const FRANJAS_COMPLEJO = ['Viernes desde 17 hs', 'Sábado mañana 8:30 a 11:30 hs', 'Sábado desde 16 hs'];
+/** 'Viernes desde 16 hs' queda aceptada para inscripciones viejas. */
+const TODAS_FRANJAS = FRANJAS.concat(FRANJAS_COMPLEJO, ['Viernes desde 16 hs']);
 function dispTexto_(disp) {
   const completa = (lista) => lista.length === disp.length && lista.every((f) => disp.includes(f));
   return completa(FRANJAS) || completa(FRANJAS_COMPLEJO) ? 'Completa' : disp.join(' / ');
