@@ -762,7 +762,7 @@ body.mc-abierto{overflow:hidden}
   var FR={
     base:{op:[['Viernes 14 a 00 hs','<b>Viernes</b> 14:00 a 00:00'],['Sábado mañana 9 a 13 hs','<b>Sábado mañana</b> 9:00 a 13:00'],['Sábado siesta/tarde 13 a 18 hs','<b>Sábado siesta/tarde</b> 13:00 a 18:00'],['Sábado noche 18 a 00 hs','<b>Sábado noche</b> 18:00 a 00:00']],
       regla:'al menos dos franjas del sábado, o el viernes completo'},
-    complejo:{op:[['Viernes desde 16 hs','<b>Viernes</b> desde las 16:00'],['Sábado mañana 8:30 a 11:30 hs','<b>Sábado mañana</b> 8:30 a 11:30'],['Sábado desde 16 hs','<b>Sábado tarde/noche</b> desde las 16:00']],
+    complejo:{op:[['Viernes desde 17 hs','<b>Viernes</b> desde las 17:00'],['Sábado mañana 8:30 a 11:30 hs','<b>Sábado mañana</b> 8:30 a 11:30'],['Sábado desde 16 hs','<b>Sábado tarde/noche</b> desde las 16:00']],
       regla:'el viernes, o las dos franjas del sábado'}
   };
   function frDe(id){var c=document.querySelector('.torneo[data-id="'+id+'"]');return FR[(c&&c.dataset.franjas)||'base']||FR.base}
