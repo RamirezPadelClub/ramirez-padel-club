@@ -388,12 +388,15 @@ function zonas(T,i){
   var sedeDe=function(k){var ps=C.partidos.filter(function(p){return R.esZona(p.fase)===k});return {k:k,ps:ps}};
   return '<div class="zonas">'+ks.slice().sort().map(sedeDe).map(function(z){
         var tb=C.tabla(z.k),z0=C.zonas.filter(function(x){return x.zona===z.k})[0];
-        var filas=tb&&tb.filas.length?tb.filas:(z0?z0.parejas.map(function(n){return{pareja:n,pj:0,pg:0,sf:0,sc:0}}):[]);
-        return '<div class="caja zona"><span class="etq">Zona '+esc(z.k)+'</span><table class="tabla"><thead><tr><th>#</th><th>PAREJA</th><th>PJ</th><th>PG</th><th>SETS</th></tr></thead><tbody>'+
-          filas.map(function(f,n){return '<tr class="'+(tb&&tb.cerrada&&n<tb.clasif?'cl':'')+'"><td><span>'+(n+1)+'</span></td><td>'+esc(f.pareja)+'</td><td>'+f.pj+'</td><td>'+f.pg+'</td><td>'+f.sf+'-'+f.sc+'</td></tr>'}).join('')+
+        var filas=tb&&tb.filas.length?tb.filas:(z0?z0.parejas.map(function(n){return{pareja:n,pj:0,pg:0,sf:0,sc:0,gf:0,gc:0}}):[]);
+        return '<div class="caja zona"><span class="etq">Zona '+esc(z.k)+'</span><table class="tabla"><thead><tr><th>#</th><th>PAREJA</th><th>PG</th><th>SETS</th><th>GAMES</th></tr></thead><tbody>'+
+          filas.map(function(f,n){return '<tr class="'+(tb&&tb.cerrada&&n<tb.clasif?'cl':'')+'"><td><span>'+(n+1)+'</span></td><td>'+esc(f.pareja)+'</td><td>'+f.pg+'</td><td>'+difTxt(f.sf-f.sc)+'</td><td>'+difTxt(f.gf-f.gc)+'</td></tr>'}).join('')+
           '</tbody></table><div class="pz">'+z.ps.map(function(p){return partidoHTML(C,p)}).join('')+'</div></div>';
       }).join('')+'</div>';
 }
+
+/* Diferencia de sets o de games: +3, −2 o 0 */
+function difTxt(d){return d>0?'+'+d:d<0?'−'+(-d):'0'}
 
 function cronograma(T){
   var todos=[];
