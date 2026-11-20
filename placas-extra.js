@@ -73,11 +73,11 @@ async function placaConj(I){
   c.save();c.beginPath();c.rect(X,Y,FW,FH);c.clip();fotoDibujar(c,img,X,Y,FW,FH,aj,TINTE.conj);c.restore();
   // marcador
   const MY=Y+FH+34;c.fillStyle='#fff';c.fillRect(X,MY,FW,3);
-  const R=X+FW,cols=[R-76*3-24,R-76*2-12,R-76].map(x=>x+38);
+  const PAD=48,R=X+FW-PAD,cols=[R-76*3-24,R-76*2-12,R-76].map(x=>x+38);
   c.fillStyle=GRIS2;c.font='700 18px Archivo';c.save();c.letterSpacing='3px';['SET 1','SET 2','SET 3'].forEach((t,j)=>c.fillText(t,cols[j],MY+34));c.restore();
   const w=I.w;
   [I.A,I.B].forEach((n,i)=>{const y=MY+112+i*104,gana=(w===1)===(i===0),col=gana?'#fff':GRIS,t=n.replace('–','-');
-    c.textAlign='left';c.fillStyle=col;c.fontStretch='condensed';ajusta(c,t,'800 #px Archivo',cols[0]-38-X-20,36,22);c.fillText(t,X,y);
+    c.textAlign='left';c.fillStyle=col;c.fontStretch='condensed';ajusta(c,t,'800 #px Archivo',cols[0]-38-X-PAD-20,36,22);c.fillText(t,X+PAD,y);
     c.textAlign='center';c.font='900 64px Archivo';c.fontStretch='extra-condensed';
     for(let j=0;j<3;j++){const s=I.sets[j];c.fillStyle=s?(s[i]>s[1-i]?'#fff':GRIS):'#3a3a3a';c.fillText(s?String(s[i]):'-',cols[j],y+10)}
     if(i===0){c.fillStyle='#2a2a2a';c.fillRect(X,y+40,FW,2)}});
