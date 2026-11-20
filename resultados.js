@@ -1,6 +1,7 @@
 /* Resultados de torneos — lógica compartida por la página (Ver torneo) y la app de organizadores.
    Reglas del circuito:
    - Sets: 6 con diferencia de 2, 7-5 o 7-6. Tercer set: súper tie-break a 11 con diferencia de 2 (para games cuenta 7-6).
+   - En el Máster (torneos master-…) los 3 sets son normales: el 3° también es 6 con diferencia de 2, 7-5 o 7-6 y cuenta sus games reales.
    - Zona de 3: clasifican 2. Orden: partidos ganados; si empatan dos, el partido entre ellos; después sets y games.
    - Zona de 4: clasifican 3. 1° el que ganó los dos partidos; 2° y 3°: si se enfrentaron, ese partido; si no, diferencia de sets y después de games.
    - En las parejas de un partido se puede escribir "Ganador 36", "Perdedor 36" o "1° Zona A": se reemplaza solo. */
@@ -9,18 +10,20 @@
     var m = String(txt || '').match(/\d+\s*-\s*\d+/g);
     return m ? m.map(function (s) { var p = s.split('-'); return [Number(p[0]), Number(p[1])]; }) : [];
   }
-  function setValido(i, a, b) {
+  function tercerNormal(torneo) { return /^master-/i.test(String(torneo || '')); }
+  function setValido(i, a, b, normal) {
     var hi = Math.max(a, b), lo = Math.min(a, b);
-    if (i < 2) return (hi === 6 && lo <= 4) || (hi === 7 && (lo === 5 || lo === 6));
+    if (i < 2 || normal) return (hi === 6 && lo <= 4) || (hi === 7 && (lo === 5 || lo === 6));
     return hi >= 11 && hi - lo >= 2 && (hi === 11 || hi - lo === 2);
   }
   /* Devuelve '' si el resultado es válido, o el motivo. */
-  function validar(ss) {
+  function validar(ss, normal) {
+    var t = normal ? '3° set' : 'súper tie-break';
     if (ss.length < 2) return 'Faltan sets: cargá por lo menos el 1° y el 2°.';
-    for (var i = 0; i < ss.length; i++) if (!setValido(i, ss[i][0], ss[i][1])) return i < 2 ? 'El ' + (i + 1) + '° set no es válido.' : 'El súper tie-break no es válido.';
+    for (var i = 0; i < ss.length; i++) if (!setValido(i, ss[i][0], ss[i][1], normal)) return i < 2 || normal ? 'El ' + (i + 1) + '° set no es válido.' : 'El súper tie-break no es válido.';
     var a = ss[0][0] > ss[0][1], b = ss[1][0] > ss[1][1];
-    if (a !== b && ss.length < 3) return 'Quedaron 1 set a 1: falta el súper tie-break.';
-    if (a === b && ss.length === 3) return 'Con 2 sets ganados no se juega súper tie-break.';
+    if (a !== b && ss.length < 3) return 'Quedaron 1 set a 1: falta el ' + t + '.';
+    if (a === b && ss.length === 3) return 'Con 2 sets ganados no se juega ' + (normal ? 'el 3° set' : 'súper tie-break') + '.';
     return '';
   }
   function ganadorSets(ss) { var a = 0, b = 0; ss.forEach(function (s) { if (s[0] > s[1]) a++; else if (s[1] > s[0]) b++; }); return a > b ? 1 : b > a ? 2 : 0; }
@@ -31,7 +34,7 @@
     var ps = (cat.partidos || []).map(function (p, n) { var o = Object.assign({}, p); o._n = n; o._sets = sets(p.resultado); return o; });
     var porId = {}; ps.forEach(function (p) { if (p.id) porId[String(p.id)] = p; });
     var zonas = (cat.zonas || []).map(function (z) { return { zona: String(z.zona).toUpperCase(), parejas: z.parejas.slice() }; });
-    var C = { cat: cat, partidos: ps, porId: porId, zonas: zonas, _tab: {} };
+    var C = { cat: cat, partidos: ps, porId: porId, zonas: zonas, _tab: {}, normal: tercerNormal(cat.torneo) };
 
     function gano(p) {
       if (p._sets.length) return ganadorSets(p._sets);
@@ -78,7 +81,7 @@
         [[A.n, 0], [B.n, 1]].forEach(function (x) {
           var k = x[0].toLowerCase(); if (!st[k]) st[k] = { pareja: x[0], pj: 0, pg: 0, sf: 0, sc: 0, gf: 0, gc: 0 };
           var s = st[k]; s.pj++; if ((w === 1) === (x[1] === 0)) s.pg++;
-          ss.forEach(function (set, n) { var m = set[x[1]], o = set[1 - x[1]]; if (n === 2) { var g = m > o; m = g ? 7 : 6; o = g ? 6 : 7; } if (m > o) s.sf++; else s.sc++; s.gf += m; s.gc += o; });
+          ss.forEach(function (set, n) { var m = set[x[1]], o = set[1 - x[1]]; if (n === 2 && !C.normal) { var g = m > o; m = g ? 7 : 6; o = g ? 6 : 7; } if (m > o) s.sf++; else s.sc++; s.gf += m; s.gc += o; });
         });
         cruces.push({ a: A.n.toLowerCase(), b: B.n.toLowerCase(), w: (w === 1 ? A.n : B.n).toLowerCase() });
       });
@@ -115,5 +118,5 @@
       col(ss[0] || [0, 0], '') + col(ss[1] || [0, 0], '') + (ss[2] ? col(ss[2], ' tb') : '<span class="rs-col tb vacio" aria-hidden="true"><b>00</b><b>00</b></span>') + '</span>';
   }
 
-  window.Resultados = { sets: sets, setValido: setValido, validar: validar, ganadorSets: ganadorSets, esZona: esZona, preparar: preparar, setsHTML: setsHTML };
+  window.Resultados = { tercerNormal: tercerNormal, sets: sets, setValido: setValido, validar: validar, ganadorSets: ganadorSets, esZona: esZona, preparar: preparar, setsHTML: setsHTML };
 })();

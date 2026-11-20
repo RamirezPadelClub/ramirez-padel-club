@@ -402,15 +402,16 @@ function orgLogin_(d) {
   return json_({ ok: true, sede: o.sede, nombre: o.nombre });
 }
 
-/** Valida un resultado de pádel: sets 6 con diferencia de 2, 7-5 o 7-6; súper tie-break a 11 con diferencia de 2. */
-function setsValidos_(sets) {
+/** Valida un resultado de pádel: sets 6 con diferencia de 2, 7-5 o 7-6; súper tie-break a 11 con diferencia de 2.
+ *  Con normal = true (Máster) el 3° también es un set normal. */
+function setsValidos_(sets, normal) {
   if (!Array.isArray(sets) || sets.length < 2 || sets.length > 3) return false;
   const ok = sets.every((s, i) => {
     if (!Array.isArray(s) || s.length !== 2) return false;
     const a = Number(s[0]), b = Number(s[1]);
     if (!Number.isInteger(a) || !Number.isInteger(b) || a < 0 || b < 0) return false;
     const hi = Math.max(a, b), lo = Math.min(a, b);
-    if (i < 2) return (hi === 6 && lo <= 4) || (hi === 7 && (lo === 5 || lo === 6));
+    if (i < 2 || normal) return (hi === 6 && lo <= 4) || (hi === 7 && (lo === 5 || lo === 6));
     return hi >= 11 && hi - lo >= 2 && (hi === 11 || hi - lo === 2);
   });
   if (!ok) return false;
@@ -424,7 +425,7 @@ function guardarResultado_(d) {
   const o = orgPorClave_(d.clave);
   if (o.error) return json_({ ok: false, error: o.error });
   const borrar = Array.isArray(d.sets) && d.sets.length === 0;
-  if (!borrar && !setsValidos_(d.sets)) return json_({ ok: false, error: 'sets' });
+  if (!borrar && !setsValidos_(d.sets, /^master-/i.test(String(d.torneo || '')))) return json_({ ok: false, error: 'sets' });
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {

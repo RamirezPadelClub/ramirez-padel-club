@@ -119,8 +119,8 @@ a.btn{display:block;text-align:center;text-decoration:none}
     </div>
   </section>
 </main>
-<script src="resultados.js"></script>
-<script src="placas-extra.js?v=20261120c"></script>
+<script src="resultados.js?v=20261120d"></script>
+<script src="placas-extra.js?v=20261120d"></script>
 <script>
 const URL_API='https://script.google.com/macros/s/AKfycby6BVoENl5ojrVDm1smQngTQ73Xwntpqg9V0iIAJrWytFsEYOMr13Fudd9cpvtS3y7l/exec';
 const LOGO='img/logo-complejo.png',LOGO_RUTA='img/logo-laruta-fondo.png';
@@ -211,26 +211,29 @@ function pintarLista(){
 }
 
 /* ---------- carga ---------- */
+/* En el Máster los 3 sets son normales; en el resto el 3° es súper tie-break. */
+let NORMAL=false;
 function abrir(n){
   sel=C.partidos[n];const A=C.nombre(sel,1),B=C.nombre(sel,2);
   $('cT').textContent=(sel.fase||'Partido')+(sel.hora?' · '+sel.hora+' hs':'');
   $('cS').textContent=catSel.categoria+(sel.id?' · Partido '+sel.id:'')+' · '+(SEDES[sel.sede||'complejo']||'');
   const v=(i,j)=>sel._sets[i]?sel._sets[i][j]:'';
-  let h='<span></span><span class="hd">1° set</span><span class="hd">2° set</span><span class="hd">Súper TB</span>';
-  [A,B].forEach((L,j)=>{h+=`<span class="nm">${esc(L.n)}</span>`;for(let i=0;i<3;i++)h+=`<input id="s${i}${j}" inputmode="numeric" maxlength="2" aria-label="${esc(L.n)}, ${i<2?'set '+(i+1):'súper tie-break'}" value="${v(i,j)}">`});
+  NORMAL=Resultados.tercerNormal(catSel.torneo);
+  let h='<span></span><span class="hd">1° set</span><span class="hd">2° set</span><span class="hd">'+(NORMAL?'3° set':'Súper TB')+'</span>';
+  [A,B].forEach((L,j)=>{h+=`<span class="nm">${esc(L.n)}</span>`;for(let i=0;i<3;i++)h+=`<input id="s${i}${j}" inputmode="numeric" maxlength="2" aria-label="${esc(L.n)}, ${i<2||NORMAL?'set '+(i+1):'súper tie-break'}" value="${v(i,j)}">`});
   $('score').innerHTML=h;marcar();$('msg').textContent='';$('placa').hidden=true;$('guardar').hidden=false;
   foto=null;ajImg=null;$('ajuste').hidden=true;$('fotoMini').removeAttribute('src');$('fotoTxt').textContent='Elegí o sacá la foto de las dos parejas';$('foto').value='';
   vista('vCarga');
 }
-function marcar(){for(let i=0;i<3;i++){const A=$('s'+i+'0'),B=$('s'+i+'1');if(!A)return;const a=A.value.trim(),b=B.value.trim();const mal=a!==''&&b!==''&&(isNaN(a)||isNaN(b)||!Resultados.setValido(i,+a,+b));[A,B].forEach(x=>{x.classList.toggle('bad',mal);x.setAttribute('aria-invalid',mal)})}}
+function marcar(){for(let i=0;i<3;i++){const A=$('s'+i+'0'),B=$('s'+i+'1');if(!A)return;const a=A.value.trim(),b=B.value.trim();const mal=a!==''&&b!==''&&(isNaN(a)||isNaN(b)||!Resultados.setValido(i,+a,+b,NORMAL));[A,B].forEach(x=>{x.classList.toggle('bad',mal);x.setAttribute('aria-invalid',mal)})}}
 $('score').addEventListener('input',e=>{marcar();$('msg').textContent='';saltar(e.target)});
 /* Al escribir un número que ya está completo, pasa solo al siguiente casillero:
    sets de 0 a 7 al toque; súper tie-break cuando tiene 2 cifras o una cifra que no puede seguir (0, 2-9). */
 $('score').addEventListener('focusin',e=>{if(e.target.tagName==='INPUT')e.target.select()});
 function saltar(el){
   const m=/^s(\d)(\d)$/.exec(el.id||'');if(!m)return;
-  const i=+m[1],j=+m[2];el.value=el.value.replace(/\D/g,'');if(i<2&&el.value.length>1)el.value=el.value.slice(-1);marcar();const v=el.value;if(v==='')return;
-  const listo=i<2?(v.length===1&&+v<=7):(v.length>=2||(v.length===1&&v!=='1'));
+  const i=+m[1],j=+m[2];el.value=el.value.replace(/\D/g,'');if((i<2||NORMAL)&&el.value.length>1)el.value=el.value.slice(-1);marcar();const v=el.value;if(v==='')return;
+  const listo=i<2||NORMAL?(v.length===1&&+v<=7):(v.length>=2||(v.length===1&&v!=='1'));
   if(!listo)return;
   if(j===0){$('s'+i+'1').focus();$('s'+i+'1').select();return}
   if(i===0){$('s10').focus();$('s10').select();return}
@@ -239,7 +242,7 @@ function saltar(el){
   el.blur();
 }
 function leer(){const ss=[];for(let i=0;i<3;i++){const a=$('s'+i+'0').value.trim(),b=$('s'+i+'1').value.trim();if(a===''&&b==='')continue;if(a===''||b===''||isNaN(a)||isNaN(b))return{err:'Completá los dos números de cada set.'};ss.push([+a,+b])}
-  const e=Resultados.validar(ss);return e?{err:e}:{sets:ss}}
+  const e=Resultados.validar(ss,NORMAL);return e?{err:e}:{sets:ss}}
 $('volver').onclick=$('otro').onclick=()=>{vista('vLista');pintarLista()};
 /* Guardar la placa: en el celular abre el menú de compartir con la imagen, donde «Guardar imagen» la manda directo a Fotos.
    Si el navegador no lo permite (por ejemplo en la compu), se descarga como archivo. */
