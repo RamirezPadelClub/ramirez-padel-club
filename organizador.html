@@ -273,7 +273,7 @@ $('guardar').onclick=async()=>{
 /* ---------- placas ---------- */
 /* Encuadre de la foto: por defecto entra entera a lo ancho (no se corta a nadie de los costados) y,
    si es alta, se recorta sobre todo de abajo (piernas). El planillero la puede mover y achicar/agrandar. */
-const CUADRO={complejo:[1080,820],tour:[900,780],master:[840,960],conj:[920,760]},TINTE={complejo:'rgba(14,122,69,.88)',tour:'rgba(11,14,51,.86)',master:'rgba(26,90,145,.86)',conj:'rgba(11,11,11,.88)'};
+const CUADRO={complejo:[1080,820],tour:[900,780],master:[984,1110],conj:[1000,880]},TINTE={complejo:'rgba(14,122,69,.88)',tour:'rgba(11,14,51,.86)',master:'rgba(26,90,145,.86)',conj:'rgba(11,11,11,.88)'};
 let aj={s:null,px:.5,py:.25},ajImg=null;
 function ajLim(img,W,H){return{smin:Math.min(W/img.width,H/img.height),smax:Math.max(W/img.width,H/img.height)}}
 function fotoDibujar(c,img,X,Y,W,H,a,tinte){const L=ajLim(img,W,H),k=W/img.width,s=Math.min(L.smax,Math.max(L.smin,a.s==null?k:a.s*k)),iw=img.width*s,ih=img.height*s;

@@ -24,7 +24,7 @@ async function placaMaster(I){
   // categoría
   c.fillStyle='#fff';c.font='300 52px Oswald';c.save();c.letterSpacing='8px';c.fillText(I.cat.toUpperCase().replace(/^SUMA\s*8/,'+8'),544,632);c.restore();
   // foto enmarcada
-  const X=120,Y=690,FW=840,FH=960;
+  const X=48,Y=690,FW=984,FH=1110;
   c.save();c.shadowColor='rgba(215,234,70,.4)';c.shadowBlur=48;rr(c,X,Y,FW,FH,24);c.fillStyle=AZUL;c.fill();c.restore();
   const img=await cargarImg(foto);
   c.save();rr(c,X,Y,FW,FH,24);c.clip();fotoDibujar(c,img,X,Y,FW,FH,aj,TINTE.master);
@@ -34,8 +34,8 @@ async function placaMaster(I){
   rr(c,311.5,665.5,457,51,24);c.fillStyle=AZUL;c.fill();c.lineWidth=3;c.strokeStyle=LIMA;c.stroke();
   c.fillStyle=LIMA;const ls=I.fase.length>14?4:8;c.save();c.letterSpacing=ls+'px';ajusta(c,I.fase,'600 #px "Cormorant Garamond"',410,34,20);c.fillText(I.fase,540+ls/2,703);c.restore();
   // marcador dentro de la foto
-  c.fillStyle=LIMA;c.fillRect(X+72,Y+FH-150,FW-144,3);
-  const BX=X+72,BW=FW-144,BY=Y+FH-136,BH=110;rr(c,BX,BY,BW,BH,22);c.fillStyle='rgba(26,90,145,.9)';c.fill();
+  c.fillStyle=LIMA;c.fillRect(X+60,Y+FH-150,FW-120,3);
+  const BX=X+60,BW=FW-120,BY=Y+FH-136,BH=110;rr(c,BX,BY,BW,BH,22);c.fillStyle='rgba(26,90,145,.9)';c.fill();
   const SX=BX+BW-34-198,w=I.w;
   [I.A,I.B].forEach((n,i)=>{const t=n.toUpperCase().replace('–','-'),gana=(w===1)===(i===0);c.textAlign='left';c.fillStyle=gana?'#fff':'rgba(255,255,255,.82)';ajusta(c,t,(gana?'700':'500')+' #px Montserrat',SX-BX-50,27,18);c.save();c.letterSpacing='1px';c.fillText(t,BX+34,BY+46+i*42);c.restore()});
   c.fillStyle='rgba(255,255,255,.7)';c.fillRect(SX,BY+12,2,BH-24);for(let j=0;j<3;j++)c.fillRect(SX+66*(j+1),BY+12,2,BH-24);c.fillRect(SX,BY+BH/2-1,198,2);
@@ -43,7 +43,7 @@ async function placaMaster(I){
   for(let j=0;j<3;j++)[0,1].forEach(i=>{const s=I.sets[j],v=s?s[i]:'-',gana=s&&s[i]>s[1-i];c.fillStyle=gana?LIMA:'#fff';c.font=(gana?'700':'500')+' 32px Montserrat';c.fillText(String(v),SX+33+66*j,BY+44+i*44)});
   // logos de las sedes
   const lgs=await Promise.all(['img/logo-complejo.png','img/logo-laruta-fondo.png'].map(cargarImg));
-  let x=405;[[128,128],[116,128]].forEach(([lw,lh],j)=>{const im=lgs[j],s=Math.min(lw/im.width,lh/im.height),dw=im.width*s,dh=im.height*s;c.drawImage(im,x+(lw-dw)/2,1722+(lh-dh)/2,dw,dh);x+=lw+26});
+  let x=456;[[78,78],[72,78]].forEach(([lw,lh],j)=>{const im=lgs[j],s=Math.min(lw/im.width,lh/im.height),dw=im.width*s,dh=im.height*s;c.drawImage(im,x+(lw-dw)/2,1822+(lh-dh)/2,dw,dh);x+=lw+20});
   return cv.toDataURL('image/jpeg',.9);
 }
 
@@ -66,14 +66,14 @@ async function placaConj(I){
   const cat=I.cat.toUpperCase().replace(/(\d)\s*°/,'$1ª');
   c.font='800 34px Archivo';c.fontStretch='condensed';c.save();c.letterSpacing='3px';const cw=c.measureText(cat).width+60;c.fillStyle='#fff';c.fillRect(540-cw/2,230,cw,62);c.fillStyle=NEGRO;c.fillText(cat,543,273);c.restore();
   // RESULTADO
-  c.fillStyle='#fff';c.font='900 190px Archivo';c.fontStretch='extra-condensed';c.save();c.letterSpacing='-3px';c.fillText('RESULTADO',540,470);c.restore();
+  c.fillStyle='#fff';c.fontStretch='extra-condensed';c.save();c.letterSpacing='-3px';ajusta(c,'RESULTADO','900 #px Archivo',940,190,90);c.fillText('RESULTADO',540,470);c.restore();
   c.fillStyle='#bdbdbd';c.font='700 22px Archivo';c.fontStretch='normal';c.save();c.letterSpacing='7px';c.fillText(I.fase,544,530);c.restore();
   // foto
-  const X=80,Y=576,FW=920,FH=760,img=await cargarImg(foto);
+  const X=40,Y=576,FW=1000,FH=880,img=await cargarImg(foto);
   c.save();c.beginPath();c.rect(X,Y,FW,FH);c.clip();fotoDibujar(c,img,X,Y,FW,FH,aj,TINTE.conj);c.restore();
   // marcador
   const MY=Y+FH+34;c.fillStyle='#fff';c.fillRect(X,MY,FW,3);
-  const cols=[1000-76*3-24,1000-76*2-12,1000-76].map(x=>x+38);
+  const R=X+FW,cols=[R-76*3-24,R-76*2-12,R-76].map(x=>x+38);
   c.fillStyle=GRIS2;c.font='700 18px Archivo';c.save();c.letterSpacing='3px';['SET 1','SET 2','SET 3'].forEach((t,j)=>c.fillText(t,cols[j],MY+34));c.restore();
   const w=I.w;
   [I.A,I.B].forEach((n,i)=>{const y=MY+112+i*104,gana=(w===1)===(i===0),col=gana?'#fff':GRIS,t=n.replace('–','-');
@@ -84,7 +84,7 @@ async function placaConj(I){
   c.fontStretch='normal';
   // logos Ramírez × La Ruta
   const [l1,l2]=await Promise.all(['img/logo-complejo.png','img/logo-laruta-fondo.png'].map(cargarImg));
-  const dib=(im,cx)=>{const s=Math.min(120/im.width,120/im.height);c.drawImage(im,cx-im.width*s/2,1770-im.height*s/2,im.width*s,im.height*s)};
-  dib(l1,540-36-24-60);dib(l2,540+36+24+60);c.fillStyle=GRIS;c.font='300 48px Archivo';c.textAlign='center';c.fillText('×',540,1786);
+  const dib=(im,cx)=>{const s=Math.min(76/im.width,76/im.height);c.drawImage(im,cx-im.width*s/2,1846-im.height*s/2,im.width*s,im.height*s)};
+  dib(l1,540-24-16-38);dib(l2,540+24+16+38);c.fillStyle=GRIS;c.font='300 36px Archivo';c.textAlign='center';c.fillText('×',540,1858);
   return cv.toDataURL('image/jpeg',.9);
 }
