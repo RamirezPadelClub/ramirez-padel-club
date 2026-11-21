@@ -74,6 +74,7 @@ a.btn{display:block;text-align:center;text-decoration:none}
 .sede{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer;min-height:44px}
 .sede img{width:46px;height:46px;object-fit:contain}.sede b{font:800 13px/1.1 var(--display);text-transform:uppercase}.sede small{font-size:11px;color:var(--muted)}
 .sede[aria-pressed="true"]{border-color:var(--green);box-shadow:0 0 0 2px var(--green);background:var(--soft)}
+.btn.borrar{margin-top:10px;background:transparent;color:#e5484d;border:2px solid #e5484d;box-shadow:none}
 </style>
 </head>
 <body>
@@ -109,6 +110,7 @@ a.btn{display:block;text-align:center;text-decoration:none}
       <label class="file" for="foto"><img id="fotoMini" alt=""><span id="fotoTxt">Elegí o sacá la foto de las dos parejas</span><input id="foto" type="file" accept="image/*"></label>
       <div class="ajuste" id="ajuste" hidden><canvas id="ajCv" aria-label="Encuadre de la foto: arrastrala para acomodarla"></canvas><div class="ajz"><span>Achicar</span><input type="range" id="ajZoom" min="0" max="100" value="0" aria-label="Tamaño de la foto"><span>Agrandar</span></div><p class="ajt">Arrastrá la foto para acomodarla. Que se vean las cabezas de los cuatro.</p></div>
       <button class="btn" id="guardar" style="margin-top:14px">Guardar resultado</button>
+      <button class="btn borrar" id="borrar" type="button" hidden>Borrar resultado (volver a 0)</button>
       <p class="msg" id="msg" role="status"></p>
       <div class="placa" id="placa" hidden>
         <span class="done">Listo, ya está en la página.</span>
@@ -221,7 +223,7 @@ function abrir(n){
   NORMAL=Resultados.tercerNormal(catSel.torneo);
   let h='<span></span><span class="hd">1° set</span><span class="hd">2° set</span><span class="hd">'+(NORMAL?'3° set':'Súper TB')+'</span>';
   [A,B].forEach((L,j)=>{h+=`<span class="nm">${esc(L.n)}</span>`;for(let i=0;i<3;i++)h+=`<input id="s${i}${j}" inputmode="numeric" maxlength="2" aria-label="${esc(L.n)}, ${i<2||NORMAL?'set '+(i+1):'súper tie-break'}" value="${v(i,j)}">`});
-  $('score').innerHTML=h;marcar();$('msg').textContent='';$('placa').hidden=true;$('guardar').hidden=false;
+  $('score').innerHTML=h;marcar();$('msg').textContent='';$('placa').hidden=true;$('guardar').hidden=false;$('borrar').hidden=!sel._sets.length;
   foto=null;ajImg=null;$('ajuste').hidden=true;$('fotoMini').removeAttribute('src');$('fotoTxt').textContent='Elegí o sacá la foto de las dos parejas';$('foto').value='';
   vista('vCarga');
 }
@@ -250,6 +252,22 @@ let placaArchivo=null;
 $('bajar').onclick=e=>{const f=placaArchivo;if(!f||!navigator.share||!navigator.canShare||!navigator.canShare({files:[f]}))return;
   e.preventDefault();navigator.share({files:[f]}).catch(err=>{if(!err||err.name!=='AbortError'){const a=document.createElement('a');a.href=$('bajar').href;a.download=f.name;document.body.appendChild(a);a.click();a.remove()}})};
 $('foto').onchange=e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{foto=fr.result;$('fotoMini').src=foto;$('fotoTxt').textContent=f.name;ajIniciar(foto).catch(()=>{})};fr.readAsDataURL(f)};
+/* Borrar el resultado de un partido ya cargado: vuelve a quedar sin jugar en la página. */
+$('borrar').onclick=async()=>{
+  if(!sel||!confirm('¿Seguro que querés borrar el resultado'+(sel.id?' del partido '+sel.id:'')+'? Va a quedar sin jugar en la página.'))return;
+  $('borrar').disabled=true;$('guardar').disabled=true;$('msg').className='msg';$('msg').textContent='Borrando…';
+  try{
+    const j=DEMO?{ok:true,resultado:''}:await post({accion:'resultado',clave,torneo:catSel.torneo,categoria:catSel.categoria,id:sel.id,sets:[]});
+    if(DEMO){const q=window.DEMO_DATOS.categorias.find(x=>x.torneo===catSel.torneo&&x.categoria===catSel.categoria).partidos.find(x=>x.id===sel.id);if(q){q.resultado='';q.ganador=''}}
+    if(!j.ok){$('msg').className='msg err';$('msg').textContent={sede:'Este partido no es de tu sede.',partido:'No se encontró el partido en la planilla.',clave:'Tu sesión venció: salí y volvé a entrar.',bloqueado:'Demasiados intentos. Esperá unos minutos.'}[j.error]||'No se pudo borrar.';return}
+    sel.resultado='';sel.ganador='';sel._sets=[];
+    for(let i=0;i<3;i++)for(let k=0;k<2;k++){const x=$('s'+i+k);if(x)x.value=''}
+    marcar();$('borrar').hidden=true;$('placa').hidden=true;$('guardar').hidden=false;
+    $('msg').className='msg ok';$('msg').textContent='Resultado borrado. El partido quedó sin jugar.';
+    cargar().catch(()=>{});
+  }catch(e){$('msg').className='msg err';$('msg').textContent='No se pudo borrar. Revisá internet y probá de nuevo.'}
+  finally{$('borrar').disabled=false;$('guardar').disabled=false}
+};
 $('guardar').onclick=async()=>{
   const r=leer();if(r.err){marcar();$('msg').className='msg err';$('msg').textContent=r.err;return}
   $('guardar').disabled=true;$('msg').className='msg';$('msg').textContent='Guardando…';
