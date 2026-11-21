@@ -227,7 +227,7 @@ section.blanca{background:var(--blanco)}
 .rs-p .ps{display:flex;flex-direction:column;font-size:14px;line-height:1.35;min-width:0}.rs-p .ps .w{font-weight:800}.rs-p .ps i{font-style:normal;color:var(--tinta-2)}
 .rs-p .pend{font-size:13px;color:var(--tinta-2)}
 .rs-sc{display:inline-flex;gap:12px;font-variant-numeric:tabular-nums}.rs-col{display:flex;flex-direction:column;align-items:center}
-.rs-col b{font-size:15px;line-height:calc(14px*1.35);font-weight:500;color:var(--tinta-2)}.rs-col b.g{font-weight:800;color:var(--verde)}.rs-col b{position:relative}.rs-col .abm{position:absolute;left:calc(100% + 1px);top:-3px;font-size:9px;font-weight:800;letter-spacing:.02em;color:#E5484D;line-height:1;opacity:1}
+.rs-col b{font-size:15px;line-height:calc(14px*1.35);font-weight:500;color:var(--tinta-2)}.rs-col b.g{font-weight:800;color:var(--verde)}.rs-col b{position:relative}.vt-llave .wo-tag{color:#E5484D;font-weight:800;font-size:.8em}.rs-col b.wo{color:#E5484D;font-weight:800;opacity:1;letter-spacing:.02em}.rs-col .abm{position:absolute;left:calc(100% + 1px);top:-3px;font-size:9px;font-weight:800;letter-spacing:.02em;color:#E5484D;line-height:1;opacity:1}
 .vt-fila .rs-sc{margin-left:auto}.rs-col{min-width:18px}.rs-col.vacio{visibility:hidden}.vt-fila{padding-left:8px!important;padding-right:8px!important}
 .vt-dia+.vt-dia{margin-top:18px}
 .vt-dia h4{font-family:var(--display);font-size:20px;text-transform:uppercase;border-bottom:2px solid var(--tinta);padding-bottom:4px;margin:0 0 2px}
@@ -748,7 +748,7 @@ body.mc-abierto{overflow:hidden}
   </form>
   <div class="res" id="insc-res" hidden></div>
 </dialog>
-<script src="resultados.js?v=20261121c"></script>
+<script src="resultados.js?v=20261121d"></script>
 <script>
 (function(){
   /* URL del Apps Script publicado (la planilla de inscripciones). */
@@ -890,8 +890,8 @@ body.mc-abierto{overflow:hidden}
         else{lista=porRonda[i].slice();falta=i===0?0:Math.pow(2,4-i)-lista.length;for(var j=0;j<falta;j++)lista.push({})}
         return'<div class="vt-ronda"><p>'+r[1]+'</p><div>'+lista.map(function(p){
           if(p.hueco)return'<div class="vt-llave hueco" aria-hidden="true"><div class="h">&nbsp;</div><div class="p"><span>&nbsp;</span></div><div class="p"><span>&nbsp;</span></div></div>';
-          var pp=function(k){var n=p.p1||p.p2?nom(p,k).n:'';return'<div class="p'+(gano(p,k)?' gana':'')+(n?'':' nada')+'"><span>'+esc(n||'A definir')+'</span></div>'};
-          var rt=p.resultado&&window.Resultados?(function(ss){return ss.length?ss.filter(function(x){return!x.nj}).map(function(x){return x.join('-')}).join(' ')+(ss.ab?' (AB)':''):p.resultado})(Resultados.resultado(p.resultado,p.ganador,c.torneo)):p.resultado;var cab=[p.id?'Partido '+p.id:'',rt||p.hora||''].filter(Boolean).join(' · ');return'<div class="vt-llave'+(i===4?' final':'')+'">'+(cab?'<div class="h">'+esc(cab)+'</div>':'')+pp(1)+pp(2)+'</div>'}).join('')+'</div></div>'}).join('');
+          var woP=window.Resultados&&p.resultado?Resultados.sets(p.resultado,p.ganador).wo:0;var pp=function(k){var n=p.p1||p.p2?nom(p,k).n:'';return'<div class="p'+(gano(p,k)?' gana':'')+(n?'':' nada')+'"><span>'+esc(n||'A definir')+(woP===k?' <small class="wo-tag">WO</small>':'')+'</span></div>'};
+          var rt=p.resultado&&window.Resultados?(function(ss){return ss.wo?'WO':ss.length?ss.filter(function(x){return!x.nj}).map(function(x){return x.join('-')}).join(' ')+(ss.ab?' (AB)':''):p.resultado})(Resultados.resultado(p.resultado,p.ganador,c.torneo)):p.resultado;var cab=[p.id?'Partido '+p.id:'',rt||p.hora||''].filter(Boolean).join(' · ');return'<div class="vt-llave'+(i===4?' final':'')+'">'+(cab?'<div class="h">'+esc(cab)+'</div>':'')+pp(1)+pp(2)+'</div>'}).join('')+'</div></div>'}).join('');
       sec.cuadro=secc('Cuadro final','','<div class="vt-cuadro"><div class="vt-rondas" style="--n:'+(5-desde)+'">'+cols+'</div></div>');
     }else sec.cuadro=secc('Cuadro final','',vacio('El cuadro se arma cuando terminan las zonas.'));
     // Campeones

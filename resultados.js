@@ -9,7 +9,8 @@
      set del abandono → la que sigue llega a 6 (7-5 si la otra tenía 5, 7-6 si tenía 6) y la que abandona se queda con sus games;
      sets que no se jugaron → no se muestran, pero para la tabla cuentan 6-0 (el súper tie-break, 7-6). Abandono en el súper tie-break: se ve como iba y cuenta 7-6.
      Abandono antes de jugar: AB en 0-0 del 1° set → 6-0 6-0.
-   - Walkover (WO): la pareja que no se presenta pierde 6-0 6-0. En la planilla: "6-0 6-0 WO" + ganador; se ve WO chiquito en esa pareja.
+   - Walkover (WO): la pareja que no se presenta pierde 6-0 6-0. En la planilla: "6-0 6-0 WO" + ganador; en la página no se ve
+     el 6-0 6-0 sino "WO" en la pareja que no se presentó (la tabla sí lo cuenta 6-0 6-0) y la ganadora pasa sola a la siguiente instancia.
    - En las parejas de un partido se puede escribir "Ganador 36", "Perdedor 36" o "1° Zona A": se reemplaza solo. */
 (function () {
   /* Sets tal cual están cargados. Con abandono, el arreglo lleva .ab = pareja que abandonó (1 o 2) y el último set es cómo iba. */
@@ -154,6 +155,7 @@
   function setsHTML(ss) {
     var hueco = function (cls) { return '<span class="rs-col' + cls + ' vacio" aria-hidden="true"><b>00</b><b>00</b></span>'; };
     /* Tal cual se cargó (con abandono): el último set es cómo iba, sin ganador, con AB en la pareja que abandonó. */
+    if (ss.wo) return '<span class="rs-sc" aria-label="walkover">' + '<span class="rs-col"><b class="wo">' + (ss.wo === 1 ? 'WO' : '&nbsp;') + '</b><b class="wo">' + (ss.wo === 2 ? 'WO' : '&nbsp;') + '</b></span>' + hueco('') + hueco(' tb') + '</span>';
     var crudo = ss.ab && !ss.some(function (s) { return s.w; }), ult = ss.length - 1;
     var col = function (s, cls) {
       var parcial = crudo && s === ss[ult];
