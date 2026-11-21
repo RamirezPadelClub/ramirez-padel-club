@@ -254,7 +254,7 @@ $('bajar').onclick=e=>{const f=placaArchivo;if(!f||!navigator.share||!navigator.
 $('foto').onchange=e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{foto=fr.result;$('fotoMini').src=foto;$('fotoTxt').textContent=f.name;ajIniciar(foto).catch(()=>{})};fr.readAsDataURL(f)};
 /* Borrar el resultado de un partido ya cargado: vuelve a quedar sin jugar en la página. */
 $('borrar').onclick=async()=>{
-  if(!sel||!confirm('¿Seguro que querés borrar el resultado'+(sel.id?' del partido '+sel.id:'')+'? Va a quedar sin jugar en la página.'))return;
+  if(!sel)return;
   $('borrar').disabled=true;$('guardar').disabled=true;$('msg').className='msg';$('msg').textContent='Borrando…';
   try{
     const j=DEMO?{ok:true,resultado:''}:await post({accion:'resultado',clave,torneo:catSel.torneo,categoria:catSel.categoria,id:sel.id,sets:[]});
