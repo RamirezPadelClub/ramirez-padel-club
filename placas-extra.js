@@ -37,7 +37,7 @@ async function placaMaster(I){
   c.fillStyle=LIMA;c.fillRect(X+60,Y+FH-150,FW-120,3);
   const BX=X+60,BW=FW-120,BY=Y+FH-136,BH=110;rr(c,BX,BY,BW,BH,22);c.fillStyle='rgba(26,90,145,.9)';c.fill();
   const SX=BX+BW-34-198,w=I.w;
-  [I.A,I.B].forEach((n,i)=>{const t=n.toUpperCase().replace('–','-'),gana=(w===1)===(i===0);c.textAlign='left';c.fillStyle=gana?'#fff':'rgba(255,255,255,.82)';ajusta(c,t,(gana?'700':'500')+' #px Montserrat',SX-BX-50,27,18);c.save();c.letterSpacing='1px';c.fillText(t,BX+34,BY+46+i*42);const tw=c.measureText(t).width;c.restore();if(I.ab===i+1){c.fillStyle='#FF6B6B';c.font='700 20px Montserrat';c.fillText('AB',BX+34+tw+14,BY+44+i*42)}});
+  [I.A,I.B].forEach((n,i)=>{const t=n.toUpperCase().replace('–','-'),gana=(w===1)===(i===0);c.textAlign='left';c.fillStyle=gana?'#fff':'rgba(255,255,255,.82)';ajusta(c,t,(gana?'700':'500')+' #px Montserrat',SX-BX-50,27,18);c.save();c.letterSpacing='1px';c.fillText(t,BX+34,BY+46+i*42);const tw=c.measureText(t).width;c.restore();if(I.mk===i+1){c.fillStyle='#FF6B6B';c.font='700 20px Montserrat';c.fillText(I.mkT,BX+34+tw+14,BY+44+i*42)}});
   c.fillStyle='rgba(255,255,255,.7)';c.fillRect(SX,BY+12,2,BH-24);for(let j=0;j<3;j++)c.fillRect(SX+66*(j+1),BY+12,2,BH-24);c.fillRect(SX,BY+BH/2-1,198,2);
   c.textAlign='center';
   for(let j=0;j<3;j++)[0,1].forEach(i=>{const s=I.sets[j],v=s?s[i]:'-',gana=s&&!(I.ab&&j===I.sets.length-1)&&s[i]>s[1-i];c.fillStyle=gana?LIMA:'#fff';c.font=(gana?'700':'500')+' 32px Montserrat';c.fillText(String(v),SX+33+66*j,BY+44+i*44)});
@@ -78,7 +78,7 @@ async function placaConj(I){
   const w=I.w;
   [I.A,I.B].forEach((n,i)=>{const y=MY+112+i*104,gana=(w===1)===(i===0),col=gana?'#fff':GRIS,t=n.replace('–','-');
     c.textAlign='left';c.fillStyle=col;c.fontStretch='condensed';ajusta(c,t,'800 #px Archivo',cols[0]-38-X-PAD-80,36,22);c.fillText(t,X+PAD,y);
-    if(I.ab===i+1){const tw=c.measureText(t).width;c.fillStyle='#fff';c.font='800 22px Archivo';c.fillText('AB',X+PAD+tw+14,y-4)}
+    if(I.mk===i+1){const tw=c.measureText(t).width;c.fillStyle='#fff';c.font='800 22px Archivo';c.fillText(I.mkT,X+PAD+tw+14,y-4)}
     c.textAlign='center';c.font='900 64px Archivo';c.fontStretch='extra-condensed';
     for(let j=0;j<3;j++){const s=I.sets[j],par=I.ab&&j===I.sets.length-1;c.fillStyle=s?(!par&&s[i]>s[1-i]?'#fff':GRIS):'#3a3a3a';c.fillText(s?String(s[i]):'-',cols[j],y+10)}
     if(i===0){c.fillStyle='#2a2a2a';c.fillRect(X,y+40,FW,2)}});

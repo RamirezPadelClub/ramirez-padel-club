@@ -111,7 +111,7 @@ a.btn{display:block;text-align:center;text-decoration:none}
     <div class="card">
       <div class="step">Sets</div>
       <div class="score" id="score"></div>
-      <p class="abn" id="abn">¿Abandonaron? Cargá cómo iba el set y tocá <b>AB</b> al lado de la pareja que abandonó.</p>
+      <p class="abn" id="abn">¿Abandonaron? Cargá cómo iba el set y tocá <b>AB</b> al lado de la pareja que abandonó. Si una pareja no se presentó, tocá <b>WO</b> en esa pareja (6-0 6-0).</p>
       <div class="step">Foto del partido</div>
       <label class="file" for="foto"><img id="fotoMini" alt=""><span id="fotoTxt">Elegí o sacá la foto de las dos parejas</span><input id="foto" type="file" accept="image/*"></label>
       <div class="ajuste" id="ajuste" hidden><canvas id="ajCv" aria-label="Encuadre de la foto: arrastrala para acomodarla"></canvas><div class="ajz"><span>Achicar</span><input type="range" id="ajZoom" min="0" max="100" value="0" aria-label="Tamaño de la foto"><span>Agrandar</span></div><p class="ajt">Arrastrá la foto para acomodarla. Que se vean las cabezas de los cuatro.</p></div>
@@ -127,8 +127,8 @@ a.btn{display:block;text-align:center;text-decoration:none}
     </div>
   </section>
 </main>
-<script src="resultados.js?v=20261121b"></script>
-<script src="placas-extra.js?v=20261121a"></script>
+<script src="resultados.js?v=20261121c"></script>
+<script src="placas-extra.js?v=20261121c"></script>
 <script>
 const URL_API='https://script.google.com/macros/s/AKfycby6BVoENl5ojrVDm1smQngTQ73Xwntpqg9V0iIAJrWytFsEYOMr13Fudd9cpvtS3y7l/exec';
 const LOGO='img/logo-complejo.png',LOGO_RUTA='img/logo-laruta-fondo.png';
@@ -225,18 +225,25 @@ function abrir(n){
   sel=C.partidos[n];const A=C.nombre(sel,1),B=C.nombre(sel,2);
   $('cT').textContent=(sel.fase||'Partido')+(sel.hora?' · '+sel.hora+' hs':'');
   $('cS').textContent=catSel.categoria+(sel.id?' · Partido '+sel.id:'')+' · '+(SEDES[sel.sede||'complejo']||'');
-  const R0=sel._real||sel._sets;abLado=R0.ab||0;const v=(i,j)=>R0[i]?R0[i][j]:'';
+  const R0=sel._real||sel._sets;abLado=R0.ab||0;woLado=R0.wo||0;const v=(i,j)=>R0[i]?R0[i][j]:'';
   NORMAL=Resultados.tercerNormal(catSel.torneo);
   let h='<span></span><span class="hd">1° set</span><span class="hd">2° set</span><span class="hd">'+(NORMAL?'3° set':'Súper TB')+'</span>';
-  [A,B].forEach((L,j)=>{h+=`<span class="nm">${esc(L.n)}<button type="button" class="abt" data-l="${j+1}" aria-pressed="${abLado===j+1}" aria-label="Abandonó ${esc(L.n)}">AB</button></span>`;for(let i=0;i<3;i++)h+=`<input id="s${i}${j}" inputmode="numeric" maxlength="2" aria-label="${esc(L.n)}, ${i<2||NORMAL?'set '+(i+1):'súper tie-break'}" value="${v(i,j)}">`});
+  [A,B].forEach((L,j)=>{h+=`<span class="nm">${esc(L.n)}<button type="button" class="abt" data-l="${j+1}" aria-pressed="${abLado===j+1}" aria-label="Abandonó ${esc(L.n)}">AB</button><button type="button" class="abt wo" data-w="${j+1}" aria-pressed="${woLado===j+1}" aria-label="No se presentó ${esc(L.n)} (walkover)">WO</button></span>`;for(let i=0;i<3;i++)h+=`<input id="s${i}${j}" inputmode="numeric" maxlength="2" aria-label="${esc(L.n)}, ${i<2||NORMAL?'set '+(i+1):'súper tie-break'}" value="${v(i,j)}">`});
   $('score').innerHTML=h;
-  $('score').querySelectorAll('.abt').forEach(b=>b.onclick=()=>{const l=+b.dataset.l;abLado=abLado===l?0:l;$('score').querySelectorAll('.abt').forEach(x=>x.setAttribute('aria-pressed',abLado===+x.dataset.l));marcar();$('msg').textContent=''});
+  $('score').querySelectorAll('.abt').forEach(b=>b.onclick=()=>{if(b.dataset.w){const w=+b.dataset.w;woLado=woLado===w?0:w;if(woLado)abLado=0}else{const l=+b.dataset.l;abLado=abLado===l?0:l;if(abLado)woLado=0}marcasPintar();marcar();$('msg').textContent=''});
+  marcasPintar();
   marcar();$('msg').textContent='';$('placa').hidden=true;$('guardar').hidden=false;$('borrar').hidden=!sel._sets.length;
   foto=null;ajImg=null;$('ajuste').hidden=true;$('fotoMini').removeAttribute('src');$('fotoTxt').textContent='Elegí o sacá la foto de las dos parejas';$('foto').value='';
   vista('vCarga');
 }
 /* Con abandono, el set del abandono es el primero que no está terminado: ahí va cómo iba (sin terminar). */
-let abLado=0;
+let abLado=0,woLado=0;
+/* Walkover: la pareja que no se presentó pierde 6-0 6-0; los casilleros se completan solos y se bloquean. */
+function marcasPintar(){
+  $('score').querySelectorAll('.abt').forEach(x=>x.setAttribute('aria-pressed',x.dataset.w?woLado===+x.dataset.w:abLado===+x.dataset.l));
+  for(let i=0;i<3;i++)for(let k=0;k<2;k++){const x=$('s'+i+k);if(!x)continue;
+    if(woLado){x.disabled=true;x.value=i<2?(k===woLado-1?'0':'6'):''}else if(x.disabled){x.disabled=false;x.value=''}}
+}
 function setAB(){if(!abLado)return -1;for(let i=0;i<3;i++){const a=$('s'+i+'0').value.trim(),b=$('s'+i+'1').value.trim();if(a===''||b===''||!Resultados.setValido(i,+a,+b,NORMAL))return i}return 3}
 function marcar(){const k=$('s00')?setAB():-1;for(let i=0;i<3;i++){const A=$('s'+i+'0'),B=$('s'+i+'1');if(!A)return;const a=A.value.trim(),b=B.value.trim();const mal=a!==''&&b!==''&&(isNaN(a)||isNaN(b)||(i===k?!Resultados.setParcial(i,+a,+b,NORMAL):!Resultados.setValido(i,+a,+b,NORMAL)));[A,B].forEach(x=>{x.classList.toggle('bad',mal);x.setAttribute('aria-invalid',mal)})}}
 $('score').addEventListener('input',e=>{marcar();$('msg').textContent='';saltar(e.target)});
@@ -254,7 +261,8 @@ function saltar(el){
     const g1=+a>+b,g2=+c>+d;if(a!==''&&b!==''&&g1!==g2){$('s20').focus();$('s20').select();return}}
   el.blur();
 }
-function leer(){if(abLado){const k=setAB();if(k>2)return{err:'Los 3 sets están terminados: no puede haber abandono.'};const ss=[];
+function leer(){if(woLado){const g=woLado===1?[0,6]:[6,0],ss=[g.slice(),g.slice()];ss.wo=woLado;return{sets:ss}}
+  if(abLado){const k=setAB();if(k>2)return{err:'Los 3 sets están terminados: no puede haber abandono.'};const ss=[];
     for(let i=0;i<3;i++){const a=$('s'+i+'0').value.trim(),b=$('s'+i+'1').value.trim();if(i<k)ss.push([+a,+b]);else if(i===k){if((a===''||b==='')&&a+b!=='')return{err:'Completá los dos números del set del abandono (cómo iba).'};ss.push([+a||0,+b||0])}else if(a!==''||b!=='')return{err:'Después del set del abandono no cargues más sets.'}}
     ss.ab=abLado;const e=Resultados.validar(ss,NORMAL);return e?{err:e}:{sets:ss}}
   const ss=[];for(let i=0;i<3;i++){const a=$('s'+i+'0').value.trim(),b=$('s'+i+'1').value.trim();if(a===''&&b==='')continue;if(a===''||b===''||isNaN(a)||isNaN(b))return{err:'Completá los dos números de cada set.'};ss.push([+a,+b])}
@@ -274,7 +282,7 @@ $('borrar').onclick=async()=>{
     const j=DEMO?{ok:true,resultado:''}:await post({accion:'resultado',clave,torneo:catSel.torneo,categoria:catSel.categoria,id:sel.id,sets:[]});
     if(DEMO){const q=window.DEMO_DATOS.categorias.find(x=>x.torneo===catSel.torneo&&x.categoria===catSel.categoria).partidos.find(x=>x.id===sel.id);if(q){q.resultado='';q.ganador=''}}
     if(!j.ok){$('msg').className='msg err';$('msg').textContent={sede:'Este partido no es de tu sede.',partido:'No se encontró el partido en la planilla.',clave:'Tu sesión venció: salí y volvé a entrar.',bloqueado:'Demasiados intentos. Esperá unos minutos.'}[j.error]||'No se pudo borrar.';return}
-    sel.resultado='';sel.ganador='';sel._sets=[];sel._real=[];abLado=0;$('score').querySelectorAll('.abt').forEach(x=>x.setAttribute('aria-pressed','false'));
+    sel.resultado='';sel.ganador='';sel._sets=[];sel._real=[];abLado=0;woLado=0;marcasPintar();
     for(let i=0;i<3;i++)for(let k=0;k<2;k++){const x=$('s'+i+k);if(x)x.value=''}
     marcar();$('borrar').hidden=true;$('placa').hidden=true;$('guardar').hidden=false;
     $('msg').className='msg ok';$('msg').textContent='Resultado borrado. El partido quedó sin jugar.';
@@ -286,7 +294,7 @@ $('guardar').onclick=async()=>{
   const r=leer();if(r.err){marcar();$('msg').className='msg err';$('msg').textContent=r.err;return}
   $('guardar').disabled=true;$('msg').className='msg';$('msg').textContent='Guardando…';
   try{
-    const j=DEMO?{ok:true,resultado:r.sets.map(s=>s.join('-')).join(' ')+(r.sets.ab?' AB':''),ganador:Resultados.ganadorSets(r.sets)}:await post({accion:'resultado',clave,torneo:catSel.torneo,categoria:catSel.categoria,id:sel.id,sets:r.sets.map(x=>x.slice()),ab:r.sets.ab||0});
+    const j=DEMO?{ok:true,resultado:r.sets.map(s=>s.join('-')).join(' ')+(r.sets.ab?' AB':r.sets.wo?' WO':''),ganador:Resultados.ganadorSets(r.sets)}:await post({accion:'resultado',clave,torneo:catSel.torneo,categoria:catSel.categoria,id:sel.id,sets:r.sets.map(x=>x.slice()),ab:r.sets.ab||0,wo:r.sets.wo||0});
     if(DEMO){const q=window.DEMO_DATOS.categorias.find(x=>x.torneo===catSel.torneo&&x.categoria===catSel.categoria).partidos.find(x=>x.id===sel.id);if(q){q.resultado=j.resultado;q.ganador=j.ganador}}
     if(!j.ok){$('msg').className='msg err';$('msg').textContent={sets:'El resultado no es válido.',sede:'Este partido no es de tu sede.',partido:'No se encontró el partido en la planilla.',clave:'Tu sesión venció: salí y volvé a entrar.',bloqueado:'Demasiados intentos. Esperá unos minutos.'}[j.error]||'No se pudo guardar.';return}
     const A=C.nombre(sel,1).n,B=C.nombre(sel,2).n,f=sel.fase||'';
@@ -295,7 +303,7 @@ $('guardar').onclick=async()=>{
     cargar().catch(()=>{});
     if(foto){$('msg').textContent='Resultado guardado. Armando la placa…';
       const k=Object.keys(FASES).find(x=>f.toLowerCase().startsWith(x)||(x==='16'&&/^diec/i.test(f)));
-      const I={cat:catSel.categoria,extra:catSel.nombre||'',fase:Resultados.esZona(f)?'FASE CLASIFICATORIA':(k?FASES[k]:f.toUpperCase()),A,B,sets:r.sets,ab:r.sets.ab||0,w:Resultados.ganadorSets(r.sets)};
+      const I={cat:catSel.categoria,extra:catSel.nombre||'',fase:Resultados.esZona(f)?'FASE CLASIFICATORIA':(k?FASES[k]:f.toUpperCase()),A,B,sets:r.sets,ab:r.sets.ab||0,mk:r.sets.ab||r.sets.wo||0,mkT:r.sets.wo?'WO':'AB',w:Resultados.ganadorSets(r.sets)};
       const d=await ({tour:placaTour,master:placaMaster,conj:placaConj}[tipoDe(catSel)]||placaComplejo)(I);
       $('placaImg').src=d;$('bajar').href=d;placaArchivo=null;fetch(d).then(r=>r.blob()).then(b=>{placaArchivo=new File([b],$('bajar').download||'resultado.jpg',{type:'image/jpeg'})}).catch(()=>{});$('bajar').download=('resultado-'+catSel.categoria+'-'+(sel.id||'')).toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.jpg';
       $('msg').textContent='';
@@ -348,7 +356,7 @@ async function placaTour(I){const r={sets:I.sets};
   const PY=Y+H-4,PH=190;c.fillStyle=ESC;c.fillRect(X,PY,W,PH);c.strokeStyle=LIMA;c.lineWidth=6;c.strokeRect(X,PY,W,PH);
   c.fillStyle=LIMA;c.fillRect(X,PY,14,PH);
   const w=I.w,L=[{n:I.A},{n:I.B}];
-  L.forEach((l,i)=>{const y=PY+78+i*76,t=l.n.toUpperCase().replace('–','-');c.textAlign='left';c.fillStyle=(w===1)===(i===0)?LIMA:HUESO;let fs=40;do{c.font='800 '+fs+'px Manrope';fs--}while(c.measureText(t).width>W-380&&fs>22);c.fillText(t,X+50,y);if(I.ab===i+1){const tw=c.measureText(t).width;c.fillStyle='#FF6B6B';c.font='800 26px Manrope';c.fillText('AB',X+50+tw+16,y-4)}});
+  L.forEach((l,i)=>{const y=PY+78+i*76,t=l.n.toUpperCase().replace('–','-');c.textAlign='left';c.fillStyle=(w===1)===(i===0)?LIMA:HUESO;let fs=40;do{c.font='800 '+fs+'px Manrope';fs--}while(c.measureText(t).width>W-380&&fs>22);c.fillText(t,X+50,y);if(I.mk===i+1){const tw=c.measureText(t).width;c.fillStyle='#FF6B6B';c.font='800 26px Manrope';c.fillText(I.mkT,X+50+tw+16,y-4)}});
   for(let j=0;j<3;j++){const cx=X+W-270+j*90;c.fillStyle='rgba(242,243,236,.25)';c.fillRect(cx-45,PY+26,3,PH-52);
     [0,1].forEach(i=>{const par=r.sets.ab&&j===r.sets.length-1,v=r.sets[j]?r.sets[j][i]:'-',o=r.sets[j]?r.sets[j][1-i]:0;c.fillStyle=!par&&r.sets[j]&&v>o?LIMA:HUESO;c.textAlign='center';c.font='700 46px Unbounded';c.fillText(String(v),cx,PY+80+i*76)})}
   // las dos sedes del Tour
@@ -384,7 +392,7 @@ async function placaComplejo(I){const r={sets:I.sets};
   L.forEach((l,i)=>{const y0=MY+84+i*136,gana=(w===1)===(i===0);
     c.beginPath();c.arc(84,y0+66,10,0,7);if(gana){c.fillStyle=VERDE;c.fill()}else{c.lineWidth=4;c.strokeStyle=NEGRO;c.stroke()}
     const t=l.n.toUpperCase().replace('–','-');c.textAlign='left';c.fillStyle=gana?NEGRO:GRIS;let fs=62;do{c.font='900 '+fs+'px "Big Shoulders Display"';fs--}while(c.measureText(t).width>x0-190&&fs>30);c.fillText(t,112,y0+88);
-    if(I.ab===i+1){const tw=c.measureText(t).width;c.fillStyle='#C0392B';c.font='900 34px "Big Shoulders Display"';c.fillText('AB',112+tw+14,y0+86)}
+    if(I.mk===i+1){const tw=c.measureText(t).width;c.fillStyle='#C0392B';c.font='900 34px "Big Shoulders Display"';c.fillText(I.mkT,112+tw+14,y0+86)}
     for(let j=0;j<3;j++){const cx=x0+col*j;c.fillStyle=NEGRO;c.fillRect(cx,y0,4,132);const par=r.sets.ab&&j===r.sets.length-1,v=r.sets[j]?r.sets[j][i]:'–',o=r.sets[j]?r.sets[j][1-i]:0;c.textAlign='center';c.fillStyle=r.sets[j]?(!par&&v>o?VERDE:NEGRO):GRIS;c.font=(r.sets[j]?'900 84px':'700 60px')+' "Big Shoulders Display"';c.fillText(String(v),cx+col/2+2,y0+96)}
     c.fillStyle=NEGRO;c.fillRect(x0+col*3,y0,4,132);
     if(i===0)linea(y0+132)});

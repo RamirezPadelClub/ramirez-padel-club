@@ -9,12 +9,14 @@
      set del abandono → la que sigue llega a 6 (7-5 si la otra tenía 5, 7-6 si tenía 6) y la que abandona se queda con sus games;
      sets que no se jugaron → no se muestran, pero para la tabla cuentan 6-0 (el súper tie-break, 7-6). Abandono en el súper tie-break: se ve como iba y cuenta 7-6.
      Abandono antes de jugar: AB en 0-0 del 1° set → 6-0 6-0.
+   - Walkover (WO): la pareja que no se presenta pierde 6-0 6-0. En la planilla: "6-0 6-0 WO" + ganador; se ve WO chiquito en esa pareja.
    - En las parejas de un partido se puede escribir "Ganador 36", "Perdedor 36" o "1° Zona A": se reemplaza solo. */
 (function () {
   /* Sets tal cual están cargados. Con abandono, el arreglo lleva .ab = pareja que abandonó (1 o 2) y el último set es cómo iba. */
   function sets(txt, ganador) {
     var t = String(txt || ''), m = t.match(/\d+\s*-\s*\d+/g);
     var ss = m ? m.map(function (s) { var p = s.split('-'); return [Number(p[0]), Number(p[1])]; }) : [];
+    if (/(^|\s)WO(\s|$)/i.test(t)) { var gw = String(ganador || '').trim(); if (gw === '1' || gw === '2') { var w1 = gw === '1'; ss = [w1 ? [6, 0] : [0, 6], w1 ? [6, 0] : [0, 6]]; ss.wo = 3 - Number(gw); } return ss; }
     if (/(^|\s)AB(\s|$)/i.test(t)) { var g = String(ganador || '').trim(); if (g === '1' || g === '2') { if (!ss.length) ss.push([0, 0]); ss.ab = 3 - Number(g); } }
     return ss;
   }
@@ -63,7 +65,7 @@
     if (a === b && ss.length === 3) return 'Con 2 sets ganados no se juega ' + (normal ? 'el 3° set' : 'súper tie-break') + '.';
     return '';
   }
-  function ganadorSets(ss) { if (ss && ss.ab) return 3 - ss.ab; var a = 0, b = 0; ss.forEach(function (s) { if (s[0] > s[1]) a++; else if (s[1] > s[0]) b++; }); return a > b ? 1 : b > a ? 2 : 0; }
+  function ganadorSets(ss) { if (ss && (ss.ab || ss.wo)) return 3 - (ss.ab || ss.wo); var a = 0, b = 0; ss.forEach(function (s) { if (s[0] > s[1]) a++; else if (s[1] > s[0]) b++; }); return a > b ? 1 : b > a ? 2 : 0; }
   function esZona(f) { var m = String(f || '').match(/^zona\s+(\S+)/i); return m ? m[1].toUpperCase() : null; }
 
   /* Prepara una categoría (la que devuelve la planilla) para resolver nombres, tablas y cruces. */
@@ -156,11 +158,12 @@
     var col = function (s, cls) {
       var parcial = crudo && s === ss[ult];
       var g = function (i) { return parcial ? false : s.w ? s.w === i + 1 : s[i] > s[1 - i]; };
-      var abm = parcial ? ss.ab : s.abm;
-      var b = function (i) { return '<b class="' + (g(i) ? 'g' : '') + '">' + s[i] + (abm === i + 1 ? '<small class="abm">AB</small>' : '') + '</b>'; };
+      var abm = parcial ? ss.ab : s.abm, mt = 'AB';
+      if (ss.wo && s === ss[0]) { abm = ss.wo; mt = 'WO'; }
+      var b = function (i) { return '<b class="' + (g(i) ? 'g' : '') + '">' + s[i] + (abm === i + 1 ? '<small class="abm">' + mt + '</small>' : '') + '</b>'; };
       return '<span class="rs-col' + cls + '">' + b(0) + b(1) + '</span>';
     };
-    return '<span class="rs-sc" aria-label="' + ss.filter(function (s) { return !s.nj; }).map(function (s) { return s.join('-'); }).join(' ') + (ss.ab ? ' (abandono)' : '') + '">' +
+    return '<span class="rs-sc" aria-label="' + ss.filter(function (s) { return !s.nj; }).map(function (s) { return s.join('-'); }).join(' ') + (ss.ab ? ' (abandono)' : ss.wo ? ' (walkover)' : '') + '">' +
       col(ss[0] || [0, 0], '') + (ss[1] && !ss[1].nj ? col(ss[1], '') : hueco('')) + (ss[2] && !ss[2].nj ? col(ss[2], ' tb') : '<span class="rs-col tb vacio" aria-hidden="true"><b>00</b><b>00</b></span>') + '</span>';
   }
 
