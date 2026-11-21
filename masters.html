@@ -261,7 +261,7 @@ h1.mf{margin-bottom:0;font-size:inherit;font-weight:inherit}
   <p class="firma">Diseño y desarrollo: Axel Acosta · <a href="https://wa.me/5493434698281" target="_blank" rel="noopener">(0343) 469-8281</a> · <a href="mailto:axelacosta1992@gmail.com">axelacosta1992@gmail.com</a></p>
 </main>
 
-<script src="resultados.js?v=20261121a"></script>
+<script src="resultados.js?v=20261121b"></script>
 <script>
 (function(){
 var URL_DATOS='https://script.google.com/macros/s/AKfycby6BVoENl5ojrVDm1smQngTQ73Xwntpqg9V0iIAJrWytFsEYOMr13Fudd9cpvtS3y7l/exec';
@@ -356,8 +356,9 @@ document.addEventListener('click',function(e){
 });
 
 /* ---------- piezas ---------- */
-function partidoHTML(C,p,conCat,ocho){
-  var A=C.nombre(p,1),B=C.nombre(p,2),w=C.gano(p),ss=p._sets,S=SEDES[p.sede]||SEDES.complejo;
+function partidoHTML(C,p,conCat,ocho,comoIba){
+  /* En el cronograma, un abandono se ve como iba (7-5 3-1 AB); en las zonas y el cuadro, completado (7-5 6-3). */
+  var A=C.nombre(p,1),B=C.nombre(p,2),w=C.gano(p),ss=comoIba&&p._real&&p._real.ab?p._real:p._sets,S=SEDES[p.sede]||SEDES.complejo;
   var tag=conCat?esc(conCat)+' · '+esc(p.fase):'';
   return '<div class="p '+esc(p.sede||'complejo')+(ocho?' ocho':'')+'"><div class="meta"><img src="'+S.logo+'" alt="'+S.n+'">'+
     (p.id?'PARTIDO '+esc(p.id)+' · ':'')+esc((p.dia||'').toUpperCase())+' '+esc(p.hora||'')+(tag?'<span class="tag">'+tag+'</span>':'')+'</div>'+
@@ -414,7 +415,7 @@ function cronograma(T){
   del.sort(function(a,b){return hm(a.p.hora)-hm(b.p.hora)||(+a.p.id||0)-(+b.p.id||0)});
   var cols=['complejo','ruta'].map(function(s){
     var S=SEDES[s],xs=del.filter(function(x){return (x.p.sede||'complejo')===s}),h='',ult=null;
-    xs.forEach(function(x){if(x.p.hora!==ult){ult=x.p.hora;h+='<div class="hora">'+esc(x.p.hora)+' HS</div>'}h+=partidoHTML(x.C,x.p,x.cat,x.t.tema==='conj')});
+    xs.forEach(function(x){if(x.p.hora!==ult){ult=x.p.hora;h+='<div class="hora">'+esc(x.p.hora)+' HS</div>'}h+=partidoHTML(x.C,x.p,x.cat,x.t.tema==='conj',true)});
     return '<div class="col"><div class="sede"><img src="'+S.logo+'" alt=""><h3>'+S.n+'<small>'+esc(dia)+'</small></h3></div>'+(h||'<div class="sin">Sin partidos este día.</div>')+'</div>';
   });
   return '<div class="crono">'+cols.join('')+'</div>';

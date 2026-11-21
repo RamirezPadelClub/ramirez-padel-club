@@ -151,9 +151,13 @@
   /* Siempre 3 lugares: si no hubo súper tie-break, el 3ro queda vacío para que los sets queden alineados. */
   function setsHTML(ss) {
     var hueco = function (cls) { return '<span class="rs-col' + cls + ' vacio" aria-hidden="true"><b>00</b><b>00</b></span>'; };
+    /* Tal cual se cargó (con abandono): el último set es cómo iba, sin ganador, con AB en la pareja que abandonó. */
+    var crudo = ss.ab && !ss.some(function (s) { return s.w; }), ult = ss.length - 1;
     var col = function (s, cls) {
-      var g = function (i) { return s.w ? s.w === i + 1 : s[i] > s[1 - i]; };
-      var b = function (i) { return '<b class="' + (g(i) ? 'g' : '') + '">' + s[i] + (s.abm === i + 1 ? '<small class="abm">AB</small>' : '') + '</b>'; };
+      var parcial = crudo && s === ss[ult];
+      var g = function (i) { return parcial ? false : s.w ? s.w === i + 1 : s[i] > s[1 - i]; };
+      var abm = parcial ? ss.ab : s.abm;
+      var b = function (i) { return '<b class="' + (g(i) ? 'g' : '') + '">' + s[i] + (abm === i + 1 ? '<small class="abm">AB</small>' : '') + '</b>'; };
       return '<span class="rs-col' + cls + '">' + b(0) + b(1) + '</span>';
     };
     return '<span class="rs-sc" aria-label="' + ss.filter(function (s) { return !s.nj; }).map(function (s) { return s.join('-'); }).join(' ') + (ss.ab ? ' (abandono)' : '') + '">' +

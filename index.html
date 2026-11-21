@@ -748,7 +748,7 @@ body.mc-abierto{overflow:hidden}
   </form>
   <div class="res" id="insc-res" hidden></div>
 </dialog>
-<script src="resultados.js?v=20261121a"></script>
+<script src="resultados.js?v=20261121b"></script>
 <script>
 (function(){
   /* URL del Apps Script publicado (la planilla de inscripciones). */
@@ -865,7 +865,7 @@ body.mc-abierto{overflow:hidden}
     var hoy=['dom','lun','mar','mié','jue','vie','sáb'][new Date().getDay()],diaSel=dias.indexOf(vtDia)>=0?vtDia:(dias.filter(function(d){return d.toLowerCase().slice(0,3)===hoy})[0]||dias[0]);
     var botDias=dias.length>1?'<div class="vt-cats" role="group" aria-label="Día">'+dias.map(function(d){return'<button type="button" data-vtdia="'+esc(d)+'" aria-pressed="'+(d===diaSel)+'">'+esc(String(d).split(' ')[0])+'</button>'}).join('')+'</div>':'';
     sec.crono=secc('Cronograma','',conHora.length?botDias+dias.filter(function(d){return d===diaSel}).map(function(d){return'<div class="vt-dia"><h4>'+esc(d)+'</h4>'+conHora.filter(function(x){return(x.p.dia||'Sin día')===d}).map(function(x){var p=x.p;
-      var ss=window.Resultados?Resultados.resultado(p.resultado,p.ganador,(cs[x.ci]||{}).torneo):[];
+      var ss=window.Resultados?Resultados.sets(p.resultado,p.ganador):[];
       var w=ss.length?Resultados.ganadorSets(ss):0;var tg=[x.cat,p.fase,multiSede?SEDE_N[p.sede||'complejo']||p.sede:''].filter(Boolean).join(' · ');return'<div class="vt-fila'+(w?' jugado':'')+'"><span class="h">'+esc(p.hora||'—')+'</span><span class="ps"><span class="'+(w===1?'w':w===2?'l':'')+'">'+esc(x.nm(1))+'</span><span class="'+(w===2?'w':w===1?'l':'')+'">'+esc(x.nm(2))+'</span>'+(ss.length?'':(p.resultado?'<span class="res">'+esc(p.resultado)+'</span>':''))+'</span>'+(ss.length?Resultados.setsHTML(ss):'')+(tg?'<span class="tag">'+esc(tg)+'</span>':'')+'</div>'}).join('')+'</div>'}).join(''):vacio('Los horarios se publican junto con las zonas.'));
     // Cuadro
     var llaves=ps.filter(function(p){return ronda(p.fase)>=0});
