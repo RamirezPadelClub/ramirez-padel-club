@@ -443,8 +443,12 @@ function setsAbandono_(sets, ab, normal) {
 function guardarResultado_(d) {
   const o = orgPorClave_(d.clave);
   if (o.error) return json_({ ok: false, error: o.error });
-  const ab = Number(d.ab) || 0;
-  const borrar = !ab && Array.isArray(d.sets) && d.sets.length === 0;
+  const wo = Number(d.wo) || 0;
+  if (wo && wo !== 1 && wo !== 2) return json_({ ok: false, error: 'sets' });
+  /* Walkover: la pareja wo no se presentó → 6-0 6-0 para la otra. */
+  if (wo) d.sets = wo === 1 ? [[0, 6], [0, 6]] : [[6, 0], [6, 0]];
+  const ab = wo ? 0 : Number(d.ab) || 0;
+  const borrar = !ab && !wo && Array.isArray(d.sets) && d.sets.length === 0;
   const normal = /^master-/i.test(String(d.torneo || ''));
   if (ab && !setsAbandono_(d.sets, ab, normal)) return json_({ ok: false, error: 'sets' });
   if (!ab && !borrar && !setsValidos_(d.sets, normal)) return json_({ ok: false, error: 'sets' });
@@ -456,8 +460,8 @@ function guardarResultado_(d) {
     if (!p) return json_({ ok: false, error: 'partido' });
     const sedeP = txt_(p.sede, 20).toLowerCase() || 'complejo';
     if (o.sede !== 'todas' && o.sede !== sedeP) return json_({ ok: false, error: 'sede' });
-    const res = borrar ? '' : d.sets.map((s) => Number(s[0]) + '-' + Number(s[1])).concat(ab ? ['AB'] : []).join(' ');
-    const gan = borrar ? '' : ab ? 3 - ab : (d.sets.filter((s) => Number(s[0]) > Number(s[1])).length > d.sets.length / 2 ? 1 : 2);
+    const res = borrar ? '' : d.sets.map((s) => Number(s[0]) + '-' + Number(s[1])).concat(ab ? ['AB'] : wo ? ['WO'] : []).join(' ');
+    const gan = borrar ? '' : wo ? 3 - wo : ab ? 3 - ab : (d.sets.filter((s) => Number(s[0]) > Number(s[1])).length > d.sets.length / 2 ? 1 : 2);
     sh.getRange(p._fila, COLS_P.indexOf('resultado') + 1, 1, 2).setValues([[res, gan]]);
     SpreadsheetApp.flush();
     return json_({ ok: true, resultado: res, ganador: gan });
