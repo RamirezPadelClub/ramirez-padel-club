@@ -420,12 +420,34 @@ function setsValidos_(sets, normal) {
   return empate ? sets.length === 3 : sets.length === 2;
 }
 
-/** Guarda (o borra, con sets vacío) el resultado de un partido. */
+/** Abandono: ab = pareja que abandonó (1 o 2). sets = los sets terminados + cómo iba el set del abandono (sin terminar). */
+function setsAbandono_(sets, ab, normal) {
+  if (ab !== 1 && ab !== 2) return false;
+  if (!Array.isArray(sets) || sets.length < 1 || sets.length > 3) return false;
+  const num = (s) => Array.isArray(s) && s.length === 2 && s.every((x) => Number.isInteger(Number(x)) && Number(x) >= 0);
+  if (!sets.every(num)) return false;
+  const fin = (i, a, b) => {
+    const hi = Math.max(a, b), lo = Math.min(a, b);
+    if (i < 2 || normal) return (hi === 6 && lo <= 4) || (hi === 7 && (lo === 5 || lo === 6));
+    return hi >= 11 && hi - lo >= 2 && (hi === 11 || hi - lo === 2);
+  };
+  const k = sets.length - 1;
+  for (let i = 0; i < k; i++) if (!fin(i, Number(sets[i][0]), Number(sets[i][1]))) return false;
+  if (k === 2 && (Number(sets[0][0]) > Number(sets[0][1])) === (Number(sets[1][0]) > Number(sets[1][1]))) return false;
+  const a = Number(sets[k][0]), b = Number(sets[k][1]);
+  if (fin(k, a, b)) return false;
+  return k < 2 || normal ? a <= 6 && b <= 6 : Math.max(a, b) <= 30;
+}
+
+/** Guarda (o borra, con sets vacío) el resultado de un partido. Con d.ab (1 o 2) guarda un abandono: "7-5 1-3 AB" y gana la otra pareja. */
 function guardarResultado_(d) {
   const o = orgPorClave_(d.clave);
   if (o.error) return json_({ ok: false, error: o.error });
-  const borrar = Array.isArray(d.sets) && d.sets.length === 0;
-  if (!borrar && !setsValidos_(d.sets, /^master-/i.test(String(d.torneo || '')))) return json_({ ok: false, error: 'sets' });
+  const ab = Number(d.ab) || 0;
+  const borrar = !ab && Array.isArray(d.sets) && d.sets.length === 0;
+  const normal = /^master-/i.test(String(d.torneo || ''));
+  if (ab && !setsAbandono_(d.sets, ab, normal)) return json_({ ok: false, error: 'sets' });
+  if (!ab && !borrar && !setsValidos_(d.sets, normal)) return json_({ ok: false, error: 'sets' });
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
@@ -434,8 +456,8 @@ function guardarResultado_(d) {
     if (!p) return json_({ ok: false, error: 'partido' });
     const sedeP = txt_(p.sede, 20).toLowerCase() || 'complejo';
     if (o.sede !== 'todas' && o.sede !== sedeP) return json_({ ok: false, error: 'sede' });
-    const res = borrar ? '' : d.sets.map((s) => Number(s[0]) + '-' + Number(s[1])).join(' ');
-    const gan = borrar ? '' : (d.sets.filter((s) => Number(s[0]) > Number(s[1])).length > d.sets.length / 2 ? 1 : 2);
+    const res = borrar ? '' : d.sets.map((s) => Number(s[0]) + '-' + Number(s[1])).concat(ab ? ['AB'] : []).join(' ');
+    const gan = borrar ? '' : ab ? 3 - ab : (d.sets.filter((s) => Number(s[0]) > Number(s[1])).length > d.sets.length / 2 ? 1 : 2);
     sh.getRange(p._fila, COLS_P.indexOf('resultado') + 1, 1, 2).setValues([[res, gan]]);
     SpreadsheetApp.flush();
     return json_({ ok: true, resultado: res, ganador: gan });
