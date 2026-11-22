@@ -152,6 +152,8 @@ a{color:inherit}
 .conj .p .meta .est{border-radius:0;font-family:Archivo,sans-serif;font-stretch:80%}
 @keyframes latido{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
 @media (prefers-reduced-motion:reduce){.p .meta .est.juego i{animation:none}}
+.p .ps .pts,.tabla .pts{color:var(--lima);font-weight:500;font-size:.85em;margin-left:6px;white-space:nowrap;letter-spacing:.02em}
+.conj .p .ps .pts{color:#fff;opacity:.7}
 /* cronograma por sede */
 .crono{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;align-items:start}
 .crono .col{display:flex;flex-direction:column;gap:10px}
@@ -366,14 +368,26 @@ document.addEventListener('click',function(e){
 });
 
 /* ---------- piezas ---------- */
-function partidoHTML(C,p,conCat,ocho,comoIba,est){
+/* Puntos de ranking del jugador que entró al Máster (el de los 12), al lado de su apellido: "ALBORNOZ 5650 P - CAVALLO".
+   Salen de la lista de inscriptos (LISTAS); fijos, no suman lo del Máster. */
+function sinTilde(t){return String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
+function conPts(cat,par){
+  var L=LISTAS[cat],ps=String(par||'').split(/\s+[-–]\s+/);
+  if(!L||ps.length!==2)return esc(par);
+  var a=sinTilde(ps[0]),b=sinTilde(ps[1]);
+  var r=L.filter(function(x){var j1=sinTilde(x[0]),j2=sinTilde(x[2]);return (j1===a||j1.indexOf(a+' ')===0)&&(j2===b||j2.indexOf(b+' ')===0)})[0];
+  return r?esc(ps[0])+'<span class="pts">'+r[1]+' P</span> - '+esc(ps[1]):esc(par);
+}
+
+function partidoHTML(C,p,conCat,ocho,comoIba,est,pts){
+  var nm=function(x){return pts?conPts(C.cat.categoria,x.n):esc(x.n)};
   /* En el cronograma, un abandono se ve como iba (7-5 3-1 AB); en las zonas y el cuadro, completado (7-5 6-3). */
   var A=C.nombre(p,1),B=C.nombre(p,2),w=C.gano(p),ss=comoIba&&p._real&&p._real.ab?p._real:p._sets,S=SEDES[p.sede]||SEDES.complejo;
   var tag=conCat?esc(conCat)+' · '+esc(p.fase):'';
   var eb=est==='juego'?'<span class="est juego"><i></i>EN JUEGO</span>':est==='fin'?'<span class="est fin">FINALIZADO</span>':'';
   return '<div class="p '+esc(p.sede||'complejo')+(ocho?' ocho':'')+(est==='juego'?' vivo':'')+'"><div class="meta"><img src="'+S.logo+'" alt="'+S.n+'">'+
     (p.id?'PARTIDO '+esc(p.id)+' · ':'')+esc((p.dia||'').toUpperCase())+' '+esc(p.hora||'')+(tag?'<span class="tag">'+tag+'</span>':'')+eb+'</div>'+
-    '<div class="ps"><span class="'+(w===1?'w':w===2?'l':'')+'">'+esc(A.n)+'</span><span class="'+(w===2?'w':w===1?'l':'')+'">'+esc(B.n)+'</span></div>'+
+    '<div class="ps"><span class="'+(w===1?'w':w===2?'l':'')+'">'+nm(A)+'</span><span class="'+(w===2?'w':w===1?'l':'')+'">'+nm(B)+'</span></div>'+
     (ss.length?R.setsHTML(ss):'')+'</div>';
 }
 function vacio(t){return '<div class="sin">'+t+'</div>'}
@@ -403,8 +417,8 @@ function zonas(T,i){
         var tb=C.tabla(z.k),z0=C.zonas.filter(function(x){return x.zona===z.k})[0];
         var filas=tb&&tb.filas.length?tb.filas:(z0?z0.parejas.map(function(n){return{pareja:n,pj:0,pg:0,sf:0,sc:0,gf:0,gc:0}}):[]);
         return '<div class="caja zona"><span class="etq">Zona '+esc(z.k)+'</span><table class="tabla"><thead><tr><th>#</th><th>PAREJA</th><th>PG</th><th>SETS</th><th>GAMES</th></tr></thead><tbody>'+
-          filas.map(function(f,n){return '<tr class="'+(tb&&tb.cerrada&&n<tb.clasif?'cl':'')+'"><td><span>'+(n+1)+'</span></td><td>'+esc(f.pareja)+'</td><td>'+f.pg+'</td><td>'+difTxt(f.sf-f.sc)+'</td><td>'+difTxt(f.gf-f.gc)+'</td></tr>'}).join('')+
-          '</tbody></table><div class="pz">'+z.ps.map(function(p){return partidoHTML(C,p,null,false,false,EM[c.categoria+'|'+p.id])}).join('')+'</div></div>';
+          filas.map(function(f,n){return '<tr class="'+(tb&&tb.cerrada&&n<tb.clasif?'cl':'')+'"><td><span>'+(n+1)+'</span></td><td>'+conPts(c.categoria,f.pareja)+'</td><td>'+f.pg+'</td><td>'+difTxt(f.sf-f.sc)+'</td><td>'+difTxt(f.gf-f.gc)+'</td></tr>'}).join('')+
+          '</tbody></table><div class="pz">'+z.ps.map(function(p){return partidoHTML(C,p,null,false,false,EM[c.categoria+'|'+p.id],true)}).join('')+'</div></div>';
       }).join('')+'</div>';
 }
 
@@ -437,7 +451,7 @@ function cronograma(T){
   var EM=estadosFinde();del.forEach(function(x){x.est=EM[x.C.cat.categoria+'|'+x.p.id]});
   var cols=['complejo','ruta'].map(function(s){
     var S=SEDES[s],xs=del.filter(function(x){return (x.p.sede||'complejo')===s}),h='',ult=null;
-    xs.forEach(function(x){if(x.p.hora!==ult){ult=x.p.hora;h+='<div class="hora">'+esc(x.p.hora)+' HS</div>'}h+=partidoHTML(x.C,x.p,x.cat,x.t.tema==='conj',true,x.est)});
+    xs.forEach(function(x){if(x.p.hora!==ult){ult=x.p.hora;h+='<div class="hora">'+esc(x.p.hora)+' HS</div>'}h+=partidoHTML(x.C,x.p,x.cat,x.t.tema==='conj',true,x.est,true)});
     return '<div class="col"><div class="sede"><img src="'+S.logo+'" alt=""><h3>'+S.n+'<small>'+esc(dia)+'</small></h3></div>'+(h||'<div class="sin">Sin partidos este día.</div>')+'</div>';
   });
   return '<div class="crono">'+cols.join('')+'</div>';
