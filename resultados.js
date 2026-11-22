@@ -169,5 +169,28 @@
       col(ss[0] || [0, 0], '') + (ss[1] && !ss[1].nj ? col(ss[1], '') : hueco('')) + (ss[2] && !ss[2].nj ? col(ss[2], ' tb') : '<span class="rs-col tb vacio" aria-hidden="true"><b>00</b><b>00</b></span>') + '</span>';
   }
 
-  window.Resultados = { tercerNormal: tercerNormal, sets: sets, completar: completar, resultado: resultado, setParcial: setParcial, setValido: setValido, validar: validar, ganadorSets: ganadorSets, esZona: esZona, preparar: preparar, setsHTML: setsHTML };
+
+  /* Estado de cada partido en el cronograma: 'fin' (tiene resultado), 'juego' (se está jugando) o ''.
+     items: partidos de UN día, en el orden del cronograma: {sede, dia, hora, jugado}.
+     Se juega en orden: en cada sede hay tantos partidos en juego como canchas (los que comparten el mismo horario).
+     Al cargar el resultado de uno, el siguiente sin resultado de esa sede pasa a "en juego".
+     Solo el día del torneo (el día dice "Domingo 22/11") y desde la hora del primer partido de esa sede. */
+  function estados(items, ahora) {
+    ahora = ahora || new Date();
+    var hm = function (h) { var m = String(h || '').match(/(\d+):(\d+)/); if (!m) return null; var v = +m[1] * 60 + +m[2]; return v < 360 ? v + 1440 : v; };
+    var ref = new Date(ahora.getTime()); if (ref.getHours() < 6) ref.setDate(ref.getDate() - 1); /* después de medianoche sigue siendo el día del torneo */
+    var hoy = ref.getDate() + '/' + (ref.getMonth() + 1), min = ahora.getHours() * 60 + ahora.getMinutes(); if (ahora.getHours() < 6) min += 1440;
+    var esHoy = function (d) { var m = String(d || '').match(/(\d{1,2})\/(\d{1,2})/); return !!m && (+m[1] + '/' + +m[2]) === hoy; };
+    var out = items.map(function (x) { return x.jugado ? 'fin' : ''; }), porSede = {};
+    items.forEach(function (x, i) { if (!esHoy(x.dia)) return; var k = x.sede || 'complejo'; (porSede[k] = porSede[k] || []).push(i); });
+    Object.keys(porSede).forEach(function (k) {
+      var ix = porSede[k], cuenta = {}, canchas = 1, primero = null;
+      ix.forEach(function (i) { var h = items[i].hora || ''; cuenta[h] = (cuenta[h] || 0) + 1; if (cuenta[h] > canchas) canchas = cuenta[h]; var v = hm(h); if (v !== null && (primero === null || v < primero)) primero = v; });
+      if (primero === null || min < primero) return;
+      ix.filter(function (i) { return !items[i].jugado; }).slice(0, canchas).forEach(function (i) { out[i] = 'juego'; });
+    });
+    return out;
+  }
+
+  window.Resultados = { tercerNormal: tercerNormal, sets: sets, completar: completar, resultado: resultado, setParcial: setParcial, setValido: setValido, validar: validar, ganadorSets: ganadorSets, esZona: esZona, preparar: preparar, setsHTML: setsHTML, estados: estados };
 })();

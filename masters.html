@@ -142,6 +142,16 @@ a{color:inherit}
 .rs-col.vacio{visibility:hidden}.rs-col b{position:relative}.rs-col b.wo{color:#E5484D;font-weight:800;opacity:1;letter-spacing:.02em}.rs-col .abm{position:absolute;left:calc(100% + 1px);top:-3px;font-size:9px;font-weight:800;letter-spacing:.02em;color:#E5484D;line-height:1;opacity:1}
 .conj .rs-col b{font-family:Archivo,sans-serif;font-stretch:70%;font-weight:800;font-size:19px}.conj .rs-col b.g{color:#fff}
 
+/* en juego / finalizado (cronograma) */
+.p .meta .est{font:700 11px/1 Montserrat,sans-serif;letter-spacing:.1em;padding:4px 8px;border-radius:999px;white-space:nowrap}
+.p .meta .est{margin-left:auto}.p .meta .tag+.est{margin-left:6px}
+.p .meta .est.juego{background:#e8313f;color:#fff;display:inline-flex;align-items:center;gap:6px}
+.p .meta .est.juego i{width:7px;height:7px;border-radius:50%;background:#fff;animation:latido 1.2s ease-in-out infinite}
+.p .meta .est.fin{border:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.75)}
+.p.vivo{box-shadow:0 0 0 2px #e8313f,0 0 22px rgba(232,49,63,.35)}
+.conj .p .meta .est{border-radius:0;font-family:Archivo,sans-serif;font-stretch:80%}
+@keyframes latido{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+@media (prefers-reduced-motion:reduce){.p .meta .est.juego i{animation:none}}
 /* cronograma por sede */
 .crono{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;align-items:start}
 .crono .col{display:flex;flex-direction:column;gap:10px}
@@ -261,7 +271,7 @@ h1.mf{margin-bottom:0;font-size:inherit;font-weight:inherit}
   <p class="firma">Diseño y desarrollo: Axel Acosta · <a href="https://wa.me/5493434698281" target="_blank" rel="noopener">(0343) 469-8281</a> · <a href="mailto:axelacosta1992@gmail.com">axelacosta1992@gmail.com</a></p>
 </main>
 
-<script src="resultados.js?v=20261121d"></script>
+<script src="resultados.js?v=20261122a"></script>
 <script>
 (function(){
 var URL_DATOS='https://script.google.com/macros/s/AKfycby6BVoENl5ojrVDm1smQngTQ73Xwntpqg9V0iIAJrWytFsEYOMr13Fudd9cpvtS3y7l/exec';
@@ -356,12 +366,13 @@ document.addEventListener('click',function(e){
 });
 
 /* ---------- piezas ---------- */
-function partidoHTML(C,p,conCat,ocho,comoIba){
+function partidoHTML(C,p,conCat,ocho,comoIba,est){
   /* En el cronograma, un abandono se ve como iba (7-5 3-1 AB); en las zonas y el cuadro, completado (7-5 6-3). */
   var A=C.nombre(p,1),B=C.nombre(p,2),w=C.gano(p),ss=comoIba&&p._real&&p._real.ab?p._real:p._sets,S=SEDES[p.sede]||SEDES.complejo;
   var tag=conCat?esc(conCat)+' · '+esc(p.fase):'';
-  return '<div class="p '+esc(p.sede||'complejo')+(ocho?' ocho':'')+'"><div class="meta"><img src="'+S.logo+'" alt="'+S.n+'">'+
-    (p.id?'PARTIDO '+esc(p.id)+' · ':'')+esc((p.dia||'').toUpperCase())+' '+esc(p.hora||'')+(tag?'<span class="tag">'+tag+'</span>':'')+'</div>'+
+  var eb=est==='juego'?'<span class="est juego"><i></i>EN JUEGO</span>':est==='fin'?'<span class="est fin">FINALIZADO</span>':'';
+  return '<div class="p '+esc(p.sede||'complejo')+(ocho?' ocho':'')+(est==='juego'?' vivo':'')+'"><div class="meta"><img src="'+S.logo+'" alt="'+S.n+'">'+
+    (p.id?'PARTIDO '+esc(p.id)+' · ':'')+esc((p.dia||'').toUpperCase())+' '+esc(p.hora||'')+(tag?'<span class="tag">'+tag+'</span>':'')+eb+'</div>'+
     '<div class="ps"><span class="'+(w===1?'w':w===2?'l':'')+'">'+esc(A.n)+'</span><span class="'+(w===2?'w':w===1?'l':'')+'">'+esc(B.n)+'</span></div>'+
     (ss.length?R.setsHTML(ss):'')+'</div>';
 }
@@ -386,19 +397,28 @@ function zonas(T,i){
         return '<li><span class="n">'+n+'</span><span><span class="j">'+esc(r[0])+'<span class="pts">'+r[1]+' P</span></span><span class="sep">–</span><span class="j">'+esc(r[2])+'</span></span></li>'}).join('')+'</ol></div>';
     }).join('')+'</div><p class="zm-nota">El número es el preclasificado de cada pareja. Horarios y resultados se publican cuando se arme el cronograma.</p>';
   }
+  var EM=estadosFinde();
   var sedeDe=function(k){var ps=C.partidos.filter(function(p){return R.esZona(p.fase)===k});return {k:k,ps:ps}};
   return '<div class="zonas">'+ks.slice().sort().map(sedeDe).map(function(z){
         var tb=C.tabla(z.k),z0=C.zonas.filter(function(x){return x.zona===z.k})[0];
         var filas=tb&&tb.filas.length?tb.filas:(z0?z0.parejas.map(function(n){return{pareja:n,pj:0,pg:0,sf:0,sc:0,gf:0,gc:0}}):[]);
         return '<div class="caja zona"><span class="etq">Zona '+esc(z.k)+'</span><table class="tabla"><thead><tr><th>#</th><th>PAREJA</th><th>PG</th><th>SETS</th><th>GAMES</th></tr></thead><tbody>'+
           filas.map(function(f,n){return '<tr class="'+(tb&&tb.cerrada&&n<tb.clasif?'cl':'')+'"><td><span>'+(n+1)+'</span></td><td>'+esc(f.pareja)+'</td><td>'+f.pg+'</td><td>'+difTxt(f.sf-f.sc)+'</td><td>'+difTxt(f.gf-f.gc)+'</td></tr>'}).join('')+
-          '</tbody></table><div class="pz">'+z.ps.map(function(p){return partidoHTML(C,p)}).join('')+'</div></div>';
+          '</tbody></table><div class="pz">'+z.ps.map(function(p){return partidoHTML(C,p,null,false,false,EM[c.categoria+'|'+p.id])}).join('')+'</div></div>';
       }).join('')+'</div>';
 }
 
 /* Diferencia de sets o de games: +3, −2 o 0 */
 function difTxt(d){return d>0?'+'+d:d<0?'−'+(-d):'0'}
 
+/* EN JUEGO / FINALIZADO de todo el fin de semana (Máster y 8° Damas juntos): se juega en orden,
+   en cada sede tantos partidos a la vez como canchas. Clave: categoría + número de partido. */
+function estadosFinde(){
+  var xs=[],hm=function(h){var m=String(h||'').match(/(\d+):(\d+)/);if(!m)return 9999;var v=+m[1]*60+ +m[2];return v<360?v+1440:v};
+  Object.keys(TORNEOS).forEach(function(k){var TT=TORNEOS[k];TT.cats.forEach(function(c,i){var cd=catDatos(TT,i),C=R.preparar(cd);C.partidos.forEach(function(p){xs.push({k:cd.categoria+'|'+p.id,sede:p.sede||'complejo',dia:p.dia,hora:p.hora,id:p.id,jugado:p._sets.length>0})})})});
+  xs.sort(function(a,b){return hm(a.hora)-hm(b.hora)||(+a.id||0)-(+b.id||0)});
+  var es=R.estados(xs),m={};xs.forEach(function(x,i){m[x.k]=es[i]});return m;
+}
 function cronograma(T){
   var todos=[];
   /* El cronograma es del fin de semana completo: Máster y 8° Damas juntos */
@@ -407,15 +427,17 @@ function cronograma(T){
   var orden=['viernes','sábado','sabado','domingo'],dias=[];
   todos.forEach(function(x){var d=(x.p.dia||'').trim();if(d&&dias.indexOf(d)<0)dias.push(d)});
   dias.sort(function(a,b){return orden.indexOf(a.toLowerCase())-orden.indexOf(b.toLowerCase())});
-  if(!dia||dias.indexOf(dia)<0){var hoy=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][new Date().getDay()];dia=dias.filter(function(d){return d.toLowerCase()===hoy})[0]||dias[0]}
+  if(!dia||dias.indexOf(dia)<0){var hoy=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][new Date().getDay()];dia=dias.filter(function(d){return d.toLowerCase().split(' ')[0]===hoy})[0]||dias[0]}
   $('dias').hidden=dias.length<2;
   $('dias').innerHTML=dias.map(function(d){return '<button class="pill" data-dia="'+esc(d)+'" aria-pressed="'+(d===dia)+'">'+esc(d.toUpperCase())+'</button>'}).join('');
   var del=todos.filter(function(x){return x.p.dia===dia});
   var hm=function(h){var m=String(h||'').match(/(\d+):(\d+)/);if(!m)return 9999;var v=+m[1]*60+ +m[2];return v<360?v+1440:v};
   del.sort(function(a,b){return hm(a.p.hora)-hm(b.p.hora)||(+a.p.id||0)-(+b.p.id||0)});
+  /* EN JUEGO / FINALIZADO: se juega en orden, en cada sede tantos partidos a la vez como canchas */
+  var EM=estadosFinde();del.forEach(function(x){x.est=EM[x.C.cat.categoria+'|'+x.p.id]});
   var cols=['complejo','ruta'].map(function(s){
     var S=SEDES[s],xs=del.filter(function(x){return (x.p.sede||'complejo')===s}),h='',ult=null;
-    xs.forEach(function(x){if(x.p.hora!==ult){ult=x.p.hora;h+='<div class="hora">'+esc(x.p.hora)+' HS</div>'}h+=partidoHTML(x.C,x.p,x.cat,x.t.tema==='conj',true)});
+    xs.forEach(function(x){if(x.p.hora!==ult){ult=x.p.hora;h+='<div class="hora">'+esc(x.p.hora)+' HS</div>'}h+=partidoHTML(x.C,x.p,x.cat,x.t.tema==='conj',true,x.est)});
     return '<div class="col"><div class="sede"><img src="'+S.logo+'" alt=""><h3>'+S.n+'<small>'+esc(dia)+'</small></h3></div>'+(h||'<div class="sin">Sin partidos este día.</div>')+'</div>';
   });
   return '<div class="crono">'+cols.join('')+'</div>';

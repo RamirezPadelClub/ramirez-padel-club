@@ -237,6 +237,12 @@ section.blanca{background:var(--blanco)}
 .vt-fila .ps{display:flex;flex-direction:column;min-width:0;font-size:15px;line-height:calc(14px*1.35);font-weight:600}.vt-fila .ps .w{font-weight:800;color:var(--tinta)}.vt-fila .ps .l{font-weight:500;color:var(--tinta-2)}.vt-fila.jugado .rs-sc{align-self:center}
 .vt-fila .vs i{font-style:normal;color:var(--tinta-2);font-weight:500;padding:0 4px}
 .vt-fila .tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--verde-osc);background:var(--verde-claro);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.vt-fila .est,.rs-p .est{display:inline-flex;align-self:flex-start;align-items:center;gap:6px;margin-top:6px;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.1em;line-height:1;padding:4px 9px;border-radius:999px;white-space:nowrap!important}
+.vt-fila .est.juego,.rs-p .est.juego{background:#E8313F;color:#fff}.vt-fila .est.juego i,.rs-p .est.juego i{width:6px;height:6px;border-radius:50%;background:#fff;animation:latido 1.2s ease-in-out infinite}
+.vt-fila .est.fin,.rs-p .est.fin{background:var(--hueso);color:var(--tinta-2);border:1px solid var(--linea)}
+.rs-p.vivo{background:#FDF1F2;box-shadow:inset 4px 0 0 #E8313F}.vt-fila.vivo{background:#FDF1F2;border-left:4px solid #E8313F;border-radius:6px}
+@keyframes latido{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+@media (prefers-reduced-motion:reduce){.vt-fila .est.juego i,.rs-p .est.juego i{animation:none}}
 .vt-fila .res{display:block;font-size:13px;color:var(--verde);font-weight:800;margin-top:2px}
 @media (min-width:601px){.vt-fila{grid-template-columns:62px minmax(0,1fr) auto 172px}.vt-fila .tag{justify-self:end;grid-column:4}}
 .vt-cuadro{overflow-x:auto;margin:0 -22px;padding:0 22px}
@@ -748,7 +754,7 @@ body.mc-abierto{overflow:hidden}
   </form>
   <div class="res" id="insc-res" hidden></div>
 </dialog>
-<script src="resultados.js?v=20261121d"></script>
+<script src="resultados.js?v=20261122a"></script>
 <script>
 (function(){
   /* URL del Apps Script publicado (la planilla de inscripciones). */
@@ -848,6 +854,11 @@ body.mc-abierto{overflow:hidden}
     // Inscriptos
     var adentro=c.inscriptos.filter(function(i){return!i.espera});
     sec.insc=secc('Inscriptos',adentro.length+(c.cupo?' de '+c.cupo:'')+' parejas',c.inscriptos.length?'<ol class="vt-lista">'+c.inscriptos.map(function(i,n){return'<li'+(i.espera?' class="esp"':'')+'><b>'+(n+1)+'</b><span>'+esc(i.pareja)+'</span>'+(i.espera?'<small>lista de espera</small>':'')+'</li>'}).join('')+'</ol>':vacio('Todavía no hay inscriptos.'));
+    // EN JUEGO / FINALIZADO de todo el torneo: se juega en orden, en cada sede tantos partidos a la vez como canchas
+    var EMv=(function(){if(!window.Resultados||!Resultados.estados)return{};var xs=[],hm=function(h){var m=String(h||'').match(/(\d+):(\d+)/);if(!m)return 9999;var v=+m[1]*60+ +m[2];return v<360?v+1440:v};
+      cs.forEach(function(cc){(cc.partidos||[]).forEach(function(p){if(p.hora||p.dia)xs.push({k:cc.categoria+'|'+p.id,sede:p.sede||'complejo',dia:p.dia,hora:p.hora,id:p.id,jugado:Resultados.sets(p.resultado,p.ganador).length>0})})});
+      xs.sort(function(a,b){return hm(a.hora)-hm(b.hora)||(+a.id||0)-(+b.id||0)});var es=Resultados.estados(xs),m={};xs.forEach(function(x,i){m[x.k]=es[i]});return m})();
+    var estB=function(e){return e==='juego'?'<em class="est juego"><i></i>EN JUEGO</em>':e==='fin'?'<em class="est fin">FINALIZADO</em>':''};
     // Zonas
     var conRes=RS&&RS.partidos.some(function(p){return Resultados.esZona(p.fase)});
     sec.zonas=conRes?secc('Zonas','tablas y resultados','<div class="vt-zonas">'+RS.listaZonas().map(function(zk){var t=RS.tabla(zk),falta=t.partidos.filter(function(p){return!p._sets.length}).length;
@@ -855,7 +866,7 @@ body.mc-abierto{overflow:hidden}
         t.filas.map(function(f,i){var q=t.cerrada&&i<t.clasif;return'<tr class="'+(q?'q':'')+'"><td class="pos">'+(i+1)+'°</td><td class="l">'+esc(f.pareja)+(q?' <span class="rs-b">Clasifica</span>':'')+'</td><td>'+f.pg+'</td><td>'+(function(d){return'<span class="dg '+(d>0?'pos':d<0?'neg':'cero')+'">'+(d>0?'+'+d:d<0?'−'+(-d):'0')+'</span>'})(f.sf-f.sc)+'</td><td>'+(function(d){return'<span class="dg '+(d>0?'pos':d<0?'neg':'cero')+'">'+(d>0?'+'+d:d<0?'−'+(-d):'0')+'</span>'})(f.gf-f.gc)+'</td></tr>'}).join('')+
         '</tbody></table></div>'+(!t.cerrada&&falta?'<div class="rs-n">'+(falta>1?'Faltan '+falta+' partidos.':'Falta 1 partido.')+'</div>':'')+
         t.partidos.map(function(p){var A=RS.nombre(p,1),B=RS.nombre(p,2),w=p._sets.length?Resultados.ganadorSets(p._sets):0;
-          return'<div class="rs-p"><span class="h">'+esc(p.hora||'')+'</span><span class="ps"><span class="'+(w===1?'w':'')+'">'+(A.ok?esc(A.n):'<i>'+esc(A.n)+'</i>')+'</span><span class="'+(w===2?'w':'')+'">'+(B.ok?esc(B.n):'<i>'+esc(B.n)+'</i>')+'</span></span>'+(p._sets.length?Resultados.setsHTML(p._sets):'<span class="pend">'+esc(p.dia||'Por jugar')+'</span>')+'</div>'}).join('')+'</div>'}).join('')+'</div>'):secc('Zonas','',zonas.length?'<div class="vt-zonas">'+zonas.map(function(z){return'<div class="vt-zona"><p>Zona<b>'+esc(z.zona)+'</b></p><ul>'+z.parejas.map(function(p){return'<li>'+esc(p)+'</li>'}).join('')+'</ul></div>'}).join('')+'</div>':vacio('Las zonas se publican cuando cierra la inscripción.'));
+          var e1=EMv[c.categoria+'|'+p.id]||'';return'<div class="rs-p'+(e1==='juego'?' vivo':'')+'"><span class="h">'+esc(p.hora||'')+'</span><span class="ps"><span class="'+(w===1?'w':'')+'">'+(A.ok?esc(A.n):'<i>'+esc(A.n)+'</i>')+'</span><span class="'+(w===2?'w':'')+'">'+(B.ok?esc(B.n):'<i>'+esc(B.n)+'</i>')+'</span>'+estB(e1)+'</span>'+(p._sets.length?Resultados.setsHTML(p._sets):'<span class="pend">'+esc(p.dia||'Por jugar')+'</span>')+'</div>'}).join('')+'</div>'}).join('')+'</div>'):secc('Zonas','',zonas.length?'<div class="vt-zonas">'+zonas.map(function(z){return'<div class="vt-zona"><p>Zona<b>'+esc(z.zona)+'</b></p><ul>'+z.parejas.map(function(p){return'<li>'+esc(p)+'</li>'}).join('')+'</ul></div>'}).join('')+'</div>':vacio('Las zonas se publican cuando cierra la inscripción.'));
     // Horarios: cronograma de todas las categorías juntas, ordenado por día y hora
     var conHora=[];cs.forEach(function(cc,ci){var pss=cc.partidos||[],R=window.Resultados?Resultados.preparar(cc):null,cat=(function(n){var w=n.split(' ')[0];return/^[\d+]|^suma$/i.test(w)?n:w})(String(cc.categoria||''));
       pss.forEach(function(p){if(p.hora||p.dia)conHora.push({p:p,ci:ci,cat:cs.length>1?cat:'',nm:function(k){if(!R)return(k===1?p.p1:p.p2)||'A definir';return R.nombre(R.partidos[pss.indexOf(p)],k).n}})})});
@@ -864,9 +875,9 @@ body.mc-abierto{overflow:hidden}
     var dias=[];conHora.forEach(function(x){var d=x.p.dia||'Sin día';if(dias.indexOf(d)<0)dias.push(d)});
     var hoy=['dom','lun','mar','mié','jue','vie','sáb'][new Date().getDay()],diaSel=dias.indexOf(vtDia)>=0?vtDia:(dias.filter(function(d){return d.toLowerCase().slice(0,3)===hoy})[0]||dias[0]);
     var botDias=dias.length>1?'<div class="vt-cats" role="group" aria-label="Día">'+dias.map(function(d){return'<button type="button" data-vtdia="'+esc(d)+'" aria-pressed="'+(d===diaSel)+'">'+esc(String(d).split(' ')[0])+'</button>'}).join('')+'</div>':'';
-    sec.crono=secc('Cronograma','',conHora.length?botDias+dias.filter(function(d){return d===diaSel}).map(function(d){return'<div class="vt-dia"><h4>'+esc(d)+'</h4>'+conHora.filter(function(x){return(x.p.dia||'Sin día')===d}).map(function(x){var p=x.p;
+    sec.crono=secc('Cronograma','',conHora.length?botDias+dias.filter(function(d){return d===diaSel}).map(function(d){return(function(xs){return'<div class="vt-dia"><h4>'+esc(d)+'</h4>'+xs.map(function(x){var p=x.p,es1=EMv[cs[x.ci].categoria+'|'+p.id]||'';
       var ss=window.Resultados?Resultados.sets(p.resultado,p.ganador):[];
-      var w=ss.length?Resultados.ganadorSets(ss):0;var tg=[x.cat,p.fase,multiSede?SEDE_N[p.sede||'complejo']||p.sede:''].filter(Boolean).join(' · ');return'<div class="vt-fila'+(w?' jugado':'')+'"><span class="h">'+esc(p.hora||'—')+'</span><span class="ps"><span class="'+(w===1?'w':w===2?'l':'')+'">'+esc(x.nm(1))+'</span><span class="'+(w===2?'w':w===1?'l':'')+'">'+esc(x.nm(2))+'</span>'+(ss.length?'':(p.resultado?'<span class="res">'+esc(p.resultado)+'</span>':''))+'</span>'+(ss.length?Resultados.setsHTML(ss):'')+(tg?'<span class="tag">'+esc(tg)+'</span>':'')+'</div>'}).join('')+'</div>'}).join(''):vacio('Los horarios se publican junto con las zonas.'));
+      var w=ss.length?Resultados.ganadorSets(ss):0;var tg=[x.cat,p.fase,multiSede?SEDE_N[p.sede||'complejo']||p.sede:''].filter(Boolean).join(' · ');return'<div class="vt-fila'+(w?' jugado':'')+(es1==='juego'?' vivo':'')+'"><span class="h">'+esc(p.hora||'—')+'</span><span class="ps"><span class="'+(w===1?'w':w===2?'l':'')+'">'+esc(x.nm(1))+'</span><span class="'+(w===2?'w':w===1?'l':'')+'">'+esc(x.nm(2))+'</span>'+(ss.length?'':(p.resultado?'<span class="res">'+esc(p.resultado)+'</span>':''))+estB(es1)+'</span>'+(ss.length?Resultados.setsHTML(ss):'')+(tg?'<span class="tag">'+esc(tg)+'</span>':'')+'</div>'}).join('')+'</div>'})(conHora.filter(function(x){return(x.p.dia||'Sin día')===d}))}).join(''):vacio('Los horarios se publican junto con las zonas.'));
     // Cuadro
     var llaves=ps.filter(function(p){return ronda(p.fase)>=0});
     if(llaves.length){
