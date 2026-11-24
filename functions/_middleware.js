@@ -68,11 +68,10 @@ async function armar(ctx) {
   set('og:image:alt', dato.titulo);
   set('twitter:card', dato.w > dato.h ? 'summary_large_image' : 'summary');
   html = html.replace(/<link rel="canonical" href="[^"]*">/, '<link rel="canonical" href="' + attr(link) + '">');
-  // en el navegador: misma página, abierta en la sección (o en el torneo) pedida
-  const ir = '<base href="/"><script>(function(){try{' +
-    (dato.torneo ? 'window.__irTorneo=' + JSON.stringify(dato.torneo) + ';' : '') +
-    'history.replaceState(null,"","/#' + dato.hash + '")}catch(e){location.replace("/#' + dato.hash + '")}})()</script>';
-  html = html.replace(/<head>/i, '<head>' + ir);
+  // en el navegador: las secciones ya abren por la dirección (/categorias); el torneo pasa a /torneos y se marca su tarjeta
+  const ir = dato.torneo ? '<script>(function(){try{window.__irTorneo=' + JSON.stringify(dato.torneo) +
+    ';history.replaceState(null,"","/torneos")}catch(e){location.replace("/#torneos")}})()</script>' : '';
+  if (ir) html = html.replace(/<head>/i, '<head>' + ir);
 
   const h2 = new Headers(base.headers);
   h2.set('content-type', 'text/html; charset=utf-8');
