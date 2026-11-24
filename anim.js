@@ -83,9 +83,10 @@
     clases: '<circle cx="60" cy="60" r="46"/><path d="M24 32 C46 48 46 72 24 88"/><path d="M96 32 C74 48 74 72 96 88"/>',
     torneos: '<path d="M36 14 H84 V44 a24 24 0 0 1 -48 0 Z"/><path d="M36 22 H20 a14 14 0 0 0 16 24"/><path d="M84 22 H100 a14 14 0 0 1 -16 24"/><line x1="60" y1="68" x2="60" y2="88"/><path d="M40 106 H80 L76 88 H44 Z"/>',
     fotos: '<rect x="12" y="34" width="96" height="66" rx="10"/><path d="M40 34 l8 -14 h24 l8 14"/><circle cx="60" cy="67" r="20"/><circle cx="92" cy="48" r="3"/>',
+    categorias: '<rect x="44" y="40" width="32" height="66" rx="2"/><rect x="12" y="62" width="32" height="44" rx="2"/><rect x="76" y="76" width="32" height="30" rx="2"/><path d="M60 12 l5 10 l11 1.5 l-8 7.5 l2 11 l-10 -5.5 l-10 5.5 l2 -11 l-8 -7.5 l11 -1.5 Z"/>',
     reservas: '<rect x="32" y="8" width="50" height="104" rx="10"/><line x1="50" y1="20" x2="64" y2="20"/><circle cx="57" cy="97" r="4"/><path d="M92 44 a12 12 0 0 1 0 18"/><path d="M100 36 a24 24 0 0 1 0 34"/>'
   };
-  var fotosTab = {complejo: 'fotos/pasarela-arriba.jpg', buffet: 'fotos/buffet.jpg', clases: 'fotos/clases.jpg', torneos: 'fotos/torneo-tribuna.jpg', fotos: 'fotos/juego/gente-festejo.jpg', reservas: 'fotos/cancha-blindex.jpg'};
+  var fotosTab = {complejo: 'fotos/pasarela-arriba.jpg', buffet: 'fotos/buffet.jpg', clases: 'fotos/clases.jpg', torneos: 'fotos/torneo-tribuna.jpg', fotos: 'fotos/juego/gente-festejo.jpg', reservas: 'fotos/cancha-blindex.jpg', categorias: 'fotos/partido-1.jpg'};
   Object.keys(fotosTab).forEach(function(v){
     var vista = document.getElementById('v-' + v);
     var cab = vista && vista.querySelector('.cab');

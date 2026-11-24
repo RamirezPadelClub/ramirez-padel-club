@@ -1388,4 +1388,36 @@ window.addEventListener('resize',function(){if(window.innerWidth>720)cerrar()});
   document.addEventListener('keydown',function(e){if(!v.hidden&&e.key==='Escape')cerrar()});
 })();
 </script>
+<style>
+.compartir{display:inline-flex;align-items:center;gap:7px;font:800 14px var(--texto);color:var(--verde);background:none;border:1.5px solid var(--linea);border-radius:999px;padding:9px 15px;cursor:pointer;min-height:40px;justify-self:start;width:max-content}
+.compartir:hover{border-color:var(--verde)}
+.torneo .compartir{padding:11px 16px}
+.portada-tab .compartir{color:#fff;border-color:rgba(255,255,255,.55);margin-top:6px}
+.portada-tab .compartir:hover{border-color:#fff}
+.torneo.destacado{outline:3px solid var(--verde);outline-offset:4px;border-radius:18px;transition:outline-color 1.2s}
+.aviso-link{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--verde-osc);color:#fff;font:700 15px var(--texto);padding:12px 20px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:200}
+</style>
+<script>
+/* Links propios para compartir: cada sección (/categorias, /torneos…) y cada torneo (/torneo/<id>) muestran su propia vista previa en WhatsApp */
+(function(){
+  var SITIO='https://ramirezpadelclub.com.ar';
+  var ICO='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>';
+  var aviso;function avisar(t){if(!aviso){aviso=document.createElement('div');aviso.className='aviso-link';aviso.setAttribute('role','status');document.body.appendChild(aviso)}aviso.textContent=t;aviso.hidden=false;clearTimeout(aviso._t);aviso._t=setTimeout(function(){aviso.hidden=true},2200)}
+  function copiar(u){if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(u);return new Promise(function(ok,mal){var t=document.createElement('textarea');t.value=u;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){mal(e)}t.remove()})}
+  function compartir(u,tit){
+    if(navigator.share&&matchMedia('(pointer:coarse)').matches){navigator.share({title:tit,url:u}).catch(function(){});return}
+    copiar(u).then(function(){avisar('Link copiado: '+u.replace('https://',''))},function(){prompt('Copiá el link:',u)});
+  }
+  function boton(u,tit,txt){var b=document.createElement('button');b.type='button';b.className='compartir';b.innerHTML=ICO+'<span>'+(txt||'Compartir')+'</span>';b.addEventListener('click',function(){compartir(u,tit)});return b}
+  var SECC={categorias:'Categorías',torneos:'Torneos',clases:'Clases',buffet:'Buffet',fotos:'Fotos',reservas:'Reservas'};
+  Object.keys(SECC).forEach(function(s){var cab=document.querySelector('#v-'+s+' .cab');if(cab)cab.appendChild(boton(SITIO+'/'+s,SECC[s]+' · Ramirez Padel Club','Compartir sección'))});
+  document.querySelectorAll('article.torneo[data-id]').forEach(function(t){var p=t.querySelector('.t-pie');if(!p)return;var h=t.querySelector('h3');p.appendChild(boton(SITIO+'/torneo/'+t.dataset.id,h?h.textContent:'Torneo'))});
+  /* llegó por /torneo/<id>: mostrar esa tarjeta */
+  var id=window.__irTorneo;if(!id)return;
+  var t=document.querySelector('article.torneo[data-id="'+id+'"]');
+  if(!t){location.hash='#torneo/'+id;return}
+  if(t.dataset.pasado&&!t.dataset.ver){location.replace('#torneo/'+id);return}
+  setTimeout(function(){t.scrollIntoView({block:'center',behavior:'smooth'});t.classList.add('destacado');setTimeout(function(){t.classList.remove('destacado')},3500)},350);
+})();
+</script>
 </body></html>
