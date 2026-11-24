@@ -274,6 +274,7 @@ function doPost_(e) {
   if (d.accion === 'reenviar') return reenviar_(d);
   if (d.accion === 'org_login') return orgLogin_(d);
   if (d.accion === 'resultado') return guardarResultado_(d);
+  if (d.accion === 'sugerencia') return sugerencia_(d);
 
   const j1 = limpio_(d.jugador_1), j2 = limpio_(d.jugador_2);
   const tel = String(d.telefono || '').replace(/[^\d+]/g, '').slice(0, 20);
@@ -634,4 +635,37 @@ function enviar_(to, asunto, filas, codigo, d, t) {
 /** Correr una vez a mano después de actualizar el código: pide el permiso para mandar emails. */
 function autorizarEmail() {
   Logger.log('Emails disponibles hoy: ' + MailApp.getRemainingDailyQuota());
+}
+
+/* ---------- Sugerencias desde la página (pestaña "Sugerencias") ---------- */
+const H_SUG = 'Sugerencias';
+function sugerencia_(d) {
+  const texto = String(d.texto || '').replace(/\s+/g, ' ').trim().slice(0, 1000);
+  const nombre = String(d.nombre || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+  if (texto.length < 5) return json_({ ok: false, error: 'datos' });
+  const cache = CacheService.getScriptCache();
+  const n = Number(cache.get('sug_min') || 0);
+  if (n > 30) return json_({ ok: false, error: 'muchas' });
+  cache.put('sug_min', String(n + 1), 60);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const ss = libro_();
+    let sh = ss.getSheetByName(H_SUG);
+    if (!sh) {
+      sh = ss.insertSheet(H_SUG);
+      sh.appendRow(['fecha_hora', 'nombre', 'sugerencia', 'leida']);
+      sh.setFrozenRows(1);
+      sh.getRange('1:1').setFontWeight('bold');
+      sh.setColumnWidth(1, 140); sh.setColumnWidth(2, 160); sh.setColumnWidth(3, 600);
+      sh.getRange('C:C').setWrap(true);
+    }
+    // el texto va como texto (si empieza con = + - @ no se toma como fórmula)
+    const seguro = (t) => (/^[=+\-@]/.test(t) ? "'" + t : t);
+    sh.appendRow([new Date(), seguro(nombre) || 'Anónimo', seguro(texto), '']);
+    sh.getRange(sh.getLastRow(), 1).setNumberFormat('dd/MM/yyyy HH:mm');
+  } finally {
+    lock.releaseLock();
+  }
+  return json_({ ok: true });
 }
