@@ -427,6 +427,7 @@ body.mc-abierto{overflow:hidden}
       <a href="#buffet" data-v="buffet">Buffet</a>
       <a href="#clases" data-v="clases">Clases</a>
       <a href="#torneos" data-v="torneos">Torneos</a>
+      <a href="#categorias" data-v="categorias">Categorías</a>
       <a href="#fotos" data-v="fotos">Fotos</a>
       <a href="#reservas" data-v="reservas">Reservas</a>
     </nav>
@@ -443,6 +444,7 @@ body.mc-abierto{overflow:hidden}
     <a href="#buffet" data-v="buffet">Buffet</a>
     <a href="#clases" data-v="clases">Clases</a>
     <a href="#torneos" data-v="torneos">Torneos</a>
+      <a href="#categorias" data-v="categorias">Categorías</a>
     <a href="#fotos" data-v="fotos">Fotos</a>
     <a href="#reservas" data-v="reservas">Reservas</a>
   </nav>
@@ -1005,6 +1007,116 @@ body.mc-abierto{overflow:hidden}
   document.addEventListener('visibilitychange',function(){if(!document.hidden&&location.hash.indexOf('#torneo/')===0)cargar(true)});
 })();
 </script>
+<!-- CATEGORÍAS (lee la planilla LISTADO POR CATEGORÍA) -->
+<main class="vista" id="v-categorias" hidden>
+  <section>
+    <div class="in">
+      <div class="cab">
+        <h2>Categorías</h2>
+        <p>Listado de jugadoras y jugadores por categoría. Buscá tu nombre para saber en qué categoría estás.</p>
+      </div>
+      <div class="ct-buscar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        <input type="search" id="ct-q" placeholder="Buscar jugador o jugadora" autocomplete="off" aria-label="Buscar jugador">
+      </div>
+      <div class="ct-res" id="ct-res" hidden></div>
+      <div id="ct-listas">
+        <div class="vt-cats ct-genero" id="ct-gen" role="group" aria-label="Rama">
+          <button type="button" data-g="DAMAS" aria-pressed="true">Damas</button>
+          <button type="button" data-g="CABALLEROS" aria-pressed="false">Caballeros</button>
+        </div>
+        <div class="vt-cats" id="ct-cats" role="group" aria-label="Categoría"></div>
+        <div class="ct-lista" id="ct-lista"><p class="ct-msj">Cargando categorías…</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+<style>
+.ct-buscar{display:flex;align-items:center;gap:10px;max-width:520px;background:var(--blanco);border:1.5px solid var(--linea);border-radius:999px;padding:0 18px;margin:0 0 26px;color:var(--tinta-2)}
+.ct-buscar:focus-within{border-color:var(--verde)}
+.ct-buscar input{flex:1;border:0;background:none;font:600 16px var(--texto);color:var(--tinta);padding:13px 0;min-width:0;outline:none}
+.ct-genero{margin-bottom:12px}
+.ct-genero button{font-size:15px;padding:10px 22px}
+#ct-cats button{border-color:var(--linea);color:var(--tinta)}
+#ct-cats button[aria-pressed="true"]{background:var(--verde-osc);border-color:var(--verde-osc);color:var(--blanco)}
+.ct-lista{background:var(--blanco);border:1px solid var(--linea);border-radius:18px;padding:22px 24px}
+.ct-tit{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid var(--linea)}
+.ct-tit h3{font:700 26px var(--display);color:var(--verde-osc);margin:0}
+.ct-tit span{font-size:14px;font-weight:700;color:var(--tinta-2)}
+.ct-lista ol{list-style:none;margin:0;padding:0;columns:3 220px;column-gap:28px}
+.ct-lista li{break-inside:avoid;padding:7px 0;border-bottom:1px dashed var(--linea);font-size:15px;font-weight:600;color:var(--tinta)}
+.ct-lista li b{font-weight:800}
+.ct-lista li.ct-marca{background:var(--verde-claro);border-radius:8px;padding-inline:8px;color:var(--verde-osc)}
+.ct-msj{margin:0;color:var(--tinta-2)}
+.ct-res{display:grid;gap:8px;max-width:520px;margin:-12px 0 26px}
+.ct-res button{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;width:100%;background:var(--blanco);border:1px solid var(--linea);border-radius:14px;padding:12px 16px;font:600 15px var(--texto);color:var(--tinta);cursor:pointer;min-height:48px}
+.ct-res button:hover{border-color:var(--verde)}
+.ct-res button small{font-weight:800;font-size:13px;color:var(--verde);white-space:nowrap}
+@media (max-width:560px){.ct-lista{padding:18px 16px}.ct-tit h3{font-size:22px}}
+</style>
+<script>
+/* Categorías: lee las hojas DAMAS y CABALLEROS de la planilla (cada columna es una categoría; fila 1 = nombre de la categoría) */
+(function(){
+  var ID='1yipGD_RIFxDADvHwo6_PXbWgfJjjQCQDaHqNNKL-y9w', HOJAS=['DAMAS','CABALLEROS'];
+  var datos={}, gen='DAMAS', cat={DAMAS:0,CABALLEROS:0}, marca='', cargado=false, n=0;
+  var $=function(i){return document.getElementById(i)};
+  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function norm(t){return String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim()}
+  function lindo(t){return String(t).toLowerCase().replace(/(^|[\s\-'])([a-zñáéíóúü])/g,function(m,a,b){return a+b.toUpperCase()})}
+  var TILDE={septima:'Séptima',decima:'Décima',novena:'Novena'};
+  function nomCat(t){var m=String(t).trim().match(/^(\d+)\s*[ºª°o]?\s*(.*)$/);if(!m)return lindo(t);var w=lindo(m[2]);return m[1]+'° '+(TILDE[norm(w)]||w)}
+  function jsonp(hoja){return new Promise(function(ok,mal){
+    var fn='__ct'+(++n)+Date.now(), s=document.createElement('script'), t=setTimeout(function(){fin();mal()},15000);
+    function fin(){clearTimeout(t);try{delete window[fn]}catch(e){window[fn]=undefined}s.remove()}
+    window[fn]=function(r){fin();ok(r)};
+    s.src='https://docs.google.com/spreadsheets/d/'+ID+'/gviz/tq?headers=0&sheet='+encodeURIComponent(hoja)+'&tqx=responseHandler:'+fn+'&_='+Date.now();
+    s.onerror=function(){fin();mal()};document.head.appendChild(s);
+  })}
+  function armar(r){
+    var filas=(r&&r.table&&r.table.rows||[]).map(function(f){return(f.c||[]).map(function(c){return c&&c.v!=null?String(c.v).trim():''})});
+    if(!filas.length)return[];
+    var cab=filas[0], out=[];
+    cab.forEach(function(t,i){if(!t)return;
+      var js=filas.slice(1).map(function(f){return f[i]||''}).filter(Boolean);
+      js.sort(function(a,b){return a.localeCompare(b,'es')});
+      out.push({cat:nomCat(t),jug:js});
+    });
+    return out;
+  }
+  function pintar(){
+    document.querySelectorAll('#ct-gen button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.g===gen)});
+    var cs=datos[gen]||[];
+    if(!cargado){return}
+    if(!cs.length){$('ct-cats').innerHTML='';$('ct-lista').innerHTML='<p class="ct-msj">No pudimos cargar las categorías. Probá de nuevo en un rato.</p>';return}
+    if(cat[gen]>=cs.length)cat[gen]=0;
+    $('ct-cats').innerHTML=cs.map(function(c,i){return'<button type="button" data-c="'+i+'" aria-pressed="'+(i===cat[gen])+'">'+esc(c.cat)+'</button>'}).join('');
+    var c=cs[cat[gen]], tot=c.jug.length;
+    $('ct-lista').innerHTML='<div class="ct-tit"><h3>'+esc(c.cat)+' · '+(gen==='DAMAS'?'Damas':'Caballeros')+'</h3><span>'+tot+(gen==='DAMAS'?' jugadoras':' jugadores')+'</span></div>'+
+      (tot?'<ol>'+c.jug.map(function(j){var p=lindo(j).split(' '),ap=p.shift();return'<li'+(marca===j?' class="ct-marca" id="ct-marcado"':'')+'><b>'+esc(ap)+'</b> '+esc(p.join(' '))+'</li>'}).join('')+'</ol>':'<p class="ct-msj">Todavía no hay nadie en esta categoría.</p>');
+    var m=$('ct-marcado');if(m)setTimeout(function(){m.scrollIntoView({block:'center',behavior:'smooth'})},60);
+  }
+  function buscar(){
+    var q=norm($('ct-q').value), res=$('ct-res');
+    if(q.length<2){res.hidden=true;res.innerHTML='';return}
+    var pal=q.split(' '), hall=[];
+    HOJAS.forEach(function(g){(datos[g]||[]).forEach(function(c,ci){c.jug.forEach(function(j){var nj=norm(j);if(pal.every(function(p){return nj.indexOf(p)>=0}))hall.push({g:g,ci:ci,j:j,cat:c.cat})})})});
+    res.hidden=false;
+    res.innerHTML=hall.length?hall.slice(0,12).map(function(h){return'<button type="button" data-g="'+h.g+'" data-ci="'+h.ci+'" data-j="'+esc(h.j)+'"><span>'+esc(lindo(h.j))+'</span><small>'+esc(h.cat)+' · '+(h.g==='DAMAS'?'Damas':'Caballeros')+'</small></button>'}).join('')+(hall.length>12?'<p class="ct-msj">Hay más resultados: escribí el nombre completo.</p>':''):'<p class="ct-msj">No encontramos a nadie con ese nombre.</p>';
+  }
+  $('ct-gen').addEventListener('click',function(e){var b=e.target.closest('[data-g]');if(!b)return;gen=b.dataset.g;marca='';pintar()});
+  $('ct-cats').addEventListener('click',function(e){var b=e.target.closest('[data-c]');if(!b)return;cat[gen]=+b.dataset.c;marca='';pintar()});
+  $('ct-q').addEventListener('input',buscar);
+  $('ct-res').addEventListener('click',function(e){var b=e.target.closest('[data-j]');if(!b)return;gen=b.dataset.g;cat[gen]=+b.dataset.ci;marca=b.dataset.j;pintar()});
+  function cargar(){
+    Promise.all(HOJAS.map(function(h){return jsonp(h).then(armar,function(){return null})})).then(function(rs){
+      rs.forEach(function(r,i){if(r)datos[HOJAS[i]]=r});cargado=true;pintar();buscar();
+    });
+  }
+  /* carga recién cuando se abre la pestaña, y de nuevo si se vuelve a abrir (para que se vean los cambios de la planilla) */
+  function ver(){if(location.hash==='#categorias')cargar()}
+  window.addEventListener('hashchange',ver);ver();
+})();
+</script>
 <!-- FOTOS -->
 <main class="vista" id="v-fotos" hidden>
   <section>
@@ -1166,7 +1278,7 @@ body.mc-abierto{overflow:hidden}
 
 <script>
 (function(){
-  var vistas=['inicio','buffet','clases','torneos','fotos','reservas','torneo','album'];
+  var vistas=['inicio','buffet','clases','torneos','categorias','fotos','reservas','torneo','album'];
   var titulo0=document.title;
   var SOLO=document.documentElement.getAttribute('data-solo');
   function mostrar(){
