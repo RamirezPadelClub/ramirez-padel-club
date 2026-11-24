@@ -1113,8 +1113,8 @@ body.mc-abierto{overflow:hidden}
     });
   }
   /* carga recién cuando se abre la pestaña, y de nuevo si se vuelve a abrir (para que se vean los cambios de la planilla) */
-  function ver(){if(location.hash==='#categorias')cargar()}
-  window.addEventListener('hashchange',ver);ver();
+  function ver(){if((window.vistaActual?window.vistaActual():location.hash.slice(1))==='categorias')cargar()}
+  window.addEventListener('hashchange',ver);window.addEventListener('popstate',ver);if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ver);else ver();
 })();
 </script>
 <!-- FOTOS -->
@@ -1279,14 +1279,19 @@ body.mc-abierto{overflow:hidden}
 <script>
 (function(){
   var vistas=['inicio','buffet','clases','torneos','categorias','fotos','reservas','torneo','album'];
-  var titulo0=document.title;
+  var titulo0='Ramirez Padel Club · Pádel en General Ramírez, Entre Ríos';
+  var TIT={buffet:'Buffet',clases:'Clases',torneos:'Torneos',categorias:'Categorías',fotos:'Fotos',reservas:'Reservas'};
   var SOLO=document.documentElement.getAttribute('data-solo');
+  /* La sección sale del # (links de adentro) o de la dirección limpia (/categorias, /fotos…).
+     Las secciones quedan con dirección limpia en la barra, así al copiarla y compartirla sale su vista previa. */
+  window.vistaActual=function(){var h=location.hash.slice(1);if(h)return h;var p=location.pathname.replace(/^\/+|\/+$/g,'').toLowerCase();return TIT[p]?p:'inicio'};
   function mostrar(){
     if(SOLO&&location.hash!=='#torneo/'+SOLO){location.replace('#torneo/'+SOLO);return}
-    var v=(location.hash||'#inicio').slice(1);
+    var v=window.vistaActual();
+    if(!SOLO&&(TIT[v]||v==='inicio')&&location.hash){try{history.replaceState(history.state,'',(v==='inicio'?'/':'/'+v)+location.search)}catch(e){}}
     if(v.indexOf('torneo/')===0) v='torneo';
     else if(v.indexOf('album/')===0) v='album';
-    else if(document.title!==titulo0) document.title=titulo0;
+    else {var nt=TIT[v]?TIT[v]+' · Ramirez Padel Club':titulo0;if(document.title!==nt)document.title=nt}
     var irComplejo=(v==='complejo');
     if(vistas.indexOf(v)<0) v='inicio';
     vistas.forEach(function(n){document.getElementById('v-'+n).hidden=(n!==v)});
@@ -1320,6 +1325,7 @@ body.mc-abierto{overflow:hidden}
   document.addEventListener('keydown',function(e){if(visor.hidden)return;if(e.key==='Escape')visor.hidden=true;if(e.key==='ArrowLeft')abrir(actual-1);if(e.key==='ArrowRight')abrir(actual+1)});
   window.addEventListener('hashchange',function(){visor.hidden=true});
   window.addEventListener('hashchange',mostrar);
+  window.addEventListener('popstate',mostrar);
   mostrar();
 })();
 /* ---------- Álbumes de torneos: fotos desde carpetas de Google Drive (albumes.json) ---------- */
