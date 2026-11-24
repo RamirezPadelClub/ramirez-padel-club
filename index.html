@@ -514,6 +514,26 @@ body.mc-abierto{overflow:hidden}
       <div class="tira"><a href="#fotos"><img src="fotos/juego/juego-bandeja.webp" srcset="fotos/juego/juego-bandeja-480.webp 480w, fotos/juego/juego-bandeja.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Bandeja" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-choque.webp" srcset="fotos/juego/gente-choque-480.webp 480w, fotos/juego/gente-choque.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Choque de manos en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-derecha.webp" srcset="fotos/juego/juego-derecha-480.webp 480w, fotos/juego/juego-derecha.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Derecha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-estirada.webp" srcset="fotos/juego/juego-estirada-480.webp 480w, fotos/juego/juego-estirada.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugadora estirándose a la pelota" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-dobles.webp" srcset="fotos/juego/juego-dobles-480.webp 480w, fotos/juego/juego-dobles.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Partido de dobles" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-red.webp" srcset="fotos/juego/juego-red-480.webp 480w, fotos/juego/juego-red.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Volea en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-smash.webp" srcset="fotos/juego/juego-smash-480.webp 480w, fotos/juego/juego-smash.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Smash" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-festejo.webp" srcset="fotos/juego/gente-festejo-480.webp 480w, fotos/juego/gente-festejo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Festejo después del punto" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-globo.webp" srcset="fotos/juego/juego-globo-480.webp 480w, fotos/juego/juego-globo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Globo" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-sonrisas.webp" srcset="fotos/juego/gente-sonrisas-480.webp 480w, fotos/juego/gente-sonrisas.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Sonrisas en la cancha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-volea.webp" srcset="fotos/juego/juego-volea-480.webp 480w, fotos/juego/juego-volea.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Volea" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-remate-damas.webp" srcset="fotos/juego/juego-remate-damas-480.webp 480w, fotos/juego/juego-remate-damas.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Remate" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-grupo.webp" srcset="fotos/juego/gente-grupo-480.webp 480w, fotos/juego/gente-grupo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Grupo en el club" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-salto.webp" srcset="fotos/juego/juego-salto-480.webp 480w, fotos/juego/juego-salto.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Salto a la pelota" loading="lazy"></a></div>
     </div>
   </section>
+  <section id="sugerencias">
+    <div class="in">
+      <div class="sug">
+        <div class="sug-txt">
+          <p class="eyebrow">Tu opinión suma</p>
+          <h2>¿Tenés una sugerencia?</h2>
+          <p>Contanos qué te gustaría que mejoremos o agreguemos en el complejo, los torneos o la página. Las leemos todas.</p>
+        </div>
+        <form class="sug-form" id="sug-form" novalidate>
+          <label for="sug-nombre">Nombre o apodo <span>(opcional)</span></label>
+          <input id="sug-nombre" name="nombre" type="text" maxlength="60" autocomplete="nickname" placeholder="Cómo te decimos">
+          <label for="sug-texto">Tu sugerencia</label>
+          <textarea id="sug-texto" name="texto" rows="4" maxlength="1000" required placeholder="Escribí acá…"></textarea>
+          <input type="text" name="web" tabindex="-1" autocomplete="off" aria-hidden="true" class="sug-trampa">
+          <div class="sug-pie"><span id="sug-cont">0 / 1000</span><button type="submit" class="btn verde" id="sug-enviar">Enviar sugerencia</button></div>
+          <p class="sug-msj" id="sug-msj" role="status" hidden></p>
+        </form>
+      </div>
+    </div>
+  </section>
 </main>
 
 <!-- BUFFET -->
@@ -1369,6 +1389,44 @@ body.mc-abierto{overflow:hidden}
 })();
 </script>
 
+<style>
+.sug{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:start;background:var(--blanco);border:1px solid var(--linea);border-radius:22px;padding:36px}
+.sug-txt h2{font-size:clamp(28px,4vw,40px);color:var(--verde-osc);margin:8px 0 12px}
+.sug-txt p{color:var(--tinta-2)}
+.sug-form{display:grid;gap:8px}
+.sug-form label{font-weight:800;font-size:14px;color:var(--tinta)}
+.sug-form label span{font-weight:600;color:var(--tinta-2)}
+.sug-form input,.sug-form textarea{font:500 16px var(--texto);color:var(--tinta);background:var(--hueso);border:1.5px solid var(--linea);border-radius:14px;padding:12px 14px;margin-bottom:8px;width:100%;box-sizing:border-box;resize:vertical}
+.sug-form input:focus,.sug-form textarea:focus{outline:none;border-color:var(--verde);background:var(--blanco)}
+.sug-trampa{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0}
+.sug-pie{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sug-pie span{font-size:13px;color:var(--tinta-2)}
+.sug-msj{margin:4px 0 0;font-weight:700;color:var(--verde)}
+.sug-msj.error{color:#B3261E}
+@media (max-width:760px){.sug{grid-template-columns:1fr;gap:20px;padding:24px 18px}}
+</style>
+<script>
+/* Sugerencias: se guardan en la pestaña "Sugerencias" de la planilla de inscripciones */
+(function(){
+  var URL_S='https://script.google.com/macros/s/AKfycby6BVoENl5ojrVDm1smQngTQ73Xwntpqg9V0iIAJrWytFsEYOMr13Fudd9cpvtS3y7l/exec';
+  var f=document.getElementById('sug-form');if(!f)return;
+  var tx=document.getElementById('sug-texto'),cont=document.getElementById('sug-cont'),msj=document.getElementById('sug-msj'),bt=document.getElementById('sug-enviar');
+  function avisar(t,err){msj.textContent=t;msj.className='sug-msj'+(err?' error':'');msj.hidden=false}
+  tx.addEventListener('input',function(){cont.textContent=tx.value.length+' / 1000'});
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var texto=tx.value.trim();
+    if(texto.length<5){avisar('Escribí tu sugerencia antes de enviarla.',true);tx.focus();return}
+    bt.disabled=true;bt.textContent='Enviando…';msj.hidden=true;
+    fetch(URL_S,{method:'POST',body:JSON.stringify({accion:'sugerencia',nombre:f.nombre.value.trim(),texto:texto,web:f.web.value})})
+      .then(function(r){return r.json()}).then(function(j){
+        if(!j.ok)throw new Error(j.error||'error');
+        f.reset();cont.textContent='0 / 1000';avisar('¡Gracias! Recibimos tu sugerencia y la vamos a leer.');
+      }).catch(function(){avisar('No se pudo enviar. Probá de nuevo en un rato.',true)})
+      .then(function(){bt.disabled=false;bt.textContent='Enviar sugerencia'});
+  });
+})();
+</script>
 <script src="anim.js?v=20261124a" defer></script>
 <script>(function(){var t=document.querySelector('.tabs');if(!t)return;function f(){t.classList.toggle('al-final',t.scrollLeft+t.clientWidth>=t.scrollWidth-4)}t.addEventListener('scroll',f,{passive:true});window.addEventListener('resize',f);f()})();</script>
 <script>(function(){var m=document.getElementById('menu-cel'),b=document.getElementById('burger'),c=document.getElementById('mc-cerrar');if(!m||!b)return;
