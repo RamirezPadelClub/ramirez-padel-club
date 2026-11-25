@@ -30,7 +30,7 @@ const COLS_P = ['torneo', 'categoria', 'fase', 'dia', 'hora', 'pareja_1', 'parej
 const H_ORG = 'Organizadores';
 const COLS_O = ['sede', 'nombre', 'clave'];
 const COLS_T = ['torneo', 'categoria', 'cupo', 'apertura', 'cierre', 'tipo', 'nombre'];
-const COLS_I = ['fecha_hora', 'torneo', 'categoria', 'jugador_1', 'jugador_2', 'telefono', 'estado', 'baja', 'disponibilidad', 'email', 'codigo'];
+const COLS_I = ['fecha_hora', 'torneo', 'categoria', 'jugador_1', 'jugador_2', 'telefono', 'estado', 'baja', 'disponibilidad', 'email', 'codigo', 'control'];
 const WEB = 'https://ramirezpadelclub.com.ar/#torneos';
 /** Regla del circuito: al menos dos franjas del sábado, o el viernes completo. */
 function dispValida_(disp) { return disp.some((f) => f.indexOf('Viernes') === 0) || disp.filter((f) => f.indexOf('Sábado') === 0).length >= 2; }
@@ -304,12 +304,12 @@ function doPost_(e) {
     }
 
     const cupo = Number(t.cupo) || 0;
-    const pos = misma.length + 1;
+    const ctl = controlCategoria_(d.categoria, j1, j2); if (ctl.bloquea) return json_({ ok: false, error: 'cat_listado', mensaje: ctl.bloquea }); const pos = misma.length + 1;
     const estado = cupo && pos > cupo ? 'Lista de espera' : 'Adentro';
     asegurarColumnas_();
     const dispTxt = dispTexto_(disp);
     const codigo = codigo_();
-    sh.appendRow([ahora, d.torneo, d.categoria, j1, j2, "'" + tel, estado, '', dispTxt, email, codigo]);
+    sh.appendRow([ahora, d.torneo, d.categoria, j1, j2, "'" + tel, estado, '', dispTxt, email, codigo, ctl.marca || '']);
     SpreadsheetApp.flush();
     const hora = Utilities.formatDate(ahora, TZ, 'dd/MM HH:mm:ss');
     const posicion = estado === 'Adentro' ? pos : pos - cupo;
@@ -668,4 +668,107 @@ function sugerencia_(d) {
     lock.releaseLock();
   }
   return json_({ ok: true });
+}
+
+/* ---------- Control de categoría (planilla LISTADO POR CATEGORÍA) ----------
+   Categoría simple (ej. "8° Caballeros", "Mixto 8va"): cada jugador tiene que ser de esa categoría o de una más baja (puede subir, no bajar).
+   Suma (ej. "Damas +13", "Suma 9 Damas"): la suma de las dos categorías tiene que dar ese número o más.
+   Mujeres en categorías de caballeros (o mixto): su categoría cuenta 2 más (una 6ª de damas juega como 8ª).
+   Si no cumple: no deja inscribir. Si un jugador no figura en el listado: deja inscribir y lo marca en la columna "control". */
+const LISTADO_ID = '1yipGD_RIFxDADvHwo6_PXbWgfJjjQCQDaHqNNKL-y9w';
+function listadoCat_() {
+  const cache = CacheService.getScriptCache();
+  const c = cache.get('listado_cat');
+  if (c) return JSON.parse(c);
+  const ss = SpreadsheetApp.openById(LISTADO_ID);
+  const out = {};
+  ['DAMAS', 'CABALLEROS'].forEach((hoja) => {
+    const sh = ss.getSheetByName(hoja);
+    const m = {};
+    if (sh) {
+      const v = sh.getDataRange().getValues();
+      const cab = v[0] || [];
+      cab.forEach((h, j) => {
+        const num = parseInt(String(h), 10);
+        if (!num) return;
+        for (let i = 1; i < v.length; i++) {
+          const nm = norm_(v[i][j]);
+          if (nm) m[nm] = num;
+        }
+      });
+    }
+    out[hoja] = m;
+  });
+  try { cache.put('listado_cat', JSON.stringify(out), 300); } catch (e) {}
+  return out;
+}
+/* nombre simplificado para tolerar diferencias de escritura (Erlich/Ehrlich, Melisa/Melissa, Thomas/Tomás, Schönhals/Schonals) */
+function simp_(s) {
+  return norm_(s).split(' ').map((w) => w.replace(/th/g, 't').replace(/h/g, '').replace(/y/g, 'i').replace(/z/g, 's')
+    .replace(/v/g, 'b').replace(/ck/g, 'k').replace(/(.)\1+/g, '$1')).filter(Boolean).sort().join(' ');
+}
+/* busca un jugador en una hoja del listado: igual, parecido o con un segundo nombre de más */
+function buscarCat_(L, hoja, nombre) {
+  const m = L[hoja] || {};
+  const k = norm_(nombre);
+  if (m[k]) return m[k];
+  const idx = L['_s_' + hoja] || (L['_s_' + hoja] = (() => {
+    const o = {}; const dup = {};
+    Object.keys(m).forEach((x) => { const sx = simp_(x); if (o[sx] && o[sx] !== m[x]) dup[sx] = 1; o[sx] = m[x]; });
+    Object.keys(dup).forEach((x) => delete o[x]);
+    return o;
+  })());
+  const sk = simp_(nombre);
+  if (idx[sk]) return idx[sk];
+  const tk = sk.split(' ');
+  if (tk.length > 2) {
+    const cand = Object.keys(idx).filter((x) => { const t = x.split(' '); return t.length >= 2 && t.every((w) => tk.includes(w)); });
+    const cats = [...new Set(cand.map((x) => idx[x]))];
+    if (cand.length && cats.length === 1) return cats[0];
+  }
+  return null;
+}
+function reglaCat_(categoria) {
+  const c = norm_(categoria);
+  const genero = /\bmixto\b/.test(c) ? 'mixto' : /\bdamas?\b/.test(c) ? 'damas' : /\bcaballeros?\b/.test(c) ? 'caballeros' : '';
+  const txt = String(categoria);
+  let m = txt.match(/\+\s*(\d+)/) || txt.match(/suma\s*(\d+)/i);
+  if (m) return { genero, suma: Number(m[1]) };
+  m = txt.match(/(\d+)\s*(?:°|º|ª|va|ma|ta|ra|da|a\b)/i) || txt.match(/(\d+)/);
+  if (m) return { genero, cat: Number(m[1]) };
+  return null;
+}
+function controlCategoria_(categoria, j1, j2) {
+  try {
+    const r = reglaCat_(categoria);
+    if (!r || !r.genero) return {};
+    const L = listadoCat_();
+    const faltan = [], datos = [];
+    [j1, j2].forEach((j) => {
+      let cat = null, esDama = false;
+      if (r.genero === 'damas') { cat = buscarCat_(L, 'DAMAS', j); esDama = true; }
+      else {
+        cat = buscarCat_(L, 'CABALLEROS', j);
+        if (!cat) { cat = buscarCat_(L, 'DAMAS', j); esDama = !!cat; }
+      }
+      if (!cat) { faltan.push(j); return; }
+      const ef = (esDama && r.genero !== 'damas') ? cat + 2 : cat;
+      datos.push({ j, cat, ef, esDama });
+    });
+    const cuenta = (x) => x.cat + 'ª' + (x.esDama && r.genero !== 'damas' ? ' de damas (juega como ' + x.ef + 'ª)' : '');
+    const pie = ' Si creés que es un error, escribí a alguno de los números que figuran en el flyer.';
+    if (r.suma) {
+      if (!faltan.length) {
+        const s = datos[0].ef + datos[1].ef;
+        if (s < r.suma) return { bloquea: 'No se pueden inscribir en ' + categoria + ': según el listado de categorías, ' + datos[0].j + ' es ' + cuenta(datos[0]) + ' y ' + datos[1].j + ' es ' + cuenta(datos[1]) + '; suman ' + s + ' y la categoría pide ' + r.suma + ' o más.' + pie };
+      }
+    } else {
+      const mal = datos.filter((x) => x.ef < r.cat);
+      if (mal.length) return { bloquea: 'No se pueden inscribir en ' + categoria + ': según el listado de categorías, ' + mal.map((x) => x.j + ' es ' + cuenta(x)).join(' y ') + ', y no puede bajar a esta categoría.' + pie };
+    }
+    return faltan.length ? { marca: 'Consultar: no figura en el listado: ' + faltan.join(', ') } : {};
+  } catch (e) {
+    console.error(e);
+    return { marca: 'Consultar: no se pudo revisar la categoría' };
+  }
 }
