@@ -673,7 +673,8 @@ function sugerencia_(d) {
 /* ---------- Control de categoría (planilla LISTADO POR CATEGORÍA) ----------
    Categoría simple (ej. "8° Caballeros", "Mixto 8va"): cada jugador tiene que ser de esa categoría o de una más baja (puede subir, no bajar).
    Suma (ej. "Damas +13", "Suma 9 Damas"): la suma de las dos categorías tiene que dar ese número o más.
-   Mujeres en categorías de caballeros (o mixto): su categoría cuenta 2 más (una 6ª de damas juega como 8ª).
+   Mujeres en categorías de caballeros: su categoría cuenta 2 más (una 6ª de damas juega como 8ª).
+   Damas: un jugador que figura en caballeros no se puede anotar. Mixto (ej. Mixto 8va): una dama y un caballero, los dos de esa categoría exacta.
    Si no cumple: no deja inscribir. Si un jugador no figura en el listado: deja inscribir y lo marca en la columna "control". */
 const LISTADO_ID = '1yipGD_RIFxDADvHwo6_PXbWgfJjjQCQDaHqNNKL-y9w';
 function listadoCat_() {
@@ -743,6 +744,29 @@ function controlCategoria_(categoria, j1, j2) {
     const r = reglaCat_(categoria);
     if (!r || !r.genero) return {};
     const L = listadoCat_();
+    const otra = ' Elegí la categoría que corresponde o buscá el torneo de tu categoría.';
+    /* Damas: si un jugador figura en el listado de caballeros, no se puede anotar */
+    if (r.genero === 'damas') {
+      const varones = [j1, j2].filter((j) => !buscarCat_(L, 'DAMAS', j) && buscarCat_(L, 'CABALLEROS', j));
+      if (varones.length) return { bloquea: 'Te estás anotando en una categoría que no corresponde: ' + categoria + ' es de damas y ' + varones.join(' y ') + (varones.length > 1 ? ' figuran' : ' figura') + ' como caballero' + (varones.length > 1 ? 's' : '') + ' en el listado de categorías.' + otra };
+    }
+    /* Mixto: sí o sí una dama y un caballero, los dos de la categoría exacta (Mixto 8va: una 8ª dama y un 8° caballero) */
+    if (r.genero === 'mixto' && r.cat) {
+      const ps = [j1, j2].map((j) => {
+        const c = buscarCat_(L, 'CABALLEROS', j), d = buscarCat_(L, 'DAMAS', j);
+        return { j, c, d };
+      });
+      const conocidos = ps.filter((p) => p.c || p.d);
+      const malCat = conocidos.filter((p) => (p.c || p.d) !== r.cat);
+      if (malCat.length) return { bloquea: 'Te estás anotando en una categoría que no corresponde: ' + categoria + ' es solo para ' + r.cat + 'ª (una dama y un caballero de ' + r.cat + 'ª), y según el listado de categorías ' + malCat.map((p) => p.j + ' es ' + (p.c || p.d) + 'ª de ' + (p.c ? 'caballeros' : 'damas')).join(' y ') + '.' + otra };
+      if (conocidos.length === 2) {
+        const damas = ps.filter((p) => p.d && !p.c).length, cabs = ps.filter((p) => p.c && !p.d).length;
+        if (damas === 2 || cabs === 2) return { bloquea: 'Te estás anotando en una categoría que no corresponde: ' + categoria + ' es una pareja mixta (una dama y un caballero) y los dos figuran como ' + (damas === 2 ? 'damas' : 'caballeros') + ' en el listado de categorías.' + otra };
+        return {};
+      }
+      const faltanM = ps.filter((p) => !p.c && !p.d).map((p) => p.j);
+      return { marca: 'Consultar: no figura en el listado: ' + faltanM.join(', ') };
+    }
     const faltan = [], datos = [];
     [j1, j2].forEach((j) => {
       let cat = null, esDama = false;
