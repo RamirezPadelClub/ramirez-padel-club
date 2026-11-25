@@ -1014,7 +1014,7 @@ body.mc-abierto{overflow:hidden}
         res.innerHTML+='<div class="acciones"><button type="button" class="btn verde" data-cerrar>Cerrar</button></div>';
         form.hidden=true;res.hidden=false;cargar();
       }else{
-        var m={duplicado:(j.jugador||'Ese jugador')+' ya está inscripto en esta categoría.',iguales:'Los dos jugadores no pueden ser la misma persona.',antes:'La inscripción todavía no abrió.',pronto:'La inscripción todavía no abrió.',cerrada:'La inscripción ya cerró.',datos:'Revisá los datos: apellido y nombre de los dos y un WhatsApp.',categoria:'Elegí una categoría.'}[j.error]||'No se pudo inscribir. Probá de nuevo.';
+        var m={duplicado:(j.jugador||'Ese jugador')+' ya está inscripto en esta categoría.',iguales:'Los dos jugadores no pueden ser la misma persona.',antes:'La inscripción todavía no abrió.',pronto:'La inscripción todavía no abrió.',cerrada:'La inscripción ya cerró.',datos:'Revisá los datos: apellido y nombre de los dos y un WhatsApp.',categoria:'Elegí una categoría.',cat_listado:j.mensaje}[j.error]||'No se pudo inscribir. Probá de nuevo.';
         err.textContent=m;err.hidden=false;
       }
     }).catch(function(){err.textContent='No se pudo conectar. Revisá la conexión y probá de nuevo.';err.hidden=false})
