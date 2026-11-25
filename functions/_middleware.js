@@ -1,5 +1,6 @@
 // Links propios por sección y por torneo, con su vista previa (título, texto e imagen) al compartirlos.
 // /categorias, /torneos, /clases, /buffet, /fotos, /reservas  y  /torneo/<id>  (id = data-id de la tarjeta)
+// Links propios de un "Ver torneo" de /masters (ej. /8cab): abren esa vista con el flyer del torneo en la vista previa.
 // Devuelve la página principal con las etiquetas og cambiadas; en el navegador abre la sección o el torneo.
 const SITIO = 'https://ramirezpadelclub.com.ar';
 const SECCIONES = {
@@ -10,6 +11,8 @@ const SECCIONES = {
   fotos: ['Fotos', 'Los álbumes de cada torneo y cómo se vive el complejo.'],
   reservas: ['Reservas', 'Reservá tu cancha por WhatsApp. Dos canchas techadas de césped sintético.'],
 };
+/* camino → [data-id de la tarjeta del torneo, # de la vista en /masters] */
+const VER = { '8cab': ['8cab-2729nov', '8cab'] };
 const limpio = t => String(t).replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ' ').trim();
 const attr = t => String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
@@ -27,6 +30,8 @@ async function armar(ctx) {
   if (SECCIONES[sec]) {
     const [t, d] = SECCIONES[sec];
     dato = { hash: sec, titulo: t + ' · Ramirez Padel Club', desc: d, img: '/img/og/' + sec + '.jpg', w: 1200, h: 630, link: '/' + sec };
+  } else if (VER[sec]) {
+    dato = { torneo: VER[sec][0], ver: sec, vista: VER[sec][1] };
   } else if (camino.startsWith('/torneo/')) {
     const id = decodeURIComponent(url.pathname.split('/')[2] || '').toLowerCase();
     if (!/^[a-z0-9-]+$/.test(id)) return next();
@@ -52,7 +57,21 @@ async function armar(ctx) {
       if (f) { img = '/' + f[1].replace(/^\/+/, ''); w = +f[2]; h = +f[3]; }
     }
     const fechaCorta = fecha ? fecha.charAt(0) + fecha.slice(1).toLowerCase() : '';
+    const ver = dato.ver, vista = dato.vista;
     dato = { hash: 'torneos', torneo: id, titulo: tit + (fecha ? ' · ' + fechaCorta : ''), desc: [cats, lugar, 'Inscripción y toda la info en la página.'].filter(Boolean).join(' · '), img, w, h, link: '/torneo/' + id };
+    if (ver) {
+      const pm = await env.ASSETS.fetch(new Request(new URL('/masters', url), { headers: request.headers }));
+      if (!pm.ok) return next();
+      html = await pm.text();
+      dato.ver = ver; dato.vista = vista; dato.link = '/' + ver;
+      dato.desc = [cats, lugar, 'Zonas, horarios, cuadro y resultados en vivo.'].filter(Boolean).join(' · ');
+      // la página del torneo no trae todas las etiquetas og: se agregan para que set() las complete
+      const faltan = ['og:url', 'og:image:secure_url', 'og:image:type', 'og:image:width', 'og:image:height', 'og:image:alt', 'twitter:card']
+        .filter(p => !new RegExp('<meta (?:property|name)="' + p.replace(/[:]/g, '\\:') + '"').test(html))
+        .map(p => '<meta ' + (p.startsWith('twitter') ? 'name' : 'property') + '="' + p + '" content="">').join('');
+      html = html.replace(/<\/title>/, '</title>' + faltan);
+      if (!/<link rel="canonical"/.test(html)) html = html.replace(/<\/title>/, '</title><link rel="canonical" href="">');
+    }
   }
 
   const abs = SITIO + dato.img, link = SITIO + dato.link;
@@ -69,7 +88,8 @@ async function armar(ctx) {
   set('twitter:card', dato.w > dato.h ? 'summary_large_image' : 'summary');
   html = html.replace(/<link rel="canonical" href="[^"]*">/, '<link rel="canonical" href="' + attr(link) + '">');
   // en el navegador: las secciones ya abren por la dirección (/categorias); el torneo pasa a /torneos y se marca su tarjeta
-  const ir = dato.torneo ? '<script>(function(){try{window.__irTorneo=' + JSON.stringify(dato.torneo) +
+  const ir = dato.ver ? '<script>if(location.hash!=="#' + dato.vista + '")history.replaceState(null,"","/' + dato.ver + '#' + dato.vista + '")</script>' :
+    dato.torneo ? '<script>(function(){try{window.__irTorneo=' + JSON.stringify(dato.torneo) +
     ';history.replaceState(null,"","/torneos")}catch(e){location.replace("/#torneos")}})()</script>' : '';
   if (ir) html = html.replace(/<head>/i, '<head>' + ir);
 
