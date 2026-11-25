@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es">
-<head><script>if(location.hostname==='ramirezpadelclub.com.ar')location.replace('https://ramirezpadelclub.com.ar'+location.pathname+location.search+location.hash);else if(!/^#(master|8damas)$/.test(location.hash))location.replace('/#torneos')</script>
+<head><script>if(location.hostname==='ramirezpadelclub.com.ar')location.replace('https://ramirezpadelclub.com.ar'+location.pathname+location.search+location.hash);else if(!/^#(master|8damas|master27)$/.test(location.hash))location.replace('/#torneos')</script>
 <meta charset="utf-8"><meta name="format-detection" content="telephone=no,address=no,email=no,date=no">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
@@ -282,12 +282,17 @@ var URL_DATOS='https://script.google.com/macros/s/AKfycby6BVoENl5ojrVDm1smQngTQ7
 var DEMO=/[?&]demo\b/.test(location.search);
 var R=window.Resultados;
 var TORNEOS={
-  master:{id:'master-2022nov',tema:'master',cats:[['6° Damas','6° DAMAS'],['5° Damas','5° DAMAS'],['7° Caballeros','7° CABALLEROS'],['Suma 8 Caballeros','+8 CABALLEROS']]},
-  '8damas':{id:'8dam-2022nov',tema:'conj',cats:[['8° Damas','8° DAMAS']]}
+  master:{id:'master-2022nov',tema:'master',finde:'2022',fecha:'20 · 21 · 22 NOV',cats:[['6° Damas','6° DAMAS'],['5° Damas','5° DAMAS'],['7° Caballeros','7° CABALLEROS'],['Suma 8 Caballeros','+8 CABALLEROS']]},
+  '8damas':{id:'8dam-2022nov',tema:'conj',finde:'2022',fecha:'20 · 21 · 22 NOV',cats:[['8° Damas','8° DAMAS']]},
+  master27:{id:'master-2729nov',tema:'master',finde:'2729',fecha:'27 · 28 · 29 NOV',cats:[['7° Damas','7° DAMAS'],['Suma 9 Damas','+9 DAMAS'],['6° Caballeros','6° CABALLEROS'],['5° Caballeros','5° CABALLEROS']]}
 };
 var SEDES={complejo:{n:'RAMÍREZ PÁDEL CLUB',c:'CRPC',logo:'img/logo-complejo-256.png'},ruta:{n:'LA RUTA PÁDEL',c:'RUTA',logo:'img/logo-laruta-fondo-256.png'},racing:{n:'CLUB RACING',c:'RACING',logo:'img/logo-racing-256.png'}};
 /* Lista oficial del Máster (doc "MÁSTER FINALS", con los puntos de cada jugador). Se usa mientras la planilla no tenga inscriptos. */
 var LISTAS={
+'7° Damas':[['Soto Mariana',4250,'Castro Yamila',2500],['Blum Soledad',3900,'Horst Karen',2200],['Garayalde Sabrina',3550,'Alfaro Magdalena',900],['Schneider Amalia',3450,'Aranda Florencia',1800],['Tiraboschi Martina',3400,'Taborda Evangelina',900],['Tiraboschi Yamila',3150,'Ehrlich Cintia',2000],['Jozami Melissa',3050,'Michelli Abril',1900],['Bernachea Jorgelina',3050,'Heffele Elena',2550],['Mernez Yanina',2950,'Dorato Juliana',2400],['Herman Natalia',2800,'Herbel Victoria',1150],['Gagioli María',2350,'Webber Tamara',1900],['Gallegos Melanie',2300,'Lorenzatto Daniela',1550]],
+'Suma 9 Damas':[['Arredondo Yanina',5600,'La Barba Débora',2050],['Riffel Jesica',5300,'Uhrich Paula',2350],['Mingiaca Mercedes',4250,'Jozami María Sol',1200],['Markel Sofía',4200,'Siebenlist Paulina',1750],['Sánchez Estefanía',3800,'González Micaela',2040],['Lampertti Ornela',3450,'Kramer Karen',1950],['Gasparri Valentina',2750,'Markel Antonella',1300],['Barquín Bárbara',2650,'Cabrera Camila',2300],['Zapata Selene',2650,'Graf Angelina',450],['Reh Eleonora',1600,'Velázquez Pamela',950],['Cuestas Ximena',1600,'Ramos Soledad',900]],
+'6° Caballeros':[['Villarruel Gonzalo',6250,'Frank Alan',1200],['Moya José',5500,'Schmidt Emanuel',1000],['Markel Marcos',4000,'Tucksewich Diego',2200],['Segurado Ramiro',3900,'Cordero Alberto',900],['Gerlach Diego',3650,'Jaime Emir',2340],['Gieco Octavio',3650,'Retamar Tomás',2450],['Tiraboschi Denis',3550,'Cardenal Santino',2600],['Fernández Germán',3300,'Carrizo Enzo',1900],['Berón Mario',3250,'Bill Gastón',2850],['Romero Paolo',3210,'Dietz Maximiliano',2700],['Siebenhar Braian',3150,'González Alem Alejandro',600],['Müller Diego',3100,'Grinovero Santiago',1000]],
+'5° Caballeros':[['Gaitán Joaquín',5250,'Arnau Alexis',2770],['Azcárate José',5100,'Gallo Brian',2480],['Godoy Gerónimo',4600,'Reichel Francisco',2100],['Eichman Gonzalo',4450,'Silva Mauro',2850],['Gloria Damián',4450,'Pividori Santiago',700],['Alonso Nahir',4050,'Neif Facundo',900],['Martínez Diego',4000,'Goncebatt Mirko',1150],['Cavagna Cristian',3650,'Dure Yamil',1350],['Gareis Maximiliano',3650,'Pfarher Martín',2300],['Cavagna Rafael',3500,'Grandoli José',1250],['Borgert Nicolás',3350,'Lange Lautaro',1700],['Genovesio Lucas',3250,'Campos Alejandro',1450]],
 '6° Damas':[['Albornoz Daniela',5650,'Cavallo Valentina',2850],['Sterzer Ivana',4600,'Muñoz Nilda',2250],['Roldán Lucía',4350,'Truffer Valentina',800],['Alzugaray Jacqueline',4050,'De Angeli Candela',600],['Sigvardt Julia',3900,'Heffele Pamela',2600],['Seiffert Florencia',3750,'Gabirondo Yésica',450],['Aguilar Vanesa',3700,'Tonutti Camila',2950],['Urchueguia Alfonsina',3600,'Weber Ivana',1750],['Olmedo Ileana',3550,'Herman Nancy',2200],['Sigvardt Luz',3200,'Tonutti Soledad',2950],['Erbes Martina',3100,'Clementin Flavia',2600],['Ramallo Silvina',3050,'Passadore Daiana',900]],
 '5° Damas':[['Marinelli Marianela',5450,'González Marianela',1400],['Riffel Jésica',5400,'Heintze Paola',1300],['Ronco Sara',4950,'La Barba Débora',2600],['Kramer Karen',4700,'Müller Melanie',2500],['Rodríguez Marianela',3650,'Ringlofer Patricia',2450],['Pissano Antonella',3450,'Lorenzatto Gabriela',2800],['Gelroth Verónica',3400,'Graf Angelina',2400],['Márquez Dariana',3400,'Esquivel Mónica',1500],['Mingiaca Mercedes',3350,'Reh Eleonora',2300],['Martínez Karen',3300,'Vergara María',300],['Markel Antonella',3250,'Sánchez Estefanía',750],['Villanueva Ana',3150,'Valle Zuazaga',1750]],
 '7° Caballeros':[['González Augusto',4650,'Gottig Adrián',1800],['Bolzan Gastón',4150,'Zárate Federico',2250],['Schreiner Eduardo',4150,'Schreiner Francis',1600],['Markel Damián',3950,'Nievas Leonel',1750],['Castro Maximiliano',3950,'Balbi Antonio',2500],['Dalinger Facundo',3900,'Friss Diego',1600],['Folmer Gonzalo',3500,'Morales Facundo',1850],['Riquel David',3100,'Mantovani Andrés',2100],['Randazzo Diego',2850,'Mayer Matías',1650],['Rojas Amilcar',2750,'Eurich Mauro',2200],['Folmer Mateo',2650,'Jeckeln Joaquín',1450],['Tablada Gustavo',2650,'Eckhardt Hernán',1100]],
@@ -297,6 +302,9 @@ var LISTAS={
 /* Inscriptas del 8° Damas */
 var NOMBRES={'8° Damas':['Godoy Debora – Richard Victoria','Reichel Martina – García Candela','Cattaneo Sandra – Holman Paola','Del Prado Rocio – Maak Elizabeth','Estebenet Sandra – Costa Viviana','Romero Fabiana – Vittori Andrea','Lell Naara – Aguilera Karen','Quintana Maria – Coceres Alejandra','Catalano Karen – Tiraboschi Karen','Nievas Candela – Nievas Tatiana']};
 var ZONAS_MASTER=[['A',[1,8,12]],['B',[2,7,11]],['C',[3,6,10]],['D',[4,5,9]]];
+/* Zonas con otro armado o con el día ya definido (Máster 27-29 NOV) */
+var ZONAS_CAT={'Suma 9 Damas':[['A',[1,6,8,10]],['B',[2,5,7,9]],['C',[3,4,11]]]};
+var DIA_ZONA={'master-2729nov':{'Suma 9 Damas':{A:'Sábado',B:'Sábado',C:'Viernes'},'*':{A:'Sábado',B:'Sábado',C:'Sábado',D:'Viernes'}}};
 
 var datos=null,vista=null,cat=0,tab='inscriptos',dia=null;
 var $=function(id){return document.getElementById(id)};
@@ -408,8 +416,9 @@ function zonas(T,i){
   if(!ks.length){
     var L=LISTAS[c.categoria];
     if(!L)return vacio('Las zonas se publican cuando cierre el armado del torneo.');
-    return '<div class="zonas">'+ZONAS_MASTER.map(function(z){
-      return '<div class="caja zona lista zm"><span class="etq">Zona '+z[0]+'</span><ol>'+z[1].map(function(n){var r=L[n-1];
+    var DZ=DIA_ZONA[T.id]?(DIA_ZONA[T.id][c.categoria]||DIA_ZONA[T.id]['*']):null;
+    return '<div class="zonas">'+(ZONAS_CAT[c.categoria]||ZONAS_MASTER).map(function(z){
+      return '<div class="caja zona lista zm"><span class="etq">Zona '+z[0]+(DZ&&DZ[z[0]]?' · '+DZ[z[0]]:'')+'</span><ol>'+z[1].filter(function(n){return L[n-1]}).map(function(n){var r=L[n-1];
         return '<li><span class="n">'+n+'</span><span><span class="j">'+esc(r[0])+'<span class="pts">'+r[1]+' P</span></span><span class="sep">–</span><span class="j">'+esc(r[2])+'</span></span></li>'}).join('')+'</ol></div>';
     }).join('')+'</div><p class="zm-nota">El número es el preclasificado de cada pareja. Horarios y resultados se publican cuando se arme el cronograma.</p>';
   }
@@ -431,14 +440,14 @@ function difTxt(d){return d>0?'+'+d:d<0?'−'+(-d):'0'}
    en cada sede tantos partidos a la vez como canchas. Clave: categoría + número de partido. */
 function estadosFinde(){
   var xs=[],hm=function(h){var m=String(h||'').match(/(\d+):(\d+)/);if(!m)return 9999;var v=+m[1]*60+ +m[2];return v<360?v+1440:v};
-  Object.keys(TORNEOS).forEach(function(k){var TT=TORNEOS[k];TT.cats.forEach(function(c,i){var cd=catDatos(TT,i),C=R.preparar(cd);C.partidos.forEach(function(p){xs.push({k:cd.categoria+'|'+p.id,sede:p.sede||'complejo',dia:p.dia,hora:p.hora,id:p.id,jugado:p._sets.length>0})})})});
+  Object.keys(TORNEOS).filter(function(k){return TORNEOS[k].finde===TORNEOS[vista].finde}).forEach(function(k){var TT=TORNEOS[k];TT.cats.forEach(function(c,i){var cd=catDatos(TT,i),C=R.preparar(cd);C.partidos.forEach(function(p){xs.push({k:cd.categoria+'|'+p.id,sede:p.sede||'complejo',dia:p.dia,hora:p.hora,id:p.id,jugado:p._sets.length>0})})})});
   xs.sort(function(a,b){return hm(a.hora)-hm(b.hora)||(+a.id||0)-(+b.id||0)});
   var es=R.estados(xs),m={};xs.forEach(function(x,i){m[x.k]=es[i]});return m;
 }
 function cronograma(T){
   var todos=[];
   /* El cronograma es del fin de semana completo: Máster y 8° Damas juntos */
-  Object.keys(TORNEOS).forEach(function(k){var TT=TORNEOS[k];TT.cats.forEach(function(c,i){var C=R.preparar(catDatos(TT,i));C.partidos.forEach(function(p){todos.push({C:C,p:p,cat:c[1],t:TT})})})});
+  Object.keys(TORNEOS).filter(function(k){return TORNEOS[k].finde===T.finde}).forEach(function(k){var TT=TORNEOS[k];TT.cats.forEach(function(c,i){var C=R.preparar(catDatos(TT,i));C.partidos.forEach(function(p){todos.push({C:C,p:p,cat:c[1],t:TT})})})});
   if(!todos.length){$('dias').hidden=true;return vacio('El cronograma se publica cuando estén armadas las zonas.')}
   var orden=['viernes','sábado','sabado','domingo'],dias=[];
   todos.forEach(function(x){var d=(x.p.dia||'').trim();if(d&&dias.indexOf(d)<0)dias.push(d)});
@@ -478,7 +487,7 @@ function pintar(){
   document.querySelectorAll('[data-cat]').forEach(function(b){b.setAttribute('aria-pressed',String(+b.dataset.cat===cat))});
   document.querySelectorAll('[data-tab]').forEach(function(b){b.setAttribute('aria-selected',String(b.dataset.tab===tab))});
   $('pills').hidden=tab==='crono'||T.cats.length<2;
-  $('subM').textContent=(tab==='crono'?'CRONOGRAMA':T.cats[cat][1])+' · 20 · 21 · 22 NOV';
+  $('subM').textContent=(tab==='crono'?'CRONOGRAMA':T.cats[cat][1])+' · '+(T.fecha||'');
   if(tab!=='crono')$('dias').hidden=true;
   if(datos===null){$('panel').innerHTML=vacio('Cargando…');return}
   $('panel').innerHTML=tab==='inscriptos'?inscriptos(T,cat):tab==='zonas'?zonas(T,cat):tab==='crono'?cronograma(T):cuadro(T,cat);
