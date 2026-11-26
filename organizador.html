@@ -82,6 +82,17 @@ a.btn{display:block;text-align:center;text-decoration:none}
 .sede[aria-pressed="true"]{border-color:var(--green);box-shadow:0 0 0 2px var(--green);background:var(--soft)}
 .btn.borrar{margin-top:10px;background:transparent;color:#e5484d;border:2px solid #e5484d;box-shadow:none}
 </style>
+<style id="movil">
+/* ===== Celular nativo (skill web-celular-nativa, 26/11/2026) ===== */
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+a,button,[role=button],summary,label{touch-action:manipulation}
+button,[role=button],.chips li,.filtros button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+button:not(:disabled),.btn,[role=button]{transition-property:transform,background-color,border-color,color,box-shadow,opacity}
+button:not(:disabled):active,.btn:active,[role=button]:active{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){button:active,.btn:active{transform:none}}
+img,video{max-width:100%}
+.p .ps span{overflow-wrap:anywhere}
+</style>
 </head>
 <body>
 <header class="bar"><img id="barLogo" src="img/logo-complejo.png" alt="Escudo"><div class="t"><b id="barT">Organizadores</b><small id="barS">Carga de resultados</small></div><button id="salir" hidden>Salir</button></header>

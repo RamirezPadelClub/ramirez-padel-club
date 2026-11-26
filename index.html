@@ -1,5 +1,6 @@
 <!doctype html><html lang="es"><head><script>if(location.hostname==='ramirezpadelclub.pages.dev')location.replace('https://ramirezpadelclub.com.ar'+location.pathname+location.search+location.hash)</script><meta charset=utf8><meta name="format-detection" content="telephone=no,address=no,email=no,date=no"><meta name="google-site-verification" content="XvOYWTEwAHaldKH7BwBF8n5pSmI9QNwHCzascK-G59k"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <title>Ramirez Padel Club · Pádel en General Ramírez, Entre Ríos</title>
+<meta name="theme-color" content="#024A29">
 <meta name="description" content="Dos canchas techadas de césped sintético, buffet abierto todo el día, clases y torneos en General Ramírez, Entre Ríos. Reservá tu turno por WhatsApp.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ramirez Padel Club">
@@ -22,12 +23,32 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png?v=2">
 <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192.png?v=2">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=2">
+<style id="movil">
+/* ===== Celular nativo (skill web-celular-nativa, 26/11/2026) ===== */
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+a,button,[role=button],summary,label{touch-action:manipulation}
+button,[role=button],.chips li,.filtros button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+button:not(:disabled),.btn,[role=button]{transition-property:transform,background-color,border-color,color,box-shadow,opacity}
+button:not(:disabled):active,.btn:active,[role=button]:active{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){button:active,.btn:active{transform:none}}
+img,video{max-width:100%}
+
+/* nombres de jugadores: nunca cortados con "…", bajan de renglón */
+.vt-zona li,.rs-p .ps span,.vt-fila .ps span{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere}
+.rs-p .ps .pts,.vt-fila .ps .pts{white-space:nowrap}
+.rs-zona table td:nth-child(2),.rs-zona td.n{overflow-wrap:anywhere}
+.vt-llave .p span:first-child{min-width:0;overflow-wrap:anywhere}
+/* visores a la altura visible real del celu */
+#fly-visor img{max-height:calc(100dvh - 90px)}
+.visor img{max-height:calc(100dvh - 140px)}
+.menu-cel{overscroll-behavior:contain}dialog.insc{max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain}
+</style>
 </head><body>
 
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Manrope:wght@400;500;700;800&display=swap">
-<link rel="stylesheet" href="anim.css">
+<link rel="stylesheet" href="anim.css?v=20261126a">
 <style>
 /* Layout: sitio en pestañas (Inicio, El complejo, Fotos, Reservas) + Pádel Tour aparte; verde y blanco del escudo */
 :root{
@@ -56,7 +77,7 @@ a{color:inherit}
 .tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-left:auto;min-width:0}
 .tabs::-webkit-scrollbar{display:none}
 .tabs a{flex:none;text-decoration:none;font-weight:700;font-size:14px;padding:9px 14px;border-radius:999px;color:rgba(255,255,255,.8);white-space:nowrap}
-.tabs a:hover{color:var(--blanco);background:rgba(255,255,255,.08)}
+@media (hover:hover) and (pointer:fine){.tabs a:hover{color:var(--blanco);background:rgba(255,255,255,.08)}}
 .tabs a[aria-current="page"]{background:var(--blanco);color:var(--verde-osc)}
 .tabs a.tour{border:1.5px solid rgba(255,255,255,.5);color:var(--blanco)}
 @media (max-width:720px){
@@ -72,7 +93,7 @@ a{color:inherit}
 /* Botones */
 .botones{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 .btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 22px;border-radius:999px;font-weight:800;text-decoration:none;font-size:15px;transition:transform .15s;border:0;font-family:var(--texto);cursor:pointer}
-.btn:hover{transform:translateY(-2px)}
+@media (hover:hover) and (pointer:fine){.btn:hover{transform:translateY(-2px)}}
 .btn.blanco{background:var(--blanco);color:var(--verde-osc)}
 .btn.borde{border:1.5px solid rgba(255,255,255,.75);color:var(--blanco)}
 .btn.verde{background:var(--verde);color:var(--blanco)}
@@ -100,7 +121,7 @@ a{color:inherit}
 .atajos{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .atajo{position:relative;display:block;aspect-ratio:3/4;border-radius:20px;overflow:hidden;text-decoration:none;color:var(--blanco);background:var(--verde-osc);max-width:100%}
 .atajo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
-.atajo:hover img{transform:scale(1.05)}
+@media (hover:hover) and (pointer:fine){.atajo:hover img{transform:scale(1.05)}}
 .atajo div{position:absolute;inset:auto 0 0;padding:18px;background:linear-gradient(transparent,rgba(2,40,22,.92) 45%)}
 .atajo h3{font-size:24px}
 .atajo span{font-size:13px;opacity:.85}
@@ -130,7 +151,7 @@ section.blanca{background:var(--blanco)}
 .extra h3{font-size:22px;color:var(--verde-osc)}
 .extra p{color:var(--tinta-2);font-size:15px}
 .aviso-clases{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:40px;padding:18px 22px;border-radius:16px;background:var(--verde-claro);color:var(--verde-osc);text-decoration:none;font-size:16px}
-.aviso-clases:hover{background:#d8eadf}
+@media (hover:hover) and (pointer:fine){.aviso-clases:hover{background:#d8eadf}}
 .clases-top{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center;margin-bottom:40px}
 .clases-foto{width:100%;height:auto;max-width:100%;aspect-ratio:1/1;object-fit:cover;object-position:center 62%;border-radius:20px}
 .profes{display:grid;grid-template-columns:1fr 1fr;gap:20px}
@@ -298,7 +319,7 @@ dialog.insc::backdrop{background:rgba(16,35,26,.55)}
 .galeria{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .galeria figure{margin:0;position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:var(--verde-claro);min-width:0;max-width:100%;cursor:zoom-in}
 .galeria img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
-.galeria figure:hover img{transform:scale(1.04)}
+@media (hover:hover) and (pointer:fine){.galeria figure:hover img{transform:scale(1.04)}}
 .galeria figcaption{position:absolute;left:10px;bottom:10px;background:rgba(2,74,41,.88);color:var(--blanco);font-size:13px;font-weight:700;padding:5px 11px;border-radius:999px}
 @media (max-width:760px){.galeria{grid-template-columns:1fr 1fr;gap:8px}}
 .galeria figcaption,.visor figcaption{display:none}
@@ -318,7 +339,7 @@ dialog.insc::backdrop{background:rgba(16,35,26,.55)}
 .albumes-tit span{font-size:13px;color:var(--tinta-2)}
 .albumes{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
 .album-card{display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;text-decoration:none;color:inherit;border-radius:18px;overflow:hidden;background:var(--blanco);border:1px solid var(--linea);transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,opacity .7s ease}
-.album-card:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(2,40,22,.14)}
+@media (hover:hover) and (pointer:fine){.album-card:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(2,40,22,.14)}}
 .album-card:focus-visible{outline:3px solid var(--verde);outline-offset:3px}
 .album-portada{position:relative;aspect-ratio:1;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:2px;background:var(--verde-osc)}
 .album-portada img{width:100%;height:100%;object-fit:cover;display:block}
@@ -334,7 +355,7 @@ dialog.insc::backdrop{background:rgba(16,35,26,.55)}
 .album-grilla button{border:0;padding:0;cursor:zoom-in;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--verde-claro)}
 .album-grilla button:focus-visible{outline:3px solid var(--verde);outline-offset:2px}
 .album-grilla img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
-.album-grilla button:hover img{transform:scale(1.05)}
+@media (hover:hover) and (pointer:fine){.album-grilla button:hover img{transform:scale(1.05)}}
 .visor .bajar{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(12px,env(safe-area-inset-left,0px));display:inline-flex;align-items:center;gap:8px;background:var(--verde);color:var(--blanco);border-radius:999px;padding:0 16px;height:46px;font-weight:800;font-size:14px;text-decoration:none}
 .visor .num{position:absolute;top:calc(env(safe-area-inset-top,0px) + 24px);left:50%;transform:translateX(-50%);color:var(--blanco);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums;opacity:.85}
 @media (max-width:600px){.album-grilla{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.album-grilla button{border-radius:6px}}
@@ -365,7 +386,7 @@ dialog.insc::backdrop{background:rgba(16,35,26,.55)}
 .tira{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
 .tira a{display:block;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:var(--verde-claro)}
 .tira img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
-.tira a:hover img{transform:scale(1.05)}
+@media (hover:hover) and (pointer:fine){.tira a:hover img{transform:scale(1.05)}}
 .tira-cab{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:24px}
 .tira-cab .cab{margin-bottom:0}
 @media (max-width:760px){.tira{grid-template-columns:repeat(3,1fr);gap:8px}}
@@ -375,7 +396,7 @@ footer .in{padding-block:24px;display:flex;flex-wrap:wrap;justify-content:space-
 footer img{width:42px;height:42px;border-radius:50%;background:var(--blanco);padding:2px}
 footer .firma{flex-basis:100%;border-top:1px solid rgba(255,255,255,.14);padding-top:12px;font-size:11.5px;color:rgba(255,255,255,.6);text-align:center}
 html[data-solo] .tabs,html[data-solo] .vt-volver,html[data-solo] footer a[href="tour.html"]{display:none!important}html[data-solo] .marca{pointer-events:none}
-footer .firma a{color:inherit;text-decoration:none}footer .firma a:hover{text-decoration:underline}
+footer .firma a{color:inherit;text-decoration:none}@media (hover:hover) and (pointer:fine){footer .firma a:hover{text-decoration:underline}}
 
 /* Mejoras auditoría 18/11 */
 ::selection{background:#bfe6cd;color:#033d22}
@@ -395,7 +416,7 @@ footer a,.firma a{display:inline-block;padding:14px 4px;margin:-14px -4px}
 @media (max-width:760px){.canchas{grid-template-columns:1fr}}
 /* Menú del celular */
 .burger{display:none;margin-left:auto;width:44px;height:44px;border:0;border-radius:12px;background:rgba(255,255,255,.1);color:var(--blanco);align-items:center;justify-content:center;cursor:pointer;flex:none}
-.burger:hover{background:rgba(255,255,255,.18)}
+@media (hover:hover) and (pointer:fine){.burger:hover{background:rgba(255,255,255,.18)}}
 .menu-cel{position:fixed;inset:0;z-index:50;background:var(--verde-osc);color:var(--blanco);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 8px) 20px calc(env(safe-area-inset-bottom,0px) + 24px);overflow-y:auto;animation:mc-in .22s ease-out}
 .menu-cel[hidden]{display:none}
 @keyframes mc-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
@@ -1070,7 +1091,7 @@ body.mc-abierto{overflow:hidden}
 .ct-msj{margin:0;color:var(--tinta-2)}
 .ct-res{display:grid;gap:8px;max-width:520px;margin:-12px 0 26px}
 .ct-res button{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;width:100%;background:var(--blanco);border:1px solid var(--linea);border-radius:14px;padding:12px 16px;font:600 15px var(--texto);color:var(--tinta);cursor:pointer;min-height:48px}
-.ct-res button:hover{border-color:var(--verde)}
+@media (hover:hover) and (pointer:fine){.ct-res button:hover{border-color:var(--verde)}}
 .ct-res button small{font-weight:800;font-size:13px;color:var(--verde);white-space:nowrap}
 @media (max-width:560px){.ct-lista{padding:18px 16px}.ct-tit h3{font-size:22px}}
 </style>
@@ -1458,10 +1479,10 @@ window.addEventListener('resize',function(){if(window.innerWidth>720)cerrar()});
 </script>
 <style>
 .compartir{display:inline-flex;align-items:center;gap:7px;font:800 14px var(--texto);color:var(--verde);background:none;border:1.5px solid var(--linea);border-radius:999px;padding:9px 15px;cursor:pointer;min-height:40px;justify-self:start;width:max-content}
-.compartir:hover{border-color:var(--verde)}
+@media (hover:hover) and (pointer:fine){.compartir:hover{border-color:var(--verde)}}
 .torneo .compartir{padding:11px 16px}
 .portada-tab .compartir{color:#fff;border-color:rgba(255,255,255,.55);margin-top:6px}
-.portada-tab .compartir:hover{border-color:#fff}
+@media (hover:hover) and (pointer:fine){.portada-tab .compartir:hover{border-color:#fff}}
 .torneo.destacado{outline:3px solid var(--verde);outline-offset:4px;border-radius:18px;transition:outline-color 1.2s}
 .aviso-link{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--verde-osc);color:#fff;font:700 15px var(--texto);padding:12px 20px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:200}
 </style>
