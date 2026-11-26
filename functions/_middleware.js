@@ -1,5 +1,6 @@
 // Links propios por sección y por torneo, con su vista previa (título, texto e imagen) al compartirlos.
 // /categorias, /torneos, /clases, /buffet, /fotos, /reservas  y  /torneo/<id>  (id = data-id de la tarjeta)
+// /album/<id> (id de albumes.json; en el navegador queda /fotos?album=<id>, que también trae su vista previa)
 // Links propios de un "Ver torneo" de /masters (ej. /8cab): abren esa vista con el flyer del torneo en la vista previa.
 // Devuelve la página principal con las etiquetas og cambiadas; en el navegador abre la sección o el torneo.
 const SITIO = 'https://ramirezpadelclub.com.ar';
@@ -27,7 +28,11 @@ async function armar(ctx) {
   const camino = url.pathname.replace(/\/+$/, '').toLowerCase();
   let dato = null;
   const sec = camino.slice(1);
-  if (SECCIONES[sec]) {
+  if (camino.startsWith('/album/') || (sec === 'fotos' && url.searchParams.get('album'))) {
+    const id = decodeURIComponent(camino.startsWith('/album/') ? (url.pathname.split('/')[2] || '') : url.searchParams.get('album')).toLowerCase();
+    if (!/^[a-z0-9-]+$/.test(id)) return next();
+    dato = { album: id };
+  } else if (SECCIONES[sec]) {
     const [t, d] = SECCIONES[sec];
     dato = { hash: sec, titulo: t + ' · Ramirez Padel Club', desc: d, img: '/img/og/' + sec + '.jpg', w: 1200, h: 630, link: '/' + sec };
   } else if (VER[sec]) {
@@ -41,6 +46,20 @@ async function armar(ctx) {
   const base = await env.ASSETS.fetch(new Request(new URL('/', url), { headers: request.headers }));
   if (!base.ok) return next();
   let html = await base.text();
+
+  if (dato.album) {
+    const id = dato.album;
+    const ra = await env.ASSETS.fetch(new Request(new URL('/albumes.json', url)));
+    const lista = ra.ok ? await ra.json().catch(() => []) : [];
+    const a = (Array.isArray(lista) ? lista : []).find(x => x.id === id);
+    if (!a) return Response.redirect(SITIO + '/fotos', 302);
+    let img = '/img/og/album-' + id + '.jpg';
+    const og = await env.ASSETS.fetch(new Request(new URL(img, url), { method: 'HEAD' }));
+    if (!og.ok || !(og.headers.get('content-type') || '').startsWith('image/')) img = '/img/og/fotos.jpg';
+    dato = { hash: 'fotos', album: id, titulo: 'Fotos: ' + a.titulo + (a.grupo ? ' · ' + a.grupo : ''),
+      desc: (a.fotos || []).length + ' fotos del torneo. Buscá las tuyas y descargalas.' + (a.credito ? ' Fotos: ' + a.credito + '.' : ''),
+      img, w: 1200, h: 630, link: '/album/' + id };
+  }
 
   if (dato.torneo) {
     const id = dato.torneo;
@@ -88,7 +107,8 @@ async function armar(ctx) {
   set('twitter:card', dato.w > dato.h ? 'summary_large_image' : 'summary');
   html = html.replace(/<link rel="canonical" href="[^"]*">/, '<link rel="canonical" href="' + attr(link) + '">');
   // en el navegador: las secciones ya abren por la dirección (/categorias); el torneo pasa a /torneos y se marca su tarjeta
-  const ir = dato.ver ? '<script>if(location.hash!=="#' + dato.vista + '")history.replaceState(null,"","/' + dato.ver + '#' + dato.vista + '")</script>' :
+  const ir = dato.album ? '<script>try{history.replaceState(null,"","/fotos?album=' + dato.album + '")}catch(e){location.replace("/#album/' + dato.album + '")}</script>' :
+    dato.ver ? '<script>if(location.hash!=="#' + dato.vista + '")history.replaceState(null,"","/' + dato.ver + '#' + dato.vista + '")</script>' :
     dato.torneo ? '<script>(function(){try{window.__irTorneo=' + JSON.stringify(dato.torneo) +
     ';history.replaceState(null,"","/torneos")}catch(e){location.replace("/#torneos")}})()</script>' : '';
   if (ir) html = html.replace(/<head>/i, '<head>' + ir);
