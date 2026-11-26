@@ -1201,7 +1201,7 @@ body.mc-abierto{overflow:hidden}
     <div class="in">
       <a class="vt-volver" href="#fotos">← Todas las fotos</a>
       <div class="album-cab">
-        <div><p class="eyebrow" id="al-grupo"></p><h2 id="al-tit" style="color:var(--verde-osc)">Álbum</h2><p id="al-info"></p></div>
+        <div><p class="eyebrow" id="al-grupo"></p><h2 id="al-tit" style="color:var(--verde-osc)">Álbum</h2><p id="al-info"></p></div><div id="al-compartir"></div>
       </div>
       <div class="album-grilla" id="al-grilla"></div>
     </div>
@@ -1304,11 +1304,14 @@ body.mc-abierto{overflow:hidden}
   var SOLO=document.documentElement.getAttribute('data-solo');
   /* La sección sale del # (links de adentro) o de la dirección limpia (/categorias, /fotos…).
      Las secciones quedan con dirección limpia en la barra, así al copiarla y compartirla sale su vista previa. */
-  window.vistaActual=function(){var h=location.hash.slice(1);if(h)return h;var p=location.pathname.replace(/^\/+|\/+$/g,'').toLowerCase();return TIT[p]?p:'inicio'};
+  window.vistaActual=function(){var h=location.hash.slice(1);if(h)return h;var p=location.pathname.replace(/^\/+|\/+$/g,'').toLowerCase();var al=new URLSearchParams(location.search).get('album');if(p==='fotos'&&al)return'album/'+al;return TIT[p]?p:'inicio'};
+  /* el álbum queda con dirección propia (/fotos?album=<id>) para que al copiarla salga su vista previa */
+  function sinAlbum(){var q=new URLSearchParams(location.search);q.delete('album');q=q.toString();return q?'?'+q:''}
   function mostrar(){
     if(SOLO&&location.hash!=='#torneo/'+SOLO){location.replace('#torneo/'+SOLO);return}
     var v=window.vistaActual();
-    if(!SOLO&&(TIT[v]||v==='inicio')&&location.hash){try{history.replaceState(history.state,'',(v==='inicio'?'/':'/'+v)+location.search)}catch(e){}}
+    if(!SOLO&&(TIT[v]||v==='inicio')&&(location.hash||/[?&]album=/.test(location.search))){try{history.replaceState(history.state,'',(v==='inicio'?'/':'/'+v)+sinAlbum())}catch(e){}}
+    if(!SOLO&&v.indexOf('album/')===0&&location.hash){try{var q=new URLSearchParams(sinAlbum());q.set('album',v.slice(6));history.replaceState(history.state,'','/fotos?'+q.toString())}catch(e){}}
     if(v.indexOf('torneo/')===0) v='torneo';
     else if(v.indexOf('album/')===0) v='album';
     else {var nt=TIT[v]?TIT[v]+' · Ramirez Padel Club':titulo0;if(document.title!==nt)document.title=nt}
@@ -1363,7 +1366,7 @@ body.mc-abierto{overflow:hidden}
   }
   var actual=null, idx=0, visor=document.getElementById('al-visor'), img=document.getElementById('al-img');
   function abrirAlbum(){
-    var h=location.hash.slice(1);if(h.indexOf('album/')!==0)return;
+    var h=window.vistaActual?window.vistaActual():location.hash.slice(1);if(h.indexOf('album/')!==0)return;
     var a=albs.filter(function(x){return x.id===decodeURIComponent(h.slice(6))})[0];
     var g=document.getElementById('al-grilla');
     if(!a){document.getElementById('al-tit').textContent=albs.length?'Álbum no encontrado':'Cargando…';g.innerHTML='';return}
@@ -1371,6 +1374,7 @@ body.mc-abierto{overflow:hidden}
     document.getElementById('al-tit').textContent=a.titulo;
     document.getElementById('al-grupo').textContent=a.grupo||'';
     document.getElementById('al-info').textContent=a.fotos.length+' fotos'+(a.credito?' · Fotos: '+a.credito:'');
+    var cb=document.getElementById('al-compartir');if(cb&&window.botonCompartir){cb.innerHTML='';cb.appendChild(window.botonCompartir('https://ramirezpadelclub.com.ar/album/'+a.id,'Fotos: '+a.titulo,'Compartir álbum'))}
     document.title=a.titulo+' · Fotos · Complejo Ramirez Padel Club';
     g.innerHTML=a.fotos.map(function(id,i){return'<button type="button" data-al="'+i+'" aria-label="Ver foto '+(i+1)+'"><img src="'+FOTO(id,400)+'" alt="" loading="lazy"></button>'}).join('');
     if(window.revelar)window.revelar(g.querySelectorAll('button'));
@@ -1462,7 +1466,7 @@ window.addEventListener('resize',function(){if(window.innerWidth>720)cerrar()});
 .aviso-link{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--verde-osc);color:#fff;font:700 15px var(--texto);padding:12px 20px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:200}
 </style>
 <script>
-/* Links propios para compartir: cada sección (/categorias, /torneos…) y cada torneo (/torneo/<id>) muestran su propia vista previa en WhatsApp */
+/* Links propios para compartir: cada sección (/categorias, /torneos…), cada torneo (/torneo/<id>) y cada álbum (/album/<id>) muestran su propia vista previa en WhatsApp */
 (function(){
   var SITIO='https://ramirezpadelclub.com.ar';
   var ICO='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>';
@@ -1473,6 +1477,7 @@ window.addEventListener('resize',function(){if(window.innerWidth>720)cerrar()});
     copiar(u).then(function(){avisar('Link copiado: '+u.replace('https://',''))},function(){prompt('Copiá el link:',u)});
   }
   function boton(u,tit,txt){var b=document.createElement('button');b.type='button';b.className='compartir';b.innerHTML=ICO+'<span>'+(txt||'Compartir')+'</span>';b.addEventListener('click',function(){compartir(u,tit)});return b}
+  window.botonCompartir=boton;
   var SECC={categorias:'Categorías',torneos:'Torneos',clases:'Clases',buffet:'Buffet',fotos:'Fotos',reservas:'Reservas'};
   Object.keys(SECC).forEach(function(s){var cab=document.querySelector('#v-'+s+' .cab');if(cab)cab.appendChild(boton(SITIO+'/'+s,SECC[s]+' · Ramirez Padel Club','Compartir sección'))});
   document.querySelectorAll('article.torneo[data-id]').forEach(function(t){var p=t.querySelector('.t-pie');if(!p)return;var h=t.querySelector('h3');p.appendChild(boton(SITIO+'/torneo/'+t.dataset.id,h?h.textContent:'Torneo'))});
