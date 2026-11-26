@@ -1416,12 +1416,13 @@ body.mc-abierto{overflow:hidden}
 .sug{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:start;background:var(--blanco);border:1px solid var(--linea);border-radius:22px;padding:36px}
 .sug-txt h2{font-size:clamp(28px,4vw,40px);color:var(--verde-osc);margin:8px 0 12px}
 /* Sugerencias dentro de Reservas: en la compu va abajo del texto, al lado del mapa; en el celu al final */
+.contacto{grid-template-rows:auto 1fr;row-gap:28px}
 .contacto>.tarjeta{grid-column:2;grid-row:1/span 2}
 .contacto>.contacto-sug{grid-column:1;grid-row:2}
 .contacto-sug .sug{grid-template-columns:1fr;gap:18px;padding:28px}
 .contacto-sug .sug-txt h3{font-size:clamp(24px,3vw,30px);color:var(--verde-osc);margin:8px 0 10px}
 .contacto-sug .sug-txt p{margin-top:0}
-@media (max-width:760px){.contacto>.tarjeta,.contacto>.contacto-sug{grid-column:auto;grid-row:auto}.contacto-sug .sug{padding:24px 18px}}
+@media (max-width:760px){.contacto{grid-template-rows:none;row-gap:40px}.contacto>.tarjeta,.contacto>.contacto-sug{grid-column:auto;grid-row:auto}.contacto-sug .sug{padding:24px 18px}}
 .sug-txt p{color:var(--tinta-2)}
 .sug-form{display:grid;gap:8px}
 .sug-form label{font-weight:800;font-size:14px;color:var(--tinta)}
