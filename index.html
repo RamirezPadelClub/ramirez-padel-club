@@ -535,26 +535,6 @@ body.mc-abierto{overflow:hidden}
       <div class="tira"><a href="#fotos"><img src="fotos/juego/juego-bandeja.webp" srcset="fotos/juego/juego-bandeja-480.webp 480w, fotos/juego/juego-bandeja.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Bandeja" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-choque.webp" srcset="fotos/juego/gente-choque-480.webp 480w, fotos/juego/gente-choque.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Choque de manos en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-derecha.webp" srcset="fotos/juego/juego-derecha-480.webp 480w, fotos/juego/juego-derecha.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Derecha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-estirada.webp" srcset="fotos/juego/juego-estirada-480.webp 480w, fotos/juego/juego-estirada.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Jugadora estirándose a la pelota" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-dobles.webp" srcset="fotos/juego/juego-dobles-480.webp 480w, fotos/juego/juego-dobles.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Partido de dobles" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-red.webp" srcset="fotos/juego/juego-red-480.webp 480w, fotos/juego/juego-red.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Volea en la red" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-smash.webp" srcset="fotos/juego/juego-smash-480.webp 480w, fotos/juego/juego-smash.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Smash" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-festejo.webp" srcset="fotos/juego/gente-festejo-480.webp 480w, fotos/juego/gente-festejo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Festejo después del punto" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-globo.webp" srcset="fotos/juego/juego-globo-480.webp 480w, fotos/juego/juego-globo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Globo" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-sonrisas.webp" srcset="fotos/juego/gente-sonrisas-480.webp 480w, fotos/juego/gente-sonrisas.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Sonrisas en la cancha" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-volea.webp" srcset="fotos/juego/juego-volea-480.webp 480w, fotos/juego/juego-volea.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Volea" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-remate-damas.webp" srcset="fotos/juego/juego-remate-damas-480.webp 480w, fotos/juego/juego-remate-damas.webp 667w" sizes="(max-width:760px) 60vw, 667px" alt="Remate" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/gente-grupo.webp" srcset="fotos/juego/gente-grupo-480.webp 480w, fotos/juego/gente-grupo.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Grupo en el club" loading="lazy"></a><a href="#fotos"><img src="fotos/juego/juego-salto.webp" srcset="fotos/juego/juego-salto-480.webp 480w, fotos/juego/juego-salto.webp 784w" sizes="(max-width:760px) 60vw, 784px" alt="Salto a la pelota" loading="lazy"></a></div>
     </div>
   </section>
-  <section id="sugerencias">
-    <div class="in">
-      <div class="sug">
-        <div class="sug-txt">
-          <p class="eyebrow">Tu opinión suma</p>
-          <h2>¿Tenés una sugerencia?</h2>
-          <p>Contanos qué te gustaría que mejoremos o agreguemos en el complejo, los torneos o la página. Las leemos todas.</p>
-        </div>
-        <form class="sug-form" id="sug-form" novalidate>
-          <label for="sug-nombre">Nombre o apodo <span>(opcional)</span></label>
-          <input id="sug-nombre" name="nombre" type="text" maxlength="60" autocomplete="nickname" placeholder="Cómo te decimos">
-          <label for="sug-texto">Tu sugerencia</label>
-          <textarea id="sug-texto" name="texto" rows="4" maxlength="1000" required placeholder="Escribí acá…"></textarea>
-          <input type="text" name="web" tabindex="-1" autocomplete="off" aria-hidden="true" class="sug-trampa">
-          <div class="sug-pie"><span id="sug-cont">0 / 1000</span><button type="submit" class="btn verde" id="sug-enviar">Enviar sugerencia</button></div>
-          <p class="sug-msj" id="sug-msj" role="status" hidden></p>
-        </form>
-      </div>
-    </div>
-  </section>
 </main>
 
 <!-- BUFFET -->
@@ -1303,6 +1283,24 @@ body.mc-abierto{overflow:hidden}
           </a>
           <a class="btn copiar" style="justify-self:start" href="https://www.google.com/maps/search/?api=1&query=Ram%C3%ADrez%20Padel%20Club%20General%20Ram%C3%ADrez&query_place_id=ChIJ0-5OMQqhtpUR3FNAvSlf0Es" target="_blank" rel="noopener">Cómo llegar</a>
         </div>
+        <div class="contacto-sug" id="sugerencias">
+          <div class="sug">
+        <div class="sug-txt">
+          <p class="eyebrow">Tu opinión suma</p>
+          <h3>¿Tenés una sugerencia?</h3>
+          <p>Contanos qué te gustaría que mejoremos o agreguemos en el complejo, los torneos o la página. Las leemos todas.</p>
+        </div>
+        <form class="sug-form" id="sug-form" novalidate>
+          <label for="sug-nombre">Nombre o apodo <span>(opcional)</span></label>
+          <input id="sug-nombre" name="nombre" type="text" maxlength="60" autocomplete="nickname" placeholder="Cómo te decimos">
+          <label for="sug-texto">Tu sugerencia</label>
+          <textarea id="sug-texto" name="texto" rows="4" maxlength="1000" required placeholder="Escribí acá…"></textarea>
+          <input type="text" name="web" tabindex="-1" autocomplete="off" aria-hidden="true" class="sug-trampa">
+          <div class="sug-pie"><span id="sug-cont">0 / 1000</span><button type="submit" class="btn verde" id="sug-enviar">Enviar sugerencia</button></div>
+          <p class="sug-msj" id="sug-msj" role="status" hidden></p>
+        </form>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1417,6 +1415,13 @@ body.mc-abierto{overflow:hidden}
 <style>
 .sug{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:start;background:var(--blanco);border:1px solid var(--linea);border-radius:22px;padding:36px}
 .sug-txt h2{font-size:clamp(28px,4vw,40px);color:var(--verde-osc);margin:8px 0 12px}
+/* Sugerencias dentro de Reservas: en la compu va abajo del texto, al lado del mapa; en el celu al final */
+.contacto>.tarjeta{grid-column:2;grid-row:1/span 2}
+.contacto>.contacto-sug{grid-column:1;grid-row:2}
+.contacto-sug .sug{grid-template-columns:1fr;gap:18px;padding:28px}
+.contacto-sug .sug-txt h3{font-size:clamp(24px,3vw,30px);color:var(--verde-osc);margin:8px 0 10px}
+.contacto-sug .sug-txt p{margin-top:0}
+@media (max-width:760px){.contacto>.tarjeta,.contacto>.contacto-sug{grid-column:auto;grid-row:auto}.contacto-sug .sug{padding:24px 18px}}
 .sug-txt p{color:var(--tinta-2)}
 .sug-form{display:grid;gap:8px}
 .sug-form label{font-weight:800;font-size:14px;color:var(--tinta)}
