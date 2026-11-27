@@ -17,7 +17,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://ramirezpadelclub.com.ar/">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SportsActivityLocation","name":"Ramirez Padel Club","alternateName":"Complejo Ramirez Padel Club","description":"Complejo de pádel con dos canchas techadas de césped sintético, buffet, clases y torneos en General Ramírez, Entre Ríos.","url":"https://ramirezpadelclub.com.ar/","logo":"https://ramirezpadelclub.com.ar/img/logo-complejo.png","image":"https://ramirezpadelclub.com.ar/img/og-complejo.jpg","telephone":"+54 343 452-2912","address":{"@type":"PostalAddress","streetAddress":"Domingo French y Urquiza","addressLocality":"General Ramírez","addressRegion":"Entre Ríos","addressCountry":"AR"},"hasMap":"https://www.google.com/maps/search/?api=1&query=Ram%C3%ADrez%20Padel%20Club%20General%20Ram%C3%ADrez&query_place_id=ChIJ0-5OMQqhtpUR3FNAvSlf0Es","sameAs":["https://www.instagram.com/complejo_ramirezpadelclub/"]}
+{"@context":"https://schema.org","@type":"SportsActivityLocation","@id":"https://ramirezpadelclub.com.ar/#club","name":"Ramirez Padel Club","alternateName":"Complejo Ramirez Padel Club","description":"Complejo de pádel con dos canchas techadas de césped sintético, buffet, clases y torneos en General Ramírez, Entre Ríos.","url":"https://ramirezpadelclub.com.ar/","logo":"https://ramirezpadelclub.com.ar/img/logo-complejo.png","image":"https://ramirezpadelclub.com.ar/img/og-complejo.jpg","telephone":"+54 343 452-2912","address":{"@type":"PostalAddress","streetAddress":"Domingo French y Urquiza","addressLocality":"General Ramírez","addressRegion":"Entre Ríos","addressCountry":"AR"},"hasMap":"https://www.google.com/maps/search/?api=1&query=Ram%C3%ADrez%20Padel%20Club%20General%20Ram%C3%ADrez&query_place_id=ChIJ0-5OMQqhtpUR3FNAvSlf0Es","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"09:00","closes":"23:59"}],"amenityFeature":[{"@type":"LocationFeatureSpecification","name":"Canchas techadas de césped sintético","value":true},{"@type":"LocationFeatureSpecification","name":"Buffet","value":true},{"@type":"LocationFeatureSpecification","name":"Vestuarios con duchas","value":true}],"sameAs":["https://www.instagram.com/complejo_ramirezpadelclub/"]}
 </script>
 <link rel="icon" href="/favicon.ico?v=2" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png?v=2">
@@ -485,6 +485,7 @@ body.mc-abierto{overflow:hidden}
         <p class="lead">Dos canchas techadas e iluminadas, ambas de césped sintético, buffet abierto todo el día y una pasarela arriba para ver los partidos.</p>
         <div class="botones">
           <a class="btn blanco" href="#reservas">Reservar cancha</a>
+          <a class="btn borde" href="#torneos">Inscribirme a un torneo</a>
         </div>
       </div>
       <img class="escudo" src="img/logo-complejo-600.webp" alt="Escudo del Ramirez Padel Club" width="290" height="290">
@@ -1515,5 +1516,33 @@ window.addEventListener('resize',function(){if(window.innerWidth>720)cerrar()});
   if(t.dataset.pasado&&!t.dataset.ver){location.replace('#torneo/'+id);return}
   setTimeout(function(){t.scrollIntoView({block:'center',behavior:'smooth'});t.classList.add('destacado');setTimeout(function(){t.classList.remove('destacado')},3500)},350);
 })();
+</script>
+<script>
+/* Datos para Google: cada torneo que todavía no terminó se anuncia como evento (sale solo de las tarjetas de Torneos) */
+(function(){try{
+  var MES={ENERO:1,FEBRERO:2,MARZO:3,ABRIL:4,MAYO:5,JUNIO:6,JULIO:7,AGOSTO:8,SEPTIEMBRE:9,SETIEMBRE:9,OCTUBRE:10,NOVIEMBRE:11,DICIEMBRE:12};
+  var hoy=new Date();hoy.setHours(0,0,0,0);var base='https://ramirezpadelclub.com.ar';
+  var club={'@type':'Place','@id':base+'/#club','name':'Complejo Ramirez Padel Club','address':{'@type':'PostalAddress','streetAddress':'Domingo French y Urquiza','addressLocality':'General Ramírez','addressRegion':'Entre Ríos','addressCountry':'AR'}};
+  var dos=function(n){return(n<10?'0':'')+n};
+  var ev=[].map.call(document.querySelectorAll('#lista-torneos article.torneo[data-fin]'),function(c){
+    var fin=c.dataset.fin,f=fin.split('-').map(Number);if(new Date(f[0],f[1]-1,f[2])<hoy)return null;
+    var q=function(s){var e=c.querySelector(s);return e?e.textContent.trim():''};
+    var d1=parseInt(q('.t-fecha'),10),y=f[0],m=f[1];if(!d1)return null;
+    if(d1>f[2]){m--;if(!m){m=12;y--}}
+    var lugar=q('.t-lugar'),loc=[club];
+    if(/la ruta/i.test(lugar))loc.push({'@type':'Place','name':'La Ruta Pádel','address':{'@type':'PostalAddress','addressLocality':'General Ramírez','addressRegion':'Entre Ríos','addressCountry':'AR'}});
+    var img=c.querySelector('img'),precio=(q('.t-precio').match(/[\d.]+/)||[''])[0].replace(/\./g,'');
+    var cat=[].filter.call(c.querySelectorAll('.t-datos li'),function(li){return/^Categor/i.test(li.textContent)}).map(function(li){return li.textContent.replace(/^[^:]*:\s*/,'')})[0];
+    var o={'@type':'SportsEvent','name':q('h3')+' · '+q('.t-fecha').toLowerCase(),'sport':'Pádel',
+      'startDate':y+'-'+dos(m)+'-'+dos(d1),'endDate':fin,'eventStatus':'https://schema.org/EventScheduled',
+      'eventAttendanceMode':'https://schema.org/OfflineEventAttendanceMode','location':loc.length>1?loc:club,
+      'organizer':{'@type':'Organization','name':'Complejo Ramirez Padel Club','url':base+'/'},
+      'url':base+'/torneo/'+c.dataset.id,'description':(cat?'Categorías: '+cat+'. ':'')+'Torneo de pádel en General Ramírez, Entre Ríos.'};
+    if(img)o.image=img.src;
+    if(precio)o.offers={'@type':'Offer','price':precio,'priceCurrency':'ARS','availability':'https://schema.org/InStock','url':base+'/torneo/'+c.dataset.id,'description':'Inscripción por jugador'};
+    return o}).filter(Boolean);
+  if(!ev.length)return;var s=document.createElement('script');s.type='application/ld+json';
+  s.textContent=JSON.stringify({'@context':'https://schema.org','@graph':ev});document.head.appendChild(s);
+}catch(e){}})();
 </script>
 </body></html>
