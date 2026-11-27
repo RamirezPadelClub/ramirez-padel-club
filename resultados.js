@@ -184,10 +184,12 @@
     var out = items.map(function (x) { return x.jugado ? 'fin' : ''; }), porSede = {};
     items.forEach(function (x, i) { if (!esHoy(x.dia)) return; var k = x.sede || 'complejo'; (porSede[k] = porSede[k] || []).push(i); });
     Object.keys(porSede).forEach(function (k) {
-      var ix = porSede[k], cuenta = {}, canchas = 1, primero = null;
-      ix.forEach(function (i) { var h = items[i].hora || ''; cuenta[h] = (cuenta[h] || 0) + 1; if (cuenta[h] > canchas) canchas = cuenta[h]; var v = hm(h); if (v !== null && (primero === null || v < primero)) primero = v; });
-      if (primero === null || min < primero) return;
-      ix.filter(function (i) { return !items[i].jugado; }).slice(0, canchas).forEach(function (i) { out[i] = 'juego'; });
+      /* en juego: los próximos sin resultado cuyo horario ya llegó (no se adelantan),
+         como máximo tantos como partidos hay programados en el horario actual */
+      var ix = porSede[k], cuenta = {}, actual = null;
+      ix.forEach(function (i) { var v = hm(items[i].hora); if (v === null || v > min) return; cuenta[v] = (cuenta[v] || 0) + 1; if (actual === null || v > actual) actual = v; });
+      if (actual === null) return;
+      ix.filter(function (i) { var v = hm(items[i].hora); return !items[i].jugado && v !== null && v <= min; }).slice(0, cuenta[actual]).forEach(function (i) { out[i] = 'juego'; });
     });
     return out;
   }
