@@ -517,7 +517,12 @@ function pintar(){
 
 window.addEventListener('hashchange',ruta);
 ruta();cargar();
-setInterval(function(){if(!DEMO&&!document.hidden)cargar(true)},60000);
+setInterval(function(){if(!DEMO&&!document.hidden)cargar(true)},30000);
+/* EN JUEGO depende de la hora: cada minuto se redibuja si cambió algún estado */
+var firmaEst='';
+function firmaEstados(){try{return JSON.stringify(estadosFinde())}catch(e){return ''}}
+setInterval(function(){if(document.hidden||!vista||!datos)return;var f=firmaEstados();if(firmaEst&&f!==firmaEst)pintar();firmaEst=f},60000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&!DEMO){firmaEst=firmaEstados();pintar();cargar(true)}});
 })();
 </script>
 </body>
