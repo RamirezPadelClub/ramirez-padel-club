@@ -160,6 +160,13 @@ a{color:inherit}
 .crono{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;align-items:start}
 .crono .col{display:flex;flex-direction:column;gap:10px}
 .crono .col .sede{margin:0 0 6px}
+.selsede{display:none}
+.selsede button{width:104px;height:64px;display:flex;align-items:center;justify-content:center;padding:0;border:2px solid rgba(215,234,70,.35);border-radius:16px;background:rgba(0,33,77,.6);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s,border-color .15s,opacity .15s}
+.selsede button img{width:48px;height:48px;object-fit:contain}
+.selsede button[aria-pressed=false]{opacity:.5}
+.selsede button[aria-pressed=true]{border-color:var(--lima);background:var(--lima)}
+.conj .selsede button{border-radius:0;border-color:#555;background:transparent}
+.conj .selsede button[aria-pressed=true]{border-color:#fff;background:#fff}
 .hora{font:700 22px/1 Oswald,sans-serif;color:var(--lima);letter-spacing:.06em;margin:12px 0 2px}
 .conj .hora{color:#fff;font-family:Archivo,sans-serif;font-weight:900;font-stretch:70%;font-size:26px}
 
@@ -190,6 +197,8 @@ a{color:inherit}
   .torneos{grid-template-columns:1fr;gap:26px}
   .zonas{grid-template-columns:1fr;gap:40px}
   .crono{grid-template-columns:1fr;gap:30px}
+  .selsede{display:flex;justify-content:center;gap:14px;margin:0 0 18px}
+  .crono .col:not(.sel){display:none}
   .tab{font-size:16px;padding:0 14px;letter-spacing:.12em}
   .pill{font-size:16px;padding:0 14px}
   .lista li{font-size:17px}
@@ -327,7 +336,7 @@ var ZONAS_MASTER=[['A',[1,8,12]],['B',[2,7,11]],['C',[3,6,10]],['D',[4,5,9]]];
 var ZONAS_CAT={'Suma 9 Damas':[['A',[1,6,8,10]],['B',[2,5,7,9]],['C',[3,4,11]]]};
 var DIA_ZONA={'master-2729nov':{'Suma 9 Damas':{A:'Sábado',B:'Sábado',C:'Viernes'},'*':{A:'Sábado',B:'Sábado',C:'Sábado',D:'Viernes'}}};
 
-var datos=null,vista=null,cat=0,tab='inscriptos',dia=null;
+var datos=null,vista=null,cat=0,tab='inscriptos',dia=null,sedeSel='complejo';
 var $=function(id){return document.getElementById(id)};
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var apellidos=function(n){return String(n).split(/\s+[–-]\s+/).map(function(x){return x.trim().split(/\s+/)[0]}).join(' - ')};
@@ -396,7 +405,8 @@ function armarPills(){
 document.addEventListener('click',function(e){
   var b=e.target.closest('[data-cat]');if(b){cat=+b.dataset.cat;pintar();return}
   b=e.target.closest('[data-tab]');if(b){tab=b.dataset.tab;dia=null;pintar();return}
-  b=e.target.closest('[data-dia]');if(b){dia=b.dataset.dia;pintar()}
+  b=e.target.closest('[data-dia]');if(b){dia=b.dataset.dia;pintar();return}
+  b=e.target.closest('[data-sede]');if(b){sedeSel=b.dataset.sede;pintar()}
 });
 
 /* ---------- piezas ---------- */
@@ -482,12 +492,14 @@ function cronograma(T){
   del.sort(function(a,b){return hm(a.p.hora)-hm(b.p.hora)||(+a.p.id||0)-(+b.p.id||0)});
   /* EN JUEGO / FINALIZADO: se juega en orden, en cada sede tantos partidos a la vez como canchas */
   var EM=estadosFinde();del.forEach(function(x){x.est=EM[x.C.cat.categoria+'|'+x.p.id]});
-  var cols=['complejo','ruta'].map(function(s){
-    var S=SEDES[s],xs=del.filter(function(x){return (x.p.sede||'complejo')===s}),h='',ult=null;
+  var nS={};var cols=['complejo','ruta'].map(function(s){
+    var S=SEDES[s],xs=del.filter(function(x){return (x.p.sede||'complejo')===s}),h='',ult=null;nS[s]=xs.length;
     xs.forEach(function(x){if(x.p.hora!==ult){ult=x.p.hora;h+='<div class="hora">'+esc(x.p.hora)+' HS</div>'}h+=partidoHTML(x.C,x.p,x.cat,x.t.tema==='conj',true,x.est,true)});
-    return '<div class="col"><div class="sede"><img src="'+S.logo+'" alt=""><h3>'+S.n+'<small>'+esc(dia)+'</small></h3></div>'+(h||'<div class="sin">Sin partidos este día.</div>')+'</div>';
+    return '<div class="col'+(s===sedeSel?' sel':'')+'"><div class="sede"><img src="'+S.logo+'" alt=""><h3>'+S.n+'<small>'+esc(dia)+'</small></h3></div>'+(h||'<div class="sin">Sin partidos este día.</div>')+'</div>';
   });
-  return '<div class="crono">'+cols.join('')+'</div>';
+  /* en el celu: botones con el logo de cada sede (en la compu van las dos columnas) */
+  var bar='<div class="selsede" role="group" aria-label="Sede">'+['complejo','ruta'].map(function(s){var S=SEDES[s];return '<button data-sede="'+s+'" aria-pressed="'+(s===sedeSel)+'" aria-label="'+S.n+'" title="'+S.n+'"><img src="'+S.logo+'" alt=""></button>'}).join('')+'</div>';
+  return bar+'<div class="crono">'+cols.join('')+'</div>';
 }
 
 function cuadro(T,i){
